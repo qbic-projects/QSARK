@@ -33,9 +33,11 @@ library(kableExtra)
 library(ggpubr)
 library(viridisLite)
 
-theme_set(theme_classic())
+theme_set(theme_gray())
 results_folder <- "results/"
 dir.create(results_folder)
+
+source("./functions.R")
 ```
 
 **Project Members:** 
@@ -73,223 +75,95 @@ Brief description of the project.
 # Loading the dataset
 
 Loading all the individual samples. Print sample summary if possible (e.g. metadata sheet).
-
 ```{r input, echo=FALSE}
 # Load your own data (e.g. in data/)
 
-# Load instance costs
-germline_singlesample_30_instance <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/aws_costs/towerid_f7O8kGNSsiCph_instancetype.csv',sep=",",header = T)
+# Load cost tables
+germline_singlesample_30_instance_raw <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/aws_costs/towerid_f7O8kGNSsiCph_instancetype.csv', stringsAsFactors = FALSE)
+germline_singlesample_30_service_raw <-  read.csv(file = '/Users/monarchy/Projects/sarek_paper/aws_costs/towerid_f7O8kGNSsiCph_service.csv', stringsAsFactors = FALSE)
+germline_singlesample_30_usage_raw <-  read.csv(file = '/Users/monarchy/Projects/sarek_paper/aws_costs/towerid_f7O8kGNSsiCph_usagetype.csv', stringsAsFactors = FALSE)
 ```
 
-Format input table to have datas as columns and categories as rows.
+Format input table to have costs as columns and categories as rows.
 ```{r format, echo=FALSE}
-# save row names
-row_names <- germline_singlesample_30_instance$Instance.Type
-# transpose data frame
-germline_singlesample_30_instance <- as.data.frame(t(germline_singlesample_30_instance[,-1]))
-# col names should now be previous row names
-colnames(germline_singlesample_30_instance) <- row_names
-# create a new column named 'instancetype' that has the current row names
-germline_singlesample_30_instance$instancetype <- factor(row.names(germline_singlesample_30_instance))
+germline_singlesample_30_instance <- format_input(germline_singlesample_30_instance_raw)
+germline_singlesample_30_service <- format_input(germline_singlesample_30_service_raw)
+germline_singlesample_30_usage <- format_input(germline_singlesample_30_usage_raw)
+```
 
+# Overview of costs per aggregation type
+
+```{r instancecosts, echo=FALSE}
+# plot costs per instance type
+ggplot(data=germline_singlesample_30_instance, aes(x=type, y=`2022-08-07`)) + 
+  geom_bar(stat="identity", fill="steelblue") + 
+  theme(axis.text.x = element_text(angle=45, hjust = 1)) +
+  geom_text(aes(label = sprintf("%0.2f", round(`2022-08-07`, digits = 2))), vjust = -0.3)
+```
+
+```{r servicecosts, echo=FALSE}
+# plot costs per instance type
+ggplot(data=germline_singlesample_30_service, aes(x=type, y=`2022-08-07`)) + 
+  geom_bar(stat="identity", fill="steelblue") + 
+  theme(axis.text.x = element_text(angle=45, hjust = 1)) +
+  geom_text(aes(label = sprintf("%0.2f", round(`2022-08-07`, digits = 2))), vjust = -0.3)
+```
+
+```{r usagecosts, echo=FALSE}
+# plot costs per instance type
+ggplot(data=germline_singlesample_30_usage, aes(x=type, y=`2022-08-07`)) + 
+  geom_bar(stat="identity", fill="steelblue") + 
+  theme(axis.text.x = element_text(angle=60, hjust = 1)) +
+  geom_text(aes(label = sprintf("%0.2f", round(`2022-08-07`, digits = 2))), vjust = -0.3)
+```
+
+Aggregate costs:
+
+```{r group}
+
+## Assign groups to each row type, default to "other"
+germline_singlesample_30_usage <- germline_singlesample_30_usage %>%
+    mutate(category = case_when(
+    startsWith(type, "SpotUsage") ~ "EC2 Instances",
+    startsWith(type, "BoxUsage") ~ "EC2 Instances",
+    startsWith(type, "Total") ~ "Total",
+    startsWith(type, "EBS") ~ "EC2 Other",
+    startsWith(type, "Timed") ~ "S3",
+    startsWith(type, "Requests") ~ "S3",
+    TRUE ~ "other"
+    ))
 ```
 
 
-# Standard pre-processing workflow
-
-Important QC params for eliminating bad quality cells (could be droplets without cells) are:
-
-* Number of unique genes detected in each cell
-* Total number of molecules detected within a cell
-
-Calculating the percentage of genes mapping to mitochondrial genome for QC:
-
-*  Low-quality / dying cells often exhibit extensive mitochondrial contamination
-* We calculate mitochondrial QC metrics with the PercentageFeatureSet function, which calculates the percentage of counts originating from a set of features
-* We use the set of all genes starting with mt- as a set of mitochondrial genes
-
-```{r, echo=FALSE}
-# CAREFUL: for mouse data pattern is "^mt-" and for human data, pattern is "^MT-"
-pbmc$percent.mt <- PercentageFeatureSet(pbmc, pattern = "^MT-")
+```{r sum}
+germline_singlesample_30_usage_aggr <- germline_singlesample_30_usage %>%
+  # To calculate total costs per category, groupby it, then sum over it
+  group_by(category) %>% 
+  summarise(`2022-08-07` = sum(`2022-08-07`)) %>% 
+  # add everything after original dataset (rows)
+  bind_rows(germline_singlesample_30_usage, .) %>%  
+  # The new rows don't have a type, copy values from category column to type
+  mutate(type = coalesce(type,category)) %>%
+  # Change the category of the new values to "total"
+  mutate(category = replace(category, type == "EC2 Instances","Total")) %>%
+  mutate(category = replace(category, type == "EC2 Other","Total")) %>%
+  mutate(category = replace(category, type == "S3","Total")) %>%
+  mutate(category = replace(category, type == "other","Total")) %>%
+  # Remove the now duplicated total cost row (keep all where type != Total)
+  filter(type!='Total')
 ```
 
-Visualization of the QC metrics:
-
-* recommended to filter out the cells that have unique feature counts over 2500 or less than 200
-* recommended to filter out cells that have >10% mitochondrial counts
-
-```{r, fig.height=3.5, fig.width=7, fig.align="center", echo=FALSE}
-metadata <- pbmc@meta.data
-vln1 <- ggplot(data = metadata, aes(x=orig.ident, y=nCount_RNA, fill=orig.ident)) +
-    geom_violin() +
-    theme(axis.text.x = element_text(angle = 30, hjust = 1)) + 
-    xlab("") + ylab("") + ggtitle("Molecules / cell") +
-    NoLegend()
-vln2 <- ggplot(data = metadata, aes(x=orig.ident, y=nFeature_RNA, fill=orig.ident)) +
-    geom_violin() +
-    theme(axis.text.x = element_text(angle = 30, hjust = 1)) + 
-    xlab("") + ylab("") + ggtitle("Genes / cell") +
-    NoLegend()
-vln3 <- ggplot(data = metadata, aes(x=orig.ident, y=percent.mt, fill=orig.ident)) +
-    geom_violin() +
-    theme(axis.text.x = element_text(angle = 30, hjust = 1)) + 
-    xlab("") + ylab("") + ggtitle("% mitochondrial") +
-    NoLegend()
-qc_vln <- vln1 + vln2 + vln3
-qc_vln
-ggsave(paste0(results_folder,"quality_violin_plot.png"), qc_vln, device="png", width = 25, height = 8, units = "cm")
-ggsave(paste0(results_folder,"quality_violin_plot.pdf"), qc_vln, device="pdf", width = 25, height = 8, units = "cm")
+```{r plot_aggregate, width = 30 , units ="cm"}
+ggplot(data=germline_singlesample_30_usage_aggr, aes(x=type, y=`2022-08-07`,fill=category)) + 
+  geom_bar(stat="identity") + 
+  theme(axis.text.x = element_text(angle=90, hjust = 1)) +
+  theme(legend.position="none") + 
+  geom_text(aes(label = sprintf("%0.2f", round(`2022-08-07`, digits = 2))), vjust = -0.3, size=2) +
+  facet_grid(~category, scales="free", space="free_x")
 ```
-
-
-```{r, fig.height=4, fig.width=7, fig.align="center", echo=FALSE}
-### GenePlot(object = seurat, gene1 = ?, gene2 = ?)
-corr <- FeatureScatter(object = pbmc, feature1 = "nCount_RNA", feature2 = "nFeature_RNA")
-corr
-ggsave(paste0(results_folder,"correlation_molecule_genes.png"), corr, device="png", width = 25, height = 8, units = "cm")
-ggsave(paste0(results_folder,"correlation_molecule_genes.pdf"), corr, device="pdf", width = 25, height = 8, units = "cm")
-```
-
-```{r, fig.height=4, fig.width=7, fig.align="center", echo=FALSE}
-### GenePlot(object = seurat, gene1 = ?, gene2 = ?)
-pbmc@meta.data$gene_count_rank <- rank(1/pbmc@meta.data$nFeature_RNA)
-ggplot(data = pbmc@meta.data, aes(y=nFeature_RNA, x=gene_count_rank)) +
-    geom_point() + 
-    xlab("") + ylab("Genes / cell")
-```
-
-## Filtering out low quality cells
-
-Low quality cells need to be filtered out:
-
-* Filtering out the cells that have unique feature counts over 2500 or less than 200
-* Filtering out cells that have >5% mitochondrial counts
-
-After filtering low quality cells, the cell numbers per sample are the following:
-
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
-pbmc <- subset(pbmc, subset = nFeature_RNA > 200 & nFeature_RNA < 2500 & percent.mt < 5)
-
-cells_per_sample = pbmc@meta.data$orig.ident
-
-```
-
-```{r echo=FALSE}
-tab <- as.data.frame(table(cells_per_sample))
-colnames(tab) <- c("Condition", "Cell_number")
-kable(tab) %>%
-    kable_styling("hover")
-```
-
-# Data normalization and clustering
-
-## Data normalization
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
-```
-
-Sample variable features: 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 2000)
-
-# Identify the 10 most highly variable genes
-top10 <- head(VariableFeatures(pbmc), 10)
-
-# plot variable features with and without labels
-plot1 <- VariableFeaturePlot(pbmc)
-plot2 <- LabelPoints(plot=plot1, points = top10, repel = TRUE)
-plot2
-```
-
-
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-all.genes <- rownames(pbmc)
-pbmc <- ScaleData(pbmc)
-```
-
-## PCA analysis
-
-Perform linear dimensionality reduction on the variable features.
-
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc))
-print(pbmc[["pca"]], dims = 1:5, nfeatures = 5)
-```
-
-Visualizing the loadings
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-VizDimLoadings(pbmc, dims = 1:2, reduction = "pca")
-```
-
-Visualizing the elbow plot
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-ElbowPlot(pbmc)
-```
-
-## Clustering the cells
-
-```{r echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
-pbmc <- FindNeighbors(pbmc, dims = 1:10)
-pbmc <- FindClusters(pbmc, resolution = 0.5)
-```
-
-## Run non-linear dimensionality reduction
-
-```{r echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
-pbmc <- RunUMAP(pbmc, dims = 1:10)
-```
-
-```{r fig.height=5, fig.width=10, echo=FALSE, message=FALSE, warning=FALSE, results="hide"}
-umap_clusters <- DimPlot(pbmc, reduction = "umap", label = TRUE) + NoLegend()
-umap_clusters
-
-ggsave(paste0(results_folder,"umap_clusters.png"), umap_clusters, device="png", width = 25, height = 8, units = "cm")
-ggsave(paste0(results_folder,"umap_clusters.pdf"), umap_clusters, device="pdf", width = 25, height = 8, units = "cm")
-
-```
-
-# Plotting cell type markers
-
-All marker plots in this section can be found under [results/markers](./results/data/markers).
-
-## Markers described in the literature
-
-DotPlot from genes in the Nature communications CSF paper.
-
-```{r fig.height=5, fig.width=10, echo=FALSE, warning=FALSE, results="hide"}
-dir.create(paste0(results_folder,"markers"))
-genes_paper2 <- c("CD3E", "CD4", "IL7R", "CD8B", "CCR7", "FOXP3", "TRDC", "GNLY", "CD79A", "IGHD", "CD27", "CD38", "LYZ", "WDFY4", "CD14", "TCF4")
-dotplot <- DotPlot(pbmc, 
-                    features = genes_paper2, 
-                    dot.scale = 4,
-                    dot.min = 0.1) + 
-    scale_color_viridis(option="D") +
-    RotatedAxis() + 
-    theme(legend.position = "right") + 
-    xlab("genes") + ylab("Clusters")
-dotplot
-ggsave(paste0(results_folder,"markers/dotplot_genes_csf_paper.png"), dotplot, device="png", width = 21, height = 12, units = "cm")
-ggsave(paste0(results_folder,"markers/dotplot_genes_csf_paper.pdf"), dotplot, device="pdf", width = 21, height = 12, units = "cm")
-
-```
-
-```{r fig.height=15, fig.width=10, echo=FALSE, warning=FALSE, results="hide"}
-gene_features <- FeaturePlot(pbmc, 
-                            features = genes_paper2, 
-                            ncol = 3)
-gene_features
-ggsave(paste0(results_folder,"markers/feature_plot_marker_genes.png"), gene_features, device="png", width = 20, height = 25, units = "cm")
-ggsave(paste0(results_folder,"markers/feature_plot_marker_genes.pdf"), gene_features, device="pdf", width = 20, height = 25, units = "cm")
-```
-
-
-```{r echo=FALSE, warning=FALSE, results="hide", message=F, warning=F}
-#SaveH5Seurat(samples.all, filename = paste0("MS_sample_",Sys.Date(),".h5Seurate"), overwrite = TRUE)
-````
 
 # Methods
 
-For the single-cell data analysis the R package Seurat v`r packageVersion("Seurat")` was employed. Graphs were produced in RStudio with `r R.version.string` mainly using the `R` package ggplot2 v`r packageVersion("ggplot2")`. Final reports were produced using the `R` package rmarkdown v`r packageVersion("rmarkdown")`, with knitr v`r packageVersion("knitr")`.
 
 Package versions:
 ```{r, echo=F}
