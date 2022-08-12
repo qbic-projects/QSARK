@@ -1,7 +1,7 @@
 ---
-title: "Single-cell RNAseq analysis"
-subtitle: "CSF isolated immune cells"
-author: "Gisela Gabernet"
+title: "Sarek Paper"
+subtitle: "paper things"
+author: "Friederike Hanssen"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output: 
   html_document:
@@ -24,16 +24,14 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 # Import all R libraries
 library(dplyr)
-library(Seurat)
 library(patchwork)
 library(forcats)
 library(ggplot2)
-library(limma)
 library(cowplot)
 library(knitr)
 library(kableExtra)
-devtools::install_github('satijalab/seurat-data')
-library(SeuratData)
+library(ggpubr)
+library(viridisLite)
 
 theme_set(theme_classic())
 results_folder <- "results/"
@@ -41,7 +39,6 @@ dir.create(results_folder)
 ```
 
 **Project Members:** 
-
 
 \
 
@@ -77,22 +74,24 @@ Brief description of the project.
 
 Loading all the individual samples. Print sample summary if possible (e.g. metadata sheet).
 
-```{r , echo=FALSE}
+```{r input, echo=FALSE}
 # Load your own data (e.g. in data/)
-# Here we load example data:
-InstallData("pbmc3k")
-pbmc <- pbmc3k
+
+# Load instance costs
+germline_singlesample_30_instance <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/aws_costs/towerid_f7O8kGNSsiCph_instancetype.csv',sep=",",header = T)
 ```
 
-Merging all samples in the dataset. The table represents the number of cells that are available for each sample.
+Format input table to have datas as columns and categories as rows.
+```{r format, echo=FALSE}
+# save row names
+row_names <- germline_singlesample_30_instance$Instance.Type
+# transpose data frame
+germline_singlesample_30_instance <- as.data.frame(t(germline_singlesample_30_instance[,-1]))
+# col names should now be previous row names
+colnames(germline_singlesample_30_instance) <- row_names
+# create a new column named 'instancetype' that has the current row names
+germline_singlesample_30_instance$instancetype <- factor(row.names(germline_singlesample_30_instance))
 
-```{r, echo=FALSE}
-# For multiple samples:
-# samples.all <- merge(seurat_list[[1]], y = c(seurat_list[[2]]), 
-#                   #add.cell.ids = c("S1","S2"), 
-#                   add.cell.ids = c("S1"),
-#                   project = "SC_CSF")
-# samples.all <- seurat_list[[1]]
 ```
 
 
