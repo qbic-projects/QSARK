@@ -79,9 +79,9 @@ Loading all the individual samples. Print sample summary if possible (e.g. metad
 # Load your own data (e.g. in data/)
 
 # Load cost tables
-germline_singlesample_30_instance_raw <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/aws_costs/towerid_f7O8kGNSsiCph_instancetype.csv', stringsAsFactors = FALSE)
-germline_singlesample_30_service_raw <-  read.csv(file = '/Users/monarchy/Projects/sarek_paper/aws_costs/towerid_f7O8kGNSsiCph_service.csv', stringsAsFactors = FALSE)
-germline_singlesample_30_usage_raw <-  read.csv(file = '/Users/monarchy/Projects/sarek_paper/aws_costs/towerid_f7O8kGNSsiCph_usagetype.csv', stringsAsFactors = FALSE)
+germline_singlesample_30_instance_raw <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/aws_costs/towerid_4GLbIcExOdptqD_instancetype_aug13.csv', stringsAsFactors = FALSE)
+germline_singlesample_30_service_raw <-  read.csv(file = '/Users/monarchy/Projects/sarek_paper/aws_costs/towerid_4GLbIcExOdptqD_service_aug13.csv', stringsAsFactors = FALSE)
+germline_singlesample_30_usage_raw <-  read.csv(file = '/Users/monarchy/Projects/sarek_paper/aws_costs/towerid_4GLbIcExOdptqD_usagetype_aug13.csv', stringsAsFactors = FALSE)
 ```
 
 Format input table to have costs as columns and categories as rows.
