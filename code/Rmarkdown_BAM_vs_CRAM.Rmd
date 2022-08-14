@@ -1,6 +1,6 @@
 ---
 title: "Sarek Paper"
-subtitle: "paper things"
+subtitle: "BAM vs CRAM"
 author: "Friederike Hanssen"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output: 
@@ -17,8 +17,12 @@ output:
 ---
 
 <!-- QBiC Logo -->
-<img src="./QBiCLogo.png" style="position:absolute;top:0px;right:0px;" height="120" width="120" />
-<div class="watermark">QBiC</div>
+
+<img src="./QBiCLogo.png" style="position:absolute;top:0px;right:0px;" height="120" width="120"/>
+
+::: watermark
+QBiC
+:::
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -32,6 +36,7 @@ library(knitr)
 library(kableExtra)
 library(ggpubr)
 library(viridisLite)
+library(tidyr)
 
 theme_set(theme_gray())
 results_folder <- "results/"
@@ -40,132 +45,226 @@ dir.create(results_folder)
 source("./functions.R")
 ```
 
-**Project Members:** 
-
-\
-
-***Member 1***
-
-
-\
-
-***Member 2***
-
-
-\
-
-
-\
-\
-**QBiC contacts:**
-
-Name Surname
-
-Bioinformatics project manager
-
-name.surname@qbic.uni-tuebingen.de
-
-
-***
+------------------------------------------------------------------------
 
 # Introduction
 
-Brief description of the project.
+These experiments investigate how BAM vs CRAM file formats compare with respect too cpu, memory, runtime, and storage usage.
+
+### **Goal**
+
+We switched from BAM to CRAM file format . While it has been shown that this reduces storage spaces, we should show that this is really the case and to which extent and addtionally how this impacts the other metrics for all relevant tools:
+
+-   BQSR
+
+```{=html}
+<!-- -->
+```
+-   QC Tools
+
+-   variant callers
+
+Since there is limited space on the cluster, these experiments are subdivided.
+
+#### Run commands
+
+    nextflow run nf-core/sarek -r 3.0 -profile cfc --input --outdir -c trace.config -c custom.config
+
+    custom.config
+
+#### For each sample: preprocessing, default
+
+This runs through mapping, duplicate marking, BQSR, and QC for BWA & non-spark GATK implementation.
+
+|                |            |            | CRAM              | CRAM         | CRAM                                                                                   | CRAM    | BAM               | BAM          | BAM     | BAM     |
+|------------|----------|------|-------|------|-------------------|------|------|------|--------|--------|
+| sample         | QBiC Code  | input size | work folder sizes | trace.config | towerID                                                                                | resumed | work folder sizes | trace.config | towerID | resumed |
+| CHC982 normal  | QSARK011AX | 84G        | x                 | x            | <http://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/Dev/watch/5cXiGGJYsoGjh8> | yes     |                   |              |         |         |
+| CHC982 tumor   | QSARK012A7 | 146G       | x                 | x            | <http://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/Dev/watch/5cXiGGJYsoGjh8> | yes     |                   |              |         |         |
+| CHC912 normal  | QSARK013AF | 98G        |                   |              | <http://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/Dev/watch/2walbMPOXeFgjT> |         |                   |              |         |         |
+| CHC912 tumor   | QSARK014AN | 166G       |                   |              | <http://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/Dev/watch/2walbMPOXeFgjT> |         |                   |              |         |         |
+| CHC2111 normal |            |            |                   |              |                                                                                        |         |                   |              |         |         |
+| CHC2111 tumor  |            |            |                   |              |                                                                                        |         |                   |              |         |         |
+| CHC2113 normal |            |            |                   |              |                                                                                        |         |                   |              |         |         |
+| CHC2113 tumor  |            |            |                   |              |                                                                                        |         |                   |              |         |         |
+| CHC2115 normal |            |            |                   |              |                                                                                        |         |                   |              |         |         |
+| CHC2115 tumor  |            |            |                   |              |                                                                                        |         |                   |              |         |         |
+
+#### For each sample: preprocessing, spark
+
+This runs through mapping with query-name sorting, duplicate marking, BQSR, and QC for BWA & spark GATK implementation.
+
+|                |            |            | CRAM              | CRAM         | CRAM    | CRAM    | BAM               | BAM          | BAM     | BAM     |
+|------------|-----------|-------|---------|------|---------|--------|------|------|--------|--------|
+| sample         | QBiC Code  | input size | work folder sizes | trace.config | towerID | resumed | work folder sizes | trace.config | towerID | resumed |
+| CHC982 normal  | QSARK011AX | 84G        |                   |              |         |         |                   |              |         |         |
+| CHC982 tumor   | QSARK012A7 | 146G       |                   |              |         |         |                   |              |         |         |
+| CHC912 normal  | QSARK013AF | 98G        |                   |              |         |         |                   |              |         |         |
+| CHC912 tumor   | QSARK014AN | 166G       |                   |              |         |         |                   |              |         |         |
+| CHC2111 normal |            |            |                   |              |         |         |                   |              |         |         |
+| CHC2111 tumor  |            |            |                   |              |         |         |                   |              |         |         |
+| CHC2113 normal |            |            |                   |              |         |         |                   |              |         |         |
+| CHC2113 tumor  |            |            |                   |              |         |         |                   |              |         |         |
+| CHC2115 normal |            |            |                   |              |         |         |                   |              |         |         |
+| CHC2115 tumor  |            |            |                   |              |         |         |                   |              |         |         |
+
+#### For each samples: variantcalling, somatic and normal
+
+    nextflow run nf-core/sarek -r 3.0 -profile cfc --input --outdir -c trace.config -c custom.config --step variantcalling --tools `all`
+
+|                |            |            | CRAM              | CRAM         | CRAM    | CRAM    | BAM               | BAM          | BAM     | BAM     |
+|------------|-----------|-------|---------|------|---------|--------|------|------|--------|--------|
+| sample         | QBiC Code  | input size | work folder sizes | trace.config | towerID | resumed | work folder sizes | trace.config | towerID | resumed |
+| CHC982 normal  | QSARK011AX | 84G        |                   |              |         |         |                   |              |         |         |
+| CHC982 tumor   | QSARK012A7 | 146G       |                   |              |         |         |                   |              |         |         |
+| CHC912 normal  | QSARK013AF | 98G        |                   |              |         |         |                   |              |         |         |
+| CHC912 tumor   | QSARK014AN | 166G       |                   |              |         |         |                   |              |         |         |
+| CHC2111 normal |            |            |                   |              |         |         |                   |              |         |         |
+| CHC2111 tumor  |            |            |                   |              |         |         |                   |              |         |         |
+| CHC2113 normal |            |            |                   |              |         |         |                   |              |         |         |
+| CHC2113 tumor  |            |            |                   |              |         |         |                   |              |         |         |
+| CHC2115 normal |            |            |                   |              |         |         |                   |              |         |         |
+| CHC2115 tumor  |            |            |                   |              |         |         |                   |              |         |         |
+
+#### For each sample: variantcalling, tumor-only
+
+| sample        | QBiC Code  | input size | work folder sizes | trace.config | towerID | resumed |
+|--------------|------------|-------|----------|----------|----------|----------|
+| CHC982 tumor  | QSARK012A7 | 146G       |                   |              |         |         |
+| CHC912 tumor  | QSARK014AN | 166G       |                   |              |         |         |
+| CHC2111 tumor |            |            |                   |              |         |         |
+| CHC2113 tumor |            |            |                   |              |         |         |
+| CHC2115 tumor |            |            |                   |              |         |         |
+
+To determine work folder size:
+
+\`\`\`console`du -hb --all --max-depth=4 <absolute/path/to>/work/ > folder_sizes.tsv`\`\`\`
 
 # Loading the dataset
 
 Loading all the individual samples. Print sample summary if possible (e.g. metadata sheet).
+
 ```{r input, echo=FALSE}
 # Load your own data (e.g. in data/)
 
-# Load cost tables
-germline_singlesample_30_instance_raw <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/aws_costs/towerid_4GLbIcExOdptqD_instancetype_aug13.csv', stringsAsFactors = FALSE)
-germline_singlesample_30_service_raw <-  read.csv(file = '/Users/monarchy/Projects/sarek_paper/aws_costs/towerid_4GLbIcExOdptqD_service_aug13.csv', stringsAsFactors = FALSE)
-germline_singlesample_30_usage_raw <-  read.csv(file = '/Users/monarchy/Projects/sarek_paper/aws_costs/towerid_4GLbIcExOdptqD_usagetype_aug13.csv', stringsAsFactors = FALSE)
+# Load file and folder size info tables
+storage_preprocessing_default_CHC982 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/bam_vs_cram/preprocessing_default/CRAM/pipeline_info_CHC982/folder_sizes.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
+
+# Load trace information
+trace_preprocessing_default_CHC982 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/bam_vs_cram/preprocessing_default/CRAM/pipeline_info_CHC982/execution_trace_2022-08-12_09-00-45.txt', sep = "\t", stringsAsFactors = FALSE)
 ```
 
-Format input table to have costs as columns and categories as rows.
-```{r format, echo=FALSE}
-germline_singlesample_30_instance <- format_input(germline_singlesample_30_instance_raw)
-germline_singlesample_30_service <- format_input(germline_singlesample_30_service_raw)
-germline_singlesample_30_usage <- format_input(germline_singlesample_30_usage_raw)
+TODO: When more are available, will need to do some magic to join the data frames
+
+### Clean data
+
+```{r}
+
+# Rename columns from storage files ( no headers by default)
+names(storage_preprocessing_default_CHC982)[names(storage_preprocessing_default_CHC982) == "V2"] <- "workdir"
+names(storage_preprocessing_default_CHC982)[names(storage_preprocessing_default_CHC982) == "V1"] <- "workdir_bytes"
+
 ```
 
-# Overview of costs per aggregation type
-
-```{r instancecosts, echo=FALSE}
-# plot costs per instance type
-ggplot(data=germline_singlesample_30_instance, aes(x=type, y=`2022-08-07`)) + 
-  geom_bar(stat="identity", fill="steelblue") + 
-  theme(axis.text.x = element_text(angle=45, hjust = 1)) +
-  geom_text(aes(label = sprintf("%0.2f", round(`2022-08-07`, digits = 2))), vjust = -0.3)
+```{r}
+# Merge both tables on key workdir
+merged_preprocessing_default_CHC982 <- merge(trace_preprocessing_default_CHC982, storage_preprocessing_default_CHC982, by = "workdir")
 ```
 
-```{r servicecosts, echo=FALSE}
-# plot costs per instance type
-ggplot(data=germline_singlesample_30_service, aes(x=type, y=`2022-08-07`)) + 
-  geom_bar(stat="identity", fill="steelblue") + 
-  theme(axis.text.x = element_text(angle=45, hjust = 1)) +
-  geom_text(aes(label = sprintf("%0.2f", round(`2022-08-07`, digits = 2))), vjust = -0.3)
+```{r}
+merged_preprocessing_default_CHC982_formatted <- 
+  merged_preprocessing_default_CHC982 %>% 
+  # Convert vmem to megabytes and gigabytes
+  mutate('vmem_MB' = bytesto(vmem, 'm')) %>%
+  mutate('vmem_GB' = bytesto(vmem, 'g')) %>%
+  # Convert peak_vmem to megabytes and gigabytes
+  mutate('peak_vmem_MB' = bytesto(peak_vmem, 'm')) %>%
+  mutate('peak_vmem_GB' = bytesto(peak_vmem, 'g')) %>%
+  # Convert requested memory to megabytes and gigabytes
+  mutate('memory_MB' = bytesto(memory, 'm')) %>%
+  mutate('memory_GB' = bytesto(memory, 'g')) %>%
+  # Get an actual CPU number by dividing the used cpu number by 100
+  mutate('num_cpu' = X.cpu/100) %>%
+  # Get last element (by :) from process name
+  mutate('simple_name' = sub("^.*:", "", process)) %>%
+  # Convert workdir storage to megabytes and gigabytes
+  mutate('workdir_MB' = bytesto(workdir_bytes, 'm')) %>%
+  mutate('workdir_GB' = bytesto(workdir_bytes, 'g')) %>%
+  # Get tumor/normal
+  mutate('status' = case_when(
+    grepl("N", tag) ~ "normal", 
+    grepl("T", tag) ~ "tumor",
+    TRUE ~ "other"))
+
 ```
 
-```{r usagecosts, echo=FALSE}
-# plot costs per instance type
-ggplot(data=germline_singlesample_30_usage, aes(x=type, y=`2022-08-07`)) + 
-  geom_bar(stat="identity", fill="steelblue") + 
-  theme(axis.text.x = element_text(angle=60, hjust = 1)) +
-  geom_text(aes(label = sprintf("%0.2f", round(`2022-08-07`, digits = 2))), vjust = -0.3)
+### CPU Usage
+
+```{r}
+ggplot(data=merged_preprocessing_default_CHC982_formatted, aes(x=simple_name, y=num_cpu)) + 
+  geom_boxplot(outlier.colour="black", outlier.shape=16, outlier.size=1, notch=FALSE) +
+  geom_jitter(shape=16, position=position_jitter(0.1), aes(color=status)) + 
+  geom_point(aes(y=cpus), shape=8) + 
+  theme(axis.text.x = element_text(angle=45, hjust = 1))
 ```
 
-Aggregate costs:
+### Memory Usage
 
-```{r group}
-
-## Assign groups to each row type, default to "other"
-germline_singlesample_30_usage <- germline_singlesample_30_usage %>%
-    mutate(category = case_when(
-    startsWith(type, "SpotUsage") ~ "EC2 Instances",
-    startsWith(type, "BoxUsage") ~ "EC2 Instances",
-    startsWith(type, "Total") ~ "Total",
-    startsWith(type, "EBS") ~ "EC2 Other",
-    startsWith(type, "Timed") ~ "S3",
-    startsWith(type, "Requests") ~ "S3",
-    TRUE ~ "other"
-    ))
+```{r}
+ggplot(data=merged_preprocessing_default_CHC982_formatted, aes(x=simple_name, y=vmem_MB)) + 
+  geom_boxplot(outlier.colour="black", outlier.shape=16, outlier.size=2, notch=FALSE) +
+  geom_jitter(shape=16, position=position_jitter(0.1), aes(color=status)) + 
+  geom_point(aes(y=memory_MB), shape=8) + 
+  theme(axis.text.x = element_text(angle=45, hjust = 1)) 
 ```
 
-
-```{r sum}
-germline_singlesample_30_usage_aggr <- germline_singlesample_30_usage %>%
-  # To calculate total costs per category, groupby it, then sum over it
-  group_by(category) %>% 
-  summarise(`2022-08-07` = sum(`2022-08-07`)) %>% 
-  # add everything after original dataset (rows)
-  bind_rows(germline_singlesample_30_usage, .) %>%  
-  # The new rows don't have a type, copy values from category column to type
-  mutate(type = coalesce(type,category)) %>%
-  # Change the category of the new values to "total"
-  mutate(category = replace(category, type == "EC2 Instances","Total")) %>%
-  mutate(category = replace(category, type == "EC2 Other","Total")) %>%
-  mutate(category = replace(category, type == "S3","Total")) %>%
-  mutate(category = replace(category, type == "other","Total")) %>%
-  # Remove the now duplicated total cost row (keep all where type != Total)
-  filter(type!='Total')
+```{r}
+ggplot(data=merged_preprocessing_default_CHC982_formatted, aes(x=simple_name, y=peak_vmem_MB)) + 
+  geom_boxplot(outlier.colour="black", outlier.shape=16, outlier.size=2, notch=FALSE) +
+  geom_jitter(shape=16, position=position_jitter(0.1), aes(color=status)) +
+  geom_point(aes(y=memory_MB), shape=8) + 
+  theme(axis.text.x = element_text(angle=45, hjust = 1)) 
 ```
 
-```{r plot_aggregate, width = 30 , units ="cm"}
-ggplot(data=germline_singlesample_30_usage_aggr, aes(x=type, y=`2022-08-07`,fill=category)) + 
-  geom_bar(stat="identity") + 
-  theme(axis.text.x = element_text(angle=90, hjust = 1)) +
-  theme(legend.position="none") + 
-  geom_text(aes(label = sprintf("%0.2f", round(`2022-08-07`, digits = 2))), vjust = -0.3, size=2) +
-  facet_grid(~category, scales="free", space="free_x")
+### Storage usage
+
+```{r}
+ggplot(data=merged_preprocessing_default_CHC982_formatted, aes(x=simple_name, y=workdir_GB)) + 
+  geom_boxplot(outlier.colour="black", outlier.shape=16, outlier.size=2, notch=FALSE) +
+  geom_jitter(shape=16, position=position_jitter(0.1), aes(color=status)) + 
+  theme(axis.text.x = element_text(angle=45, hjust = 1)) 
+```
+
+### Combine plots
+
+```{r}
+merged_preprocessing_default_CHC982_long <- tidyr::gather(merged_preprocessing_default_CHC982_formatted, key="measure", value="value", c("num_cpu","workdir_GB","peak_vmem_GB"))
+
+```
+
+```{r}
+variable_names <- list(
+  "peak_vmem_GB" = "Peak Mem(GB)",
+  "num_cpu" = "num CPU",
+  "workdir_GB" = "work (GB)",
+  "vmem_GB" = "Mem (GB)"
+)
+
+variable_labeller_y <- function(variable,value){
+  return(variable_names[value])
+}
+
+ggplot(merged_preprocessing_default_CHC982_long, aes(x=simple_name, y=value))+
+  geom_boxplot(outlier.colour="black", outlier.shape=16, outlier.size=2, notch=FALSE) +
+  geom_jitter(shape=16, position=position_jitter(0.1), aes(color=status)) + 
+  facet_wrap(~measure, ncol=1, strip.position = "left", scales="free_y", labeller = variable_labeller_y) + 
+  theme(axis.text.x = element_text(angle=35, hjust = 1), legend.position="none") 
 ```
 
 # Methods
 
-
 Package versions:
+
 ```{r, echo=F}
 installed.packages()[names(sessionInfo()$otherPkgs), "Version"]
 ```

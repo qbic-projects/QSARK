@@ -81,9 +81,9 @@ germline_singlesample_30_usage_raw <-  read.csv(file = '/Users/monarchy/Projects
 
 ```{r format, echo=FALSE}
 # Format input table to have costs as columns and categories as rows.
-germline_singlesample_30_instance <- format_input(germline_singlesample_30_instance_raw)
-germline_singlesample_30_service <- format_input(germline_singlesample_30_service_raw)
-germline_singlesample_30_usage <- format_input(germline_singlesample_30_usage_raw)
+germline_singlesample_30_instance <- format_aws_costs(germline_singlesample_30_instance_raw)
+germline_singlesample_30_service <- format_aws_costs(germline_singlesample_30_service_raw)
+germline_singlesample_30_usage <- format_aws_costs(germline_singlesample_30_usage_raw)
 ```
 
 # Overview of costs per aggregation type

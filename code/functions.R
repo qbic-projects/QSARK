@@ -1,4 +1,4 @@
-format_input <- function(cost_table, date) {
+format_aws_costs <- function(cost_table, date) {
   
   # transpose data frame & use first column from original dataframe as column headers in transposed dataframe
   cost_table_formatted <- setNames(data.frame(t(cost_table[,-1])), cost_table[,1])
@@ -13,4 +13,13 @@ format_input <- function(cost_table, date) {
   cost_table_formatted <- cost_table_formatted %>% mutate_if(is.numeric, round, digits=3)
   cost_table_formatted <- filter(cost_table_formatted, costs >= 0.001 , .preserve = FALSE)
   return (cost_table_formatted)
+}
+
+bytesto <- function(bytes, to, bsize=1024){
+  a <- data.frame ( unit = c('k', 'm', 'g', 't', 'p', 'e' ), factor = c(1,2,3,4,5,6), stringsAsFactors=FALSE)
+
+  get_factor <- a$factor
+  names(get_factor) <- a$unit
+
+  return (bytes / (bsize ^ get_factor[to]))
 }
