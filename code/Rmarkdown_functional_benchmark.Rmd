@@ -17,8 +17,12 @@ output:
 ---
 
 <!-- QBiC Logo -->
-<img src="./QBiCLogo.png" style="position:absolute;top:0px;right:0px;" height="120" width="120" />
-<div class="watermark">QBiC</div>
+
+<img src="./QBiCLogo.png" style="position:absolute;top:0px;right:0px;" height="120" width="120"/>
+
+::: watermark
+QBiC
+:::
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -40,33 +44,7 @@ dir.create(results_folder)
 source("./functions.R")
 ```
 
-**Project Members:** 
-
-\
-
-***Member 1***
-
-
-\
-
-***Member 2***
-
-
-\
-
-
-\
-\
-**QBiC contacts:**
-
-Name Surname
-
-Bioinformatics project manager
-
-name.surname@qbic.uni-tuebingen.de
-
-
-***
+------------------------------------------------------------------------
 
 # Introduction
 
@@ -75,97 +53,22 @@ Brief description of the project.
 # Loading the dataset
 
 Loading all the individual samples. Print sample summary if possible (e.g. metadata sheet).
+
+Somehow the nf-core tests are not completing and the resuming is also not working: Should we delete everything and try again?
+
 ```{r input, echo=FALSE}
 # Load your own data (e.g. in data/)
+# Downloaded reference vcf file from: 
+# https://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/release/NA12878_HG001/latest/GRCh38/
 
 # Load cost tables
-germline_singlesample_30_instance_raw <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/aws_costs/towerid_4GLbIcExOdptqD_instancetype_aug13.csv', stringsAsFactors = FALSE)
-germline_singlesample_30_service_raw <-  read.csv(file = '/Users/monarchy/Projects/sarek_paper/aws_costs/towerid_4GLbIcExOdptqD_service_aug13.csv', stringsAsFactors = FALSE)
-germline_singlesample_30_usage_raw <-  read.csv(file = '/Users/monarchy/Projects/sarek_paper/aws_costs/towerid_4GLbIcExOdptqD_usagetype_aug13.csv', stringsAsFactors = FALSE)
-```
 
-Format input table to have costs as columns and categories as rows.
-```{r format, echo=FALSE}
-germline_singlesample_30_instance <- format_input(germline_singlesample_30_instance_raw)
-germline_singlesample_30_service <- format_input(germline_singlesample_30_service_raw)
-germline_singlesample_30_usage <- format_input(germline_singlesample_30_usage_raw)
-```
-
-# Overview of costs per aggregation type
-
-```{r instancecosts, echo=FALSE}
-# plot costs per instance type
-ggplot(data=germline_singlesample_30_instance, aes(x=type, y=`2022-08-07`)) + 
-  geom_bar(stat="identity", fill="steelblue") + 
-  theme(axis.text.x = element_text(angle=45, hjust = 1)) +
-  geom_text(aes(label = sprintf("%0.2f", round(`2022-08-07`, digits = 2))), vjust = -0.3)
-```
-
-```{r servicecosts, echo=FALSE}
-# plot costs per instance type
-ggplot(data=germline_singlesample_30_service, aes(x=type, y=`2022-08-07`)) + 
-  geom_bar(stat="identity", fill="steelblue") + 
-  theme(axis.text.x = element_text(angle=45, hjust = 1)) +
-  geom_text(aes(label = sprintf("%0.2f", round(`2022-08-07`, digits = 2))), vjust = -0.3)
-```
-
-```{r usagecosts, echo=FALSE}
-# plot costs per instance type
-ggplot(data=germline_singlesample_30_usage, aes(x=type, y=`2022-08-07`)) + 
-  geom_bar(stat="identity", fill="steelblue") + 
-  theme(axis.text.x = element_text(angle=60, hjust = 1)) +
-  geom_text(aes(label = sprintf("%0.2f", round(`2022-08-07`, digits = 2))), vjust = -0.3)
-```
-
-Aggregate costs:
-
-```{r group}
-
-## Assign groups to each row type, default to "other"
-germline_singlesample_30_usage <- germline_singlesample_30_usage %>%
-    mutate(category = case_when(
-    startsWith(type, "SpotUsage") ~ "EC2 Instances",
-    startsWith(type, "BoxUsage") ~ "EC2 Instances",
-    startsWith(type, "Total") ~ "Total",
-    startsWith(type, "EBS") ~ "EC2 Other",
-    startsWith(type, "Timed") ~ "S3",
-    startsWith(type, "Requests") ~ "S3",
-    TRUE ~ "other"
-    ))
-```
-
-
-```{r sum}
-germline_singlesample_30_usage_aggr <- germline_singlesample_30_usage %>%
-  # To calculate total costs per category, groupby it, then sum over it
-  group_by(category) %>% 
-  summarise(`2022-08-07` = sum(`2022-08-07`)) %>% 
-  # add everything after original dataset (rows)
-  bind_rows(germline_singlesample_30_usage, .) %>%  
-  # The new rows don't have a type, copy values from category column to type
-  mutate(type = coalesce(type,category)) %>%
-  # Change the category of the new values to "total"
-  mutate(category = replace(category, type == "EC2 Instances","Total")) %>%
-  mutate(category = replace(category, type == "EC2 Other","Total")) %>%
-  mutate(category = replace(category, type == "S3","Total")) %>%
-  mutate(category = replace(category, type == "other","Total")) %>%
-  # Remove the now duplicated total cost row (keep all where type != Total)
-  filter(type!='Total')
-```
-
-```{r plot_aggregate, width = 30 , units ="cm"}
-ggplot(data=germline_singlesample_30_usage_aggr, aes(x=type, y=`2022-08-07`,fill=category)) + 
-  geom_bar(stat="identity") + 
-  theme(axis.text.x = element_text(angle=90, hjust = 1)) +
-  theme(legend.position="none") + 
-  geom_text(aes(label = sprintf("%0.2f", round(`2022-08-07`, digits = 2))), vjust = -0.3, size=2) +
-  facet_grid(~category, scales="free", space="free_x")
 ```
 
 # Methods
 
-
 Package versions:
+
 ```{r, echo=F}
 installed.packages()[names(sessionInfo()$otherPkgs), "Version"]
 ```

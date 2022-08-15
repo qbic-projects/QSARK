@@ -57,9 +57,8 @@ We switched from BAM to CRAM file format . While it has been shown that this red
 
 -   BQSR
 
-```{=html}
 <!-- -->
-```
+
 -   QC Tools
 
 -   variant callers
@@ -77,7 +76,7 @@ Since there is limited space on the cluster, these experiments are subdivided.
 This runs through mapping, duplicate marking, BQSR, and QC for BWA & non-spark GATK implementation.
 
 |                |            |            | CRAM              | CRAM         | CRAM                                                                                   | CRAM    | BAM               | BAM          | BAM     | BAM     |
-|------------|----------|------|-------|------|-------------------|------|------|------|--------|--------|
+|----------------|------------|------------|-------------------|--------------|----------------------------------------------------------------------------------------|---------|-------------------|--------------|---------|---------|
 | sample         | QBiC Code  | input size | work folder sizes | trace.config | towerID                                                                                | resumed | work folder sizes | trace.config | towerID | resumed |
 | CHC982 normal  | QSARK011AX | 84G        | x                 | x            | <http://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/Dev/watch/5cXiGGJYsoGjh8> | yes     |                   |              |         |         |
 | CHC982 tumor   | QSARK012A7 | 146G       | x                 | x            | <http://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/Dev/watch/5cXiGGJYsoGjh8> | yes     |                   |              |         |         |
@@ -95,7 +94,7 @@ This runs through mapping, duplicate marking, BQSR, and QC for BWA & non-spark G
 This runs through mapping with query-name sorting, duplicate marking, BQSR, and QC for BWA & spark GATK implementation.
 
 |                |            |            | CRAM              | CRAM         | CRAM    | CRAM    | BAM               | BAM          | BAM     | BAM     |
-|------------|-----------|-------|---------|------|---------|--------|------|------|--------|--------|
+|----------------|------------|------------|-------------------|--------------|---------|---------|-------------------|--------------|---------|---------|
 | sample         | QBiC Code  | input size | work folder sizes | trace.config | towerID | resumed | work folder sizes | trace.config | towerID | resumed |
 | CHC982 normal  | QSARK011AX | 84G        |                   |              |         |         |                   |              |         |         |
 | CHC982 tumor   | QSARK012A7 | 146G       |                   |              |         |         |                   |              |         |         |
@@ -113,7 +112,7 @@ This runs through mapping with query-name sorting, duplicate marking, BQSR, and 
     nextflow run nf-core/sarek -r 3.0 -profile cfc --input --outdir -c trace.config -c custom.config --step variantcalling --tools `all`
 
 |                |            |            | CRAM              | CRAM         | CRAM    | CRAM    | BAM               | BAM          | BAM     | BAM     |
-|------------|-----------|-------|---------|------|---------|--------|------|------|--------|--------|
+|----------------|------------|------------|-------------------|--------------|---------|---------|-------------------|--------------|---------|---------|
 | sample         | QBiC Code  | input size | work folder sizes | trace.config | towerID | resumed | work folder sizes | trace.config | towerID | resumed |
 | CHC982 normal  | QSARK011AX | 84G        |                   |              |         |         |                   |              |         |         |
 | CHC982 tumor   | QSARK012A7 | 146G       |                   |              |         |         |                   |              |         |         |
@@ -129,7 +128,7 @@ This runs through mapping with query-name sorting, duplicate marking, BQSR, and 
 #### For each sample: variantcalling, tumor-only
 
 | sample        | QBiC Code  | input size | work folder sizes | trace.config | towerID | resumed |
-|--------------|------------|-------|----------|----------|----------|----------|
+|---------------|------------|------------|-------------------|--------------|---------|---------|
 | CHC982 tumor  | QSARK012A7 | 146G       |                   |              |         |         |
 | CHC912 tumor  | QSARK014AN | 166G       |                   |              |         |         |
 | CHC2111 tumor |            |            |                   |              |         |         |
@@ -190,6 +189,8 @@ merged_preprocessing_default_CHC982_formatted <-
   # Convert workdir storage to megabytes and gigabytes
   mutate('workdir_MB' = bytesto(workdir_bytes, 'm')) %>%
   mutate('workdir_GB' = bytesto(workdir_bytes, 'g')) %>%
+  # Convert seconds to minutes
+  mutate('realtime_min' = realtime/(60*1000)) %>%
   # Get tumor/normal
   mutate('status' = case_when(
     grepl("N", tag) ~ "normal", 
@@ -232,6 +233,16 @@ ggplot(data=merged_preprocessing_default_CHC982_formatted, aes(x=simple_name, y=
 ggplot(data=merged_preprocessing_default_CHC982_formatted, aes(x=simple_name, y=workdir_GB)) + 
   geom_boxplot(outlier.colour="black", outlier.shape=16, outlier.size=2, notch=FALSE) +
   geom_jitter(shape=16, position=position_jitter(0.1), aes(color=status)) + 
+  theme(axis.text.x = element_text(angle=45, hjust = 1)) 
+```
+
+### Real time
+
+```{r}
+ggplot(data=merged_preprocessing_default_CHC982_formatted, aes(x=simple_name, y=realtime_min)) + 
+  geom_boxplot(outlier.colour="black", outlier.shape=16, outlier.size=2, notch=FALSE) +
+  geom_jitter(shape=16, position=position_jitter(0.1), aes(color=status)) + 
+  geom_point(aes(y=time/(60*1000)), shape=8) + 
   theme(axis.text.x = element_text(angle=45, hjust = 1)) 
 ```
 
