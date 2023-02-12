@@ -37,9 +37,12 @@ library(kableExtra)
 library(ggpubr)
 library(viridisLite)
 library(tidyr)
+library(ggpattern)
+library(ggnewscale)
+# library(scales)
 
-theme_set(theme_gray())
-results_folder <- "results/"
+theme_set(theme_pubclean())
+results_folder <- "/Users/monarchy/Projects/sarek_paper/bam_vs_cram/results_new_cfc/plots/"
 dir.create(results_folder)
 
 source("./functions.R")
@@ -55,85 +58,54 @@ These experiments investigate how BAM vs CRAM file formats compare with respect 
 
 We switched from BAM to CRAM file format . While it has been shown that this reduces storage spaces, we should show that this is really the case and to which extent and addtionally how this impacts the other metrics for all relevant tools:
 
+-   Duplicate Marking
 -   BQSR
-
-<!-- -->
-
 -   QC Tools
-
 -   variant callers
 
 Since there is limited space on the cluster, these experiments are subdivided.
 
 #### Run commands
 
-    nextflow run nf-core/sarek -r 3.0 -profile cfc --input --outdir -c trace.config -c custom.config
+    nextflow run nf-core/sarek -r 3.1.1 -profile cfc --input --outdir -c trace.config -c custom.config
+    nextflow run nf-core/sarek -r 3.1.1 -profile cfc --input --outdir -c trace.config -c custom.config --no_qc --spark_only
+    nextflow run nf-core/sarek -r 3.1.1 -profile cfc --input --outdir -c trace.config -c custom.config --step 'variant_calling' --tools <all>
 
     custom.config
 
-#### For each sample: preprocessing, default
+#### 
+For each sample: preprocessing, default
 
-This runs through mapping, duplicate marking, BQSR, and QC for BWA & non-spark GATK implementation.
+This runs through mapping, duplicate marking, BQSR, and QC for BWA & non-spark GATK implementation:
 
-|                |            |            | CRAM              | CRAM         | CRAM                                                                                   | CRAM    | BAM               | BAM          | BAM     | BAM     |
-|----------------|------------|------------|-------------------|--------------|----------------------------------------------------------------------------------------|---------|-------------------|--------------|---------|---------|
-| sample         | QBiC Code  | input size | work folder sizes | trace.config | towerID                                                                                | resumed | work folder sizes | trace.config | towerID | resumed |
-| CHC982 normal  | QSARK011AX | 84G        | x                 | x            | <http://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/Dev/watch/5cXiGGJYsoGjh8> | yes     |                   |              |         |         |
-| CHC982 tumor   | QSARK012A7 | 146G       | x                 | x            | <http://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/Dev/watch/5cXiGGJYsoGjh8> | yes     |                   |              |         |         |
-| CHC912 normal  | QSARK013AF | 98G        |                   |              | <http://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/Dev/watch/2walbMPOXeFgjT> |         |                   |              |         |         |
-| CHC912 tumor   | QSARK014AN | 166G       |                   |              | <http://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/Dev/watch/2walbMPOXeFgjT> |         |                   |              |         |         |
-| CHC2111 normal |            |            |                   |              |                                                                                        |         |                   |              |         |         |
-| CHC2111 tumor  |            |            |                   |              |                                                                                        |         |                   |              |         |         |
-| CHC2113 normal |            |            |                   |              |                                                                                        |         |                   |              |         |         |
-| CHC2113 tumor  |            |            |                   |              |                                                                                        |         |                   |              |         |         |
-| CHC2115 normal |            |            |                   |              |                                                                                        |         |                   |              |         |         |
-| CHC2115 tumor  |            |            |                   |              |                                                                                        |         |                   |              |         |         |
-
-#### For each sample: preprocessing, spark
-
-This runs through mapping with query-name sorting, duplicate marking, BQSR, and QC for BWA & spark GATK implementation.
-
-|                |            |            | CRAM              | CRAM         | CRAM    | CRAM    | BAM               | BAM          | BAM     | BAM     |
-|----------------|------------|------------|-------------------|--------------|---------|---------|-------------------|--------------|---------|---------|
-| sample         | QBiC Code  | input size | work folder sizes | trace.config | towerID | resumed | work folder sizes | trace.config | towerID | resumed |
-| CHC982 normal  | QSARK011AX | 84G        |                   |              |         |         |                   |              |         |         |
-| CHC982 tumor   | QSARK012A7 | 146G       |                   |              |         |         |                   |              |         |         |
-| CHC912 normal  | QSARK013AF | 98G        |                   |              |         |         |                   |              |         |         |
-| CHC912 tumor   | QSARK014AN | 166G       |                   |              |         |         |                   |              |         |         |
-| CHC2111 normal |            |            |                   |              |         |         |                   |              |         |         |
-| CHC2111 tumor  |            |            |                   |              |         |         |                   |              |         |         |
-| CHC2113 normal |            |            |                   |              |         |         |                   |              |         |         |
-| CHC2113 tumor  |            |            |                   |              |         |         |                   |              |         |         |
-| CHC2115 normal |            |            |                   |              |         |         |                   |              |         |         |
-| CHC2115 tumor  |            |            |                   |              |         |         |                   |              |         |         |
-
-#### For each samples: variantcalling, somatic and normal
-
-    nextflow run nf-core/sarek -r 3.0 -profile cfc --input --outdir -c trace.config -c custom.config --step variantcalling --tools `all`
-
-|                |            |            | CRAM              | CRAM         | CRAM    | CRAM    | BAM               | BAM          | BAM     | BAM     |
-|----------------|------------|------------|-------------------|--------------|---------|---------|-------------------|--------------|---------|---------|
-| sample         | QBiC Code  | input size | work folder sizes | trace.config | towerID | resumed | work folder sizes | trace.config | towerID | resumed |
-| CHC982 normal  | QSARK011AX | 84G        |                   |              |         |         |                   |              |         |         |
-| CHC982 tumor   | QSARK012A7 | 146G       |                   |              |         |         |                   |              |         |         |
-| CHC912 normal  | QSARK013AF | 98G        |                   |              |         |         |                   |              |         |         |
-| CHC912 tumor   | QSARK014AN | 166G       |                   |              |         |         |                   |              |         |         |
-| CHC2111 normal |            |            |                   |              |         |         |                   |              |         |         |
-| CHC2111 tumor  |            |            |                   |              |         |         |                   |              |         |         |
-| CHC2113 normal |            |            |                   |              |         |         |                   |              |         |         |
-| CHC2113 tumor  |            |            |                   |              |         |         |                   |              |         |         |
-| CHC2115 normal |            |            |                   |              |         |         |                   |              |         |         |
-| CHC2115 tumor  |            |            |                   |              |         |         |                   |              |         |         |
-
-#### For each sample: variantcalling, tumor-only
-
-| sample        | QBiC Code  | input size | work folder sizes | trace.config | towerID | resumed |
-|---------------|------------|------------|-------------------|--------------|---------|---------|
-| CHC982 tumor  | QSARK012A7 | 146G       |                   |              |         |         |
-| CHC912 tumor  | QSARK014AN | 166G       |                   |              |         |         |
-| CHC2111 tumor |            |            |                   |              |         |         |
-| CHC2113 tumor |            |            |                   |              |         |         |
-| CHC2115 tumor |            |            |                   |              |         |         |
++--------------------------------------+----------------+----------------+-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------+-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                                      |                | CRAM           | CRAM      | CRAM                                                                                                                                                                                    | BAM            | BAM       | BAM                                                                                                                                                                                      |
++======================================+================+================+===========+=========================================================================================================================================================================================+================+===========+:=========================================================================================================================================================================================+
+| **Type**                             | **Repetition** | **work sizes** | **trace** | **towerID**                                                                                                                                                                             | **work sizes** | **trace** | **towerID**                                                                                                                                                                              |
++--------------------------------------+----------------+----------------+-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------+-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Pre-processing                       | 1              | yes            | yes       | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/25jolHxeGgf2rt> successful                                                                                      | yes            | yes       | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/1Q0maK0w6Wga0t> successful                                                                                       |
++--------------------------------------+----------------+----------------+-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------+-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Pre-Processing                       | 2              | yes            | yes       | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/3iXq12bIAooAqC> successful                                                                                      | yes            | yes       | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/4p9ngBtJTv2G3H> successful                                                                                       |
++--------------------------------------+----------------+----------------+-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------+-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Pre-Processing                       | 3              | yes            | yes       | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/5xVT47YBvOiFCB> successful                                                                                      | yes            | yes       | [https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/3LKpdDZa9N5pu](https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/3LKpdDZa9N5pud) successful |
++--------------------------------------+----------------+----------------+-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------+-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Pre-Processing (Spark)               | 1              |                |           |                                                                                                                                                                                         |                |           |                                                                                                                                                                                          |
++--------------------------------------+----------------+----------------+-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------+-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Pre-Processing (Spark)               | 2              |                |           |                                                                                                                                                                                         |                |           |                                                                                                                                                                                          |
++--------------------------------------+----------------+----------------+-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------+-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Pre-Processing (Spark)               | 3              |                |           |                                                                                                                                                                                         |                |           |                                                                                                                                                                                          |
++--------------------------------------+----------------+----------------+-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------+-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Variant calling (germline & somatic) | 1              | yes            | yes       | [https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/2shbbCSc4sNAGc ](https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/2shbbCSc4sNAGc) failed  | yes            | yes       | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/2CGYHM96aHqasK>[                                                                                                 |
+|                                      |                |                |           |                                                                                                                                                                                         |                |           | ](https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/qQw0QZofFK1oi)looks successful but mutect only run 4 times                                                      |
++--------------------------------------+----------------+----------------+-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------+-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Variant calling (germline & somatic) | 2              | yes            | yes       | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/53ZriS5YPndXcu> successful                                                                                      | yes            | yes       | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/3ZSm7e1DclCdOu>\                                                                                                 |
+|                                      |                |                |           |                                                                                                                                                                                         |                |           | \                                                                                                                                                                                        |
+|                                      |                |                |           |                                                                                                                                                                                         |                |           | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/1tscv00d3bMWRO>\                                                                                                 |
+|                                      |                |                |           |                                                                                                                                                                                         |                |           | \                                                                                                                                                                                        |
+|                                      |                |                |           |                                                                                                                                                                                         |                |           | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/1F1JnXtDaGTD4n> running                                                                                          |
++--------------------------------------+----------------+----------------+-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------+-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Variant calling (germline & somatic) | 3              | yes            | yes       | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/57tO7tqacHyq4T> failed                                                                                          | yes            | yes       | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/1rG3bV1OD4z1p9> looks successful but mutect only run 4 times                                                     |
++--------------------------------------+----------------+----------------+-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------+-----------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 To determine work folder size:
 
@@ -143,133 +115,284 @@ To determine work folder size:
 
 Loading all the individual samples. Print sample summary if possible (e.g. metadata sheet).
 
-```{r input, echo=FALSE}
-# Load your own data (e.g. in data/)
+### Load CRAM files
 
-# Load file and folder size info tables
-storage_preprocessing_default_CHC982 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/bam_vs_cram/preprocessing_default/CRAM/pipeline_info_CHC982/folder_sizes.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
+```{r input_cram, echo=FALSE}
 
-# Load trace information
-trace_preprocessing_default_CHC982 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/bam_vs_cram/preprocessing_default/CRAM/pipeline_info_CHC982/execution_trace_2022-08-12_09-00-45.txt', sep = "\t", stringsAsFactors = FALSE)
+cram_directiory = "/Users/monarchy/Projects/sarek_paper/QSARK/data/bam_vs_cram/results_new_cfc/data/cram/"
+
+cram_preprocessing_1 <- load_data_bam_vs_cram(cram_directiory, "cram_nospark_preprocessing_1", "cram_1", "cram")
+cram_preprocessing_2 <- load_data_bam_vs_cram(cram_directiory, "cram_nospark_preprocessing_2", "cram_2", "cram")
+cram_preprocessing_3 <- load_data_bam_vs_cram(cram_directiory, "cram_nospark_preprocessing_3", "cram_3", "cram")
+
+cram_variantcalling_1 <- load_data_bam_vs_cram(cram_directiory, "cram_variantcalling_1", "cram_1", "cram")
+cram_variantcalling_2 <- load_data_bam_vs_cram(cram_directiory, "cram_variantcalling_2", "cram_2", "cram")
+cram_variantcalling_3 <- load_data_bam_vs_cram(cram_directiory, "cram_variantcalling_3", "cram_3", "cram")
 ```
 
-TODO: When more are available, will need to do some magic to join the data frames
+### Load BAM file
 
-### Clean data
+```{r input_bam, echo=FALSE}
+bam_directiory = "/Users/monarchy/Projects/sarek_paper/QSARK/data/bam_vs_cram/results_new_cfc/data/bam/"
 
-```{r}
+bam_preprocessing_1 <- load_data_bam_vs_cram(bam_directiory, "bam_nospark_preprocessing_1", "bam_1", "bam")
+bam_preprocessing_2 <- load_data_bam_vs_cram(bam_directiory, "bam_nospark_preprocessing_2", "bam_2", "bam")
+bam_preprocessing_3 <- load_data_bam_vs_cram(bam_directiory, "bam_nospark_preprocessing_3", "bam_3", "bam")
 
-# Rename columns from storage files ( no headers by default)
-names(storage_preprocessing_default_CHC982)[names(storage_preprocessing_default_CHC982) == "V2"] <- "workdir"
-names(storage_preprocessing_default_CHC982)[names(storage_preprocessing_default_CHC982) == "V1"] <- "workdir_bytes"
+bam_variantcalling_1 <- load_data_bam_vs_cram(bam_directiory, "bam_variantcalling_1", "bam_1", "bam")
+bam_variantcalling_2 <- load_data_bam_vs_cram(bam_directiory, "bam_variantcalling_2", "bam_2", "bam")
+bam_variantcalling_3 <- load_data_bam_vs_cram(bam_directiory, "bam_variantcalling_3", "bam_3", "bam")
+```
+
+Concatenate the data frames for the different runs:
+
+```{r merge_input, echo=FALSE}
+merged_preprocessing_default <- rbind(cram_preprocessing_1, 
+                                      cram_preprocessing_2,
+                                      cram_preprocessing_3,
+                                      bam_preprocessing_1,
+                                      bam_preprocessing_2,
+                                      bam_preprocessing_3
+                                      )
+
+merged_variantcalling <- rbind(cram_variantcalling_1, 
+                                cram_variantcalling_2,
+                                cram_variantcalling_3,
+                                bam_variantcalling_1,
+                                bam_variantcalling_2,
+                                bam_variantcalling_3)
+```
+
+```{r format_input, echo=FALSE}
+merged_preprocessing_default_formatted <- format_bam_vs_cram(merged_preprocessing_default)
+merged_preprocessing_default_formatted$simple_name <- factor(merged_preprocessing_default_formatted$simple_name, levels = c("MARKDUPLICATES", "INDEX_MARKDUPLICATES", "BASERECALIBRATOR","APPLYBQSR", "GATHERBQSRREPORTS", "MERGE_RECALIBRATED", "INDEX_RECALIBRATED", "MOSDEPTH", "SAMTOOLS_STATS"))
+
+merged_variantcalling_formatted <- format_bam_vs_cram(merged_variantcalling) 
+merged_variantcalling_formatted$simple_name <- factor(merged_variantcalling_formatted$simple_name, levels = c("DEEPVARIANT", "FREEBAYES", "HAPLOTYPECALLER", "MUTECT2_PAIRED", "GETPILEUPSUMMARIES", "STRELKA_SINGLE","STRELKA_SOMATIC", "MANTA_GERMLINE", "MANTA_SOMATIC", "TIDDIT_SV", "ASCAT", "CNVKIT_BATCH",  "SAMTOOLS_MPILEUP", "FREEC_SOMATIC", "MSISENSORPRO_MSI_SOMATIC"))
+
+merged_all_formatted <- rbind(merged_preprocessing_default_formatted, merged_variantcalling_formatted)
+```
+
+# Resource Usage
+
+## CPU Usage{.tabset .tabset-fade .tabset-pills}
+
+### Preprocessing
+
+```{r cpu_prep, echo=FALSE, results='hide', fig.keep='all'}
+
+cpu_preprocessing <- plot_bam_vs_cram_boxplot(df=merged_preprocessing_default_formatted,
+                         xaxis="simple_name", 
+                         yaxis="num_cpu", 
+                         boxplot_color="format",
+                         # jitter_color="sample", 
+                         outputname="/cpu_preprocessing_boxplot", 
+                         results_folder=results_folder,
+                         yaxisname = "Num CPUs"
+                         # reference = "cpus"
+                         )
+cpu_preprocessing
+```
+
+### Variantcalling
+
+```{r cpu_vc, echo=FALSE, results='hide', fig.keep='all'}
+cpu_variantcalling <- plot_bam_vs_cram_boxplot(df=merged_variantcalling_formatted, 
+                         xaxis="simple_name", 
+                         yaxis="num_cpu", 
+                         boxplot_color="format",
+                         # jitter_color="sample", 
+                         outputname="/cpu_variantcalling_boxplot", 
+                         results_folder=results_folder,
+                         yaxisname = "Num CPUs"
+                         #reference = "cpus"
+                         )
+cpu_variantcalling 
+```
+
+## Memory Usage {.tabset .tabset-fade .tabset-pills}
+
+## {-}
+
+### Vmem {.tabset .tabset-fade .tabset-pills}
+
+#### Preprocessing
+
+```{r vmem_pre, echo=FALSE, results='hide', fig.keep='all'}
+
+memory_preprocessing <- plot_bam_vs_cram_boxplot(df=merged_preprocessing_default_formatted, 
+                         xaxis="simple_name", 
+                         yaxis="vmem_GB", 
+                         boxplot_color="format",
+                         #jitter_color="sample",
+                         outputname="/mem_preprocessing", 
+                         results_folder=results_folder,
+                         yaxisname = "Memory (GB)"
+                         #reference = NULL
+                         )
+memory_preprocessing
+```
+
+#### Variantcalling
+
+```{r vmem_vc, echo=FALSE, results='hide', fig.keep='all'}
+memory_variantcalling <- plot_bam_vs_cram_boxplot(df=merged_variantcalling_formatted, 
+                         xaxis="simple_name", 
+                         yaxis="vmem_GB", 
+                         boxplot_color="format",
+                         #jitter_color="sample",
+                         outputname="/mem_variantcalling", 
+                         results_folder=results_folder,
+                         yaxisname = "Memory (GB)"
+                         #reference = NULL
+                         )
+
+memory_variantcalling
+```
+
+### Peak Vmem  {.tabset .tabset-fade .tabset-pills}
+
+#### Preprocessing
+
+```{r peakmem_pre, echo=FALSE, results='hide', fig.keep='all'}
+peak_memory_preprocessing <- plot_bam_vs_cram_boxplot(df=merged_preprocessing_default_formatted, 
+                         xaxis="simple_name", 
+                         yaxis="peak_vmem_MB", 
+                         boxplot_color="format",
+                         #jitter_color="sample",
+                         outputname="/peak_mem_preprocessing", 
+                         results_folder=results_folder,
+                         yaxisname = "Peak Memory (MB)")
+                         #reference = NULL)
+peak_memory_preprocessing
+```
+
+#### Variant calling 
+
+```{r peakmem_vc, echo=FALSE, results='hide', fig.keep='all'}
+peak_memory_variantcalling <- plot_bam_vs_cram_boxplot(df=merged_variantcalling_formatted, 
+                         xaxis="simple_name", 
+                         yaxis="peak_vmem_MB", 
+                         boxplot_color="format",
+                         # jitter_color="sample",
+                         outputname="/peak_mem_variantcalling", 
+                         results_folder=results_folder,
+                         yaxisname = "Peak Memory (MB)")
+                         #reference = NULL)
+peak_memory_variantcalling
+```
+
+## Real time {.tabset .tabset-fade .tabset-pills}
+
+### Preprocessing
+
+```{r time_pre, echo=FALSE, results='hide', fig.keep='all'}
+
+time_preprocessing <- plot_bam_vs_cram_boxplot(df=merged_preprocessing_default_formatted, 
+                         xaxis="simple_name", 
+                         yaxis="realtime_min", 
+                         boxplot_color="format",
+                         #jitter_color="sample",
+                         outputname="/realtime_boxplot", 
+                         results_folder=results_folder,
+                         yaxisname = "Time (min)")
+                         #reference = NULL)
+
+time_preprocessing  #+ stat_compare_means(aes(group = format), label = "p.signif")
 
 ```
 
-```{r}
-# Merge both tables on key workdir
-merged_preprocessing_default_CHC982 <- merge(trace_preprocessing_default_CHC982, storage_preprocessing_default_CHC982, by = "workdir")
-```
+### Variant calling
+```{r time_vc, echo=FALSE, results='hide', fig.keep='all'}
+time_variantcalling <- plot_bam_vs_cram_boxplot(df=merged_variantcalling_formatted, 
+                         xaxis="simple_name", 
+                         yaxis="realtime_min", 
+                         boxplot_color="format",
+                         #jitter_color="sample",
+                         outputname="/realtime_boxplot", 
+                         results_folder=results_folder,
+                         yaxisname = "Time (min)")
 
-```{r}
-merged_preprocessing_default_CHC982_formatted <- 
-  merged_preprocessing_default_CHC982 %>% 
-  # Convert vmem to megabytes and gigabytes
-  mutate('vmem_MB' = bytesto(vmem, 'm')) %>%
-  mutate('vmem_GB' = bytesto(vmem, 'g')) %>%
-  # Convert peak_vmem to megabytes and gigabytes
-  mutate('peak_vmem_MB' = bytesto(peak_vmem, 'm')) %>%
-  mutate('peak_vmem_GB' = bytesto(peak_vmem, 'g')) %>%
-  # Convert requested memory to megabytes and gigabytes
-  mutate('memory_MB' = bytesto(memory, 'm')) %>%
-  mutate('memory_GB' = bytesto(memory, 'g')) %>%
-  # Get an actual CPU number by dividing the used cpu number by 100
-  mutate('num_cpu' = X.cpu/100) %>%
-  # Get last element (by :) from process name
-  mutate('simple_name' = sub("^.*:", "", process)) %>%
-  # Convert workdir storage to megabytes and gigabytes
-  mutate('workdir_MB' = bytesto(workdir_bytes, 'm')) %>%
-  mutate('workdir_GB' = bytesto(workdir_bytes, 'g')) %>%
-  # Convert seconds to minutes
-  mutate('realtime_min' = realtime/(60*1000)) %>%
-  # Get tumor/normal
-  mutate('status' = case_when(
-    grepl("N", tag) ~ "normal", 
-    grepl("T", tag) ~ "tumor",
-    TRUE ~ "other"))
+time_variantcalling #+ stat_compare_means(aes(group = format), label = "p.signif")
 
 ```
 
-### CPU Usage
+## Storage usage (cumulative) {.tabset .tabset-fade .tabset-pills}
 
 ```{r}
-ggplot(data=merged_preprocessing_default_CHC982_formatted, aes(x=simple_name, y=num_cpu)) + 
-  geom_boxplot(outlier.colour="black", outlier.shape=16, outlier.size=1, notch=FALSE) +
-  geom_jitter(shape=16, position=position_jitter(0.1), aes(color=status)) + 
-  geom_point(aes(y=cpus), shape=8) + 
-  theme(axis.text.x = element_text(angle=45, hjust = 1))
-```
-
-### Memory Usage
-
-```{r}
-ggplot(data=merged_preprocessing_default_CHC982_formatted, aes(x=simple_name, y=vmem_MB)) + 
-  geom_boxplot(outlier.colour="black", outlier.shape=16, outlier.size=2, notch=FALSE) +
-  geom_jitter(shape=16, position=position_jitter(0.1), aes(color=status)) + 
-  geom_point(aes(y=memory_MB), shape=8) + 
-  theme(axis.text.x = element_text(angle=45, hjust = 1)) 
-```
-
-```{r}
-ggplot(data=merged_preprocessing_default_CHC982_formatted, aes(x=simple_name, y=peak_vmem_MB)) + 
-  geom_boxplot(outlier.colour="black", outlier.shape=16, outlier.size=2, notch=FALSE) +
-  geom_jitter(shape=16, position=position_jitter(0.1), aes(color=status)) +
-  geom_point(aes(y=memory_MB), shape=8) + 
-  theme(axis.text.x = element_text(angle=45, hjust = 1)) 
-```
-
-### Storage usage
-
-```{r}
-ggplot(data=merged_preprocessing_default_CHC982_formatted, aes(x=simple_name, y=workdir_GB)) + 
-  geom_boxplot(outlier.colour="black", outlier.shape=16, outlier.size=2, notch=FALSE) +
-  geom_jitter(shape=16, position=position_jitter(0.1), aes(color=status)) + 
-  theme(axis.text.x = element_text(angle=45, hjust = 1)) 
-```
-
-### Real time
-
-```{r}
-ggplot(data=merged_preprocessing_default_CHC982_formatted, aes(x=simple_name, y=realtime_min)) + 
-  geom_boxplot(outlier.colour="black", outlier.shape=16, outlier.size=2, notch=FALSE) +
-  geom_jitter(shape=16, position=position_jitter(0.1), aes(color=status)) + 
-  geom_point(aes(y=time/(60*1000)), shape=8) + 
-  theme(axis.text.x = element_text(angle=45, hjust = 1)) 
-```
-
-### Combine plots
-
-```{r}
-merged_preprocessing_default_CHC982_long <- tidyr::gather(merged_preprocessing_default_CHC982_formatted, key="measure", value="value", c("num_cpu","workdir_GB","peak_vmem_GB"))
-
+### Per process
+# storage_preprocessing_boxplot <- plot_bam_vs_cram_boxplot(df=merged_preprocessing_default_formatted, 
+#                          xaxis="simple_name", 
+#                          yaxis="workdir_GB", 
+#                          boxplot_color="format",
+#                          #jitter_color="sample",
+#                          outputname="/storage_preprocessing", 
+#                          results_folder=results_folder,
+#                          yaxisname = "Workdir (GB)")
+#                          #reference = NULL )
+# 
+# storage_preprocessing_boxplot
+ 
 ```
 
 ```{r}
-variable_names <- list(
-  "peak_vmem_GB" = "Peak Mem(GB)",
-  "num_cpu" = "num CPU",
-  "workdir_GB" = "work (GB)",
-  "vmem_GB" = "Mem (GB)"
-)
+# storage_variantcalling_boxplot <- plot_bam_vs_cram_boxplot(df=merged_variantcalling_formatted, 
+#                          xaxis="simple_name", 
+#                          yaxis="workdir_GB", 
+#                          boxplot_color="format",
+#                          #jitter_color="sample",
+#                          outputname="/storage_variantcalling", 
+#                          results_folder=results_folder,
+#                          yaxisname = "Workdir (GB)")
+#                          #reference = NULL )
+# 
+# storage_variantcalling_boxplot
+```
 
-variable_labeller_y <- function(variable,value){
-  return(variable_names[value])
-}
+### Preprocessing
 
-ggplot(merged_preprocessing_default_CHC982_long, aes(x=simple_name, y=value))+
-  geom_boxplot(outlier.colour="black", outlier.shape=16, outlier.size=2, notch=FALSE) +
-  geom_jitter(shape=16, position=position_jitter(0.1), aes(color=status)) + 
-  facet_wrap(~measure, ncol=1, strip.position = "left", scales="free_y", labeller = variable_labeller_y) + 
-  theme(axis.text.x = element_text(angle=35, hjust = 1), legend.position="none") 
+```{r, echo=FALSE, results='hide', fig.keep='all'}
+storage_preprocessing_cumulative <- plot_cumulative_storage(merged_preprocessing_default_formatted, "/storage_preprocessing_cumulative.png")
+storage_preprocessing_cumulative
+```
+
+### Variantcalling
+
+```{r, echo=FALSE, results='hide', fig.keep='all'}
+storage_variantcalling_cumulative <- plot_cumulative_storage(merged_variantcalling_formatted, "/storage_variantcalling_cumulative.png")
+storage_variantcalling_cumulative
+```
+
+## Combine plots {.tabset .tabset-fade .tabset-pills}
+
+```{r, echo=FALSE, results='hide', fig.keep='all'}
+
+blub <- merged_preprocessing_default_formatted %>% group_by(tag, format, simple_name) %>% filter(realtime_min == max(realtime_min))
+
+merged_preprocessing_default_long <- tidyr::gather(blub, key="measure", 
+                                                   value="value", c("num_cpu","peak_vmem_GB", "realtime_min"))
+
+# stat.test <- merged_preprocessing_default_long %>%
+#   group_by(format) %>%
+#   wilcox_test(mpg ~ am, ref.group = "0") %>%
+#   add_significance()
+# stat.test
+
+
+merged_variantcalling_long <- tidyr::gather(merged_variantcalling_formatted, key="measure", value="value", 
+                                            c("num_cpu","peak_vmem_GB", "realtime_min"))
+```
+
+### Preprocessing
+```{r, echo=FALSE, results='hide', fig.keep='all'}
+summary_preprocessing <- plot_summary(merged_preprocessing_default_long, "/summary_preprocessing.png")
+summary_preprocessing
+```
+
+### Variant calling
+```{r, echo=FALSE, results='hide', fig.keep='all'}
+summary_variantcalling <- plot_summary(merged_variantcalling_long, "/summary_variantcalling.png")
+summary_variantcalling
 ```
 
 # Methods

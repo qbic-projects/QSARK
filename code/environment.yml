@@ -1,4 +1,4 @@
-name: sarek_paper
+name: qsark
 channels:
   - conda-forge
   - bioconda
@@ -15,4 +15,7 @@ dependencies:
   - conda-forge::r-viridislite #-> 0.4.0
   - conda-forge::r-dplyr #-> 1.0.9
   - conda-forge::r-ggpubr #-> 0.4.0
+  - conda-forge::r-ggpattern 
+  - conda-forge::r-ggnewscale
+  - conda-forge::r-markdown 
   # markdown appreantly was missing
