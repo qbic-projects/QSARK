@@ -40,8 +40,6 @@ library(viridisLite)
 theme_set(theme_gray())
 results_folder <- "results/"
 dir.create(results_folder)
-
-source("./functions.R")
 ```
 
 ------------------------------------------------------------------------
@@ -57,7 +55,7 @@ Truth vcf & bed files were downloaded from [here](https://ftp-trace.ncbi.nlm.nih
 See `script.sh` for details on how `som.py` was run. 
 
 ```{r input, echo=FALSE}
-data <- read.table(file = "../data/functional/merged_30.csv", sep = ',', header = TRUE) %>%
+data_30 <- read.table(file = "../data/functional/merged_30.csv", sep = ',', header = TRUE) %>%
         mutate('mapper' = case_when(
           grepl("dragmap", run) ~ "Dragmap",
           grepl("bwamem2", run) ~ "BwaMem2",
@@ -65,6 +63,21 @@ data <- read.table(file = "../data/functional/merged_30.csv", sep = ',', header 
            TRUE ~ "other")) %>%
         mutate('caller' = case_when(
             grepl("strelka", run) ~ "Strelka2",
+            grepl("mutect2", run) & !grepl("filtered", run) ~ "Mutect2",
+            grepl("mutect2_filtered", run) ~ "Mutect2 (filtered)",
+            grepl("freebayes", run) ~ "FreeBayes",
+             TRUE ~ "other")) %>%
+      filter(type !='records') %>%
+      mutate("f_score" = 2 * ((precision*recall)/(precision+recall)))
+
+data_27 <- read.table(file = "../data/functional/merged_27.csv", sep = ',', header = TRUE) %>%
+        mutate('mapper' = case_when(
+          grepl("bwamem2", run) ~ "BwaMem2",
+          grepl("bwa", run) ~ "bwa",
+           TRUE ~ "other")) %>%
+        mutate('caller' = case_when(
+            grepl("strelka_", run)  ~ "Strelka2",
+            grepl("strelkabp_", run)  ~ "Strelka2_BP",
             grepl("mutect2", run) & !grepl("filtered", run) ~ "Mutect2",
             grepl("mutect2_filtered", run) ~ "Mutect2 (filtered)",
             grepl("freebayes", run) ~ "FreeBayes",
@@ -89,20 +102,50 @@ plot_scatter <- function (data, title) {
 
 ```
 
-## SNVs
-```{r snvs , echo=FALSE}
-data_snvs =  data %>% filter(type !='SNVs')
+## SNVs {.tabset .tabset-fade .tabset-pills}
 
-plot_scatter(data_snvs, "SNVs")
-ggbarplot(data_snvs, x="caller", y = "f_score", fill = "mapper", position=position_dodge())
+### Recall & Precision
 
+
+```{r snvs , echo=FALSE, fig.show="hold", out.width = "50%"}
+data_snvs_30 =  data_30 %>% filter(type !='Sarek 3.1.1')
+plot_scatter(data_snvs_30, "SNVs")
+
+data_snvs_27 =  data_27 %>% filter(type !='Sarek 2.7.2')
+plot_scatter(data_snvs_27, "SNVs")
 ```
 
-## Indels
-```{r indels, echo=FALSE}
-data_indels =  data %>% filter(type !='indels')
-plot_scatter(data_indels, "Indels")
-ggbarplot(data_indels, x="caller", y = "f_score", fill = "mapper", position=position_dodge())
+### F_score
+
+```{r , echo=FALSE,  fig.show="hold", out.width = "50%"}
+
+ggbarplot(data_snvs_30, x="caller", y = "f_score", fill = "mapper", position=position_dodge(), title = "Sarek 3.1.1")  +
+   geom_text(aes(label = round(f_score,3), group = mapper), position = position_dodge(.9), vjust = -0.5)
+ggbarplot(data_snvs_27, x="caller", y = "f_score", fill = "mapper", position=position_dodge(), title = "Sarek 2.7.2")  +
+   geom_text(aes(label = round(f_score,3), group = mapper), position = position_dodge(.9), vjust = -0.5)
+```
+
+## Indels {.tabset .tabset-fade .tabset-pills}
+
+### Recall & Precision
+
+
+```{r , echo=FALSE, fig.show="hold", out.width = "50%"}
+data_indels_30 =  data_30 %>% filter(type !='indels')
+plot_scatter(data_indels_30, "Sarek 3.1.1")
+
+data_indels_27 =  data_27 %>% filter(type !='indels')
+plot_scatter(data_indels_27, "Sarek 2.7.1")
+```
+
+### F_score
+
+```{r , echo=FALSE,  fig.show="hold", out.width = "50%"}
+
+ggbarplot(data_indels_30, x="caller", y = "f_score", fill = "mapper", position=position_dodge(), title = "Sarek 3.1.1")  +
+   geom_text(aes(label = round(f_score,3), group = mapper), position = position_dodge(.9), vjust = -0.5)
+ggbarplot(data_indels_27, x="caller", y = "f_score", fill = "mapper", position=position_dodge(), title = "Sarek 2.7.2")  +
+   geom_text(aes(label = round(f_score,3), group = mapper), position = position_dodge(.9), vjust = -0.5)
 ```
 
 Package versions:
