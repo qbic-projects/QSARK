@@ -1,6 +1,6 @@
 ---
 title: "Sarek Paper"
-subtitle: "paper things"
+subtitle: "Evaluate Benchmark of HCC1395"
 author: "Friederike Hanssen"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output: 
@@ -48,24 +48,62 @@ source("./functions.R")
 
 # Introduction
 
-Brief description of the project.
+For somatic benchmarking a dataset from the HCC1395 cell line was run through the pipeline by combining each mapper with all variant callers. 
 
 # Loading the dataset
 
-Loading all the individual samples. Print sample summary if possible (e.g. metadata sheet).
+Truth vcf & bed files were downloaded from [here](https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/seqc/Somatic_Mutation_WG/release/v1.2/), following the links from this [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8506910/).
 
-Somehow the nf-core tests are not completing and the resuming is also not working: Should we delete everything and try again?
+See `script.sh` for details on how `som.py` was run. 
 
 ```{r input, echo=FALSE}
-# Load your own data (e.g. in data/)
-# Downloaded reference vcf file from: 
-# https://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/release/NA12878_HG001/latest/GRCh38/
-
-# Load cost tables
-
+data <- read.table(file = "../data/functional/merged_30.csv", sep = ',', header = TRUE) %>%
+        mutate('mapper' = case_when(
+          grepl("dragmap", run) ~ "Dragmap",
+          grepl("bwamem2", run) ~ "BwaMem2",
+          grepl("bwa", run) ~ "bwa",
+           TRUE ~ "other")) %>%
+        mutate('caller' = case_when(
+            grepl("strelka", run) ~ "Strelka2",
+            grepl("mutect2", run) & !grepl("filtered", run) ~ "Mutect2",
+            grepl("mutect2_filtered", run) ~ "Mutect2 (filtered)",
+            grepl("freebayes", run) ~ "FreeBayes",
+             TRUE ~ "other")) %>%
+      filter(type !='records') %>%
+      mutate("f_score" = 2 * ((precision*recall)/(precision+recall)))
 ```
 
 # Methods
+
+```{r}
+
+plot_scatter <- function (data, title) {
+  ggscatter(data , x = "precision", y = "recall", color = "caller", fill = "caller", shape ="mapper", size = 2, title = title, ylim= c(0,1), xlim = c(0,1), palette = "npg") + 
+    guides(colour = guide_legend(override.aes = list(size=2, alpha = 1))) +
+    theme(axis.text.x = element_text(angle=90, hjust=1, size=10),
+         axis.text.y = element_text(size=10),
+         axis.title.x = element_blank(),
+         legend.position="top",  legend.box="vertical", legend.margin=margin())
+}
+
+
+```
+
+## SNVs
+```{r snvs , echo=FALSE}
+data_snvs =  data %>% filter(type !='SNVs')
+
+plot_scatter(data_snvs, "SNVs")
+ggbarplot(data_snvs, x="caller", y = "f_score", fill = "mapper", position=position_dodge())
+
+```
+
+## Indels
+```{r indels, echo=FALSE}
+data_indels =  data %>% filter(type !='indels')
+plot_scatter(data_indels, "Indels")
+ggbarplot(data_indels, x="caller", y = "f_score", fill = "mapper", position=position_dodge())
+```
 
 Package versions:
 
