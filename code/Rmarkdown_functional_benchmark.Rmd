@@ -62,7 +62,7 @@ data_30 <- read.table(file = "../data/functional/merged_30.csv", sep = ',', head
           grepl("bwa", run) ~ "bwa",
            TRUE ~ "other")) %>%
         mutate('caller' = case_when(
-            grepl("strelka", run) ~ "Strelka2",
+            grepl("strelka", run) ~ "Strelka2_BP",
             grepl("mutect2", run) & !grepl("filtered", run) ~ "Mutect2",
             grepl("mutect2_filtered", run) ~ "Mutect2 (filtered)",
             grepl("freebayes", run) ~ "FreeBayes",
@@ -91,7 +91,14 @@ data_27 <- read.table(file = "../data/functional/merged_27.csv", sep = ',', head
 ```{r}
 
 plot_scatter <- function (data, title) {
-  ggscatter(data , x = "precision", y = "recall", color = "caller", fill = "caller", shape ="mapper", size = 2, title = title, ylim= c(0,1), xlim = c(0,1), palette = "npg") + 
+    ggplot(data, aes(precision,recall, color= caller, fill = caller, shape = mapper)) +
+    geom_jitter(width= 0.02, height = 0.02) +
+    scale_y_continuous(limits=seq(0,1))+
+  # ggscatter(data , x = "precision", y = "recall", 
+  #           color = "caller", fill = "caller", 
+  #           shape ="mapper", size = 2, 
+  #           title = title, ylim= c(0,1), xlim = c(0,1), 
+  #           palette = "npg", position = position_jitter()) + 
     guides(colour = guide_legend(override.aes = list(size=2, alpha = 1))) +
     theme(axis.text.x = element_text(angle=90, hjust=1, size=10),
          axis.text.y = element_text(size=10),
@@ -108,11 +115,11 @@ plot_scatter <- function (data, title) {
 
 
 ```{r snvs , echo=FALSE, fig.show="hold", out.width = "50%"}
-data_snvs_30 =  data_30 %>% filter(type !='Sarek 3.1.1')
-plot_scatter(data_snvs_30, "SNVs")
+data_snvs_30 =  data_30 %>% filter(type !='indels')
+plot_scatter(data_snvs_30, "Sarek 3.1.1")
 
-data_snvs_27 =  data_27 %>% filter(type !='Sarek 2.7.2')
-plot_scatter(data_snvs_27, "SNVs")
+data_snvs_27 =  data_27 %>% filter(type !='indels')
+plot_scatter(data_snvs_27, "Sarek 2.7.2")
 ```
 
 ### F_score
