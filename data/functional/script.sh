@@ -13,7 +13,7 @@ do
               --output results/strelka_${type}_${mapper} \
               --reference /nfsmounts/igenomes/Homo_sapiens/GATK/GRCh38/Sequence/WholeGenomeFasta/Homo_sapiens_assembly38.fasta \
               --normalize-all \
-              --restrict-regions reference_files/somatic_ref/High-Confidence_Regions_v1.2.bed \
+              -f reference_files/somatic_ref/High-Confidence_Regions_v1.2.bed \
               --target-regions reference_files/S07604624_Padded_Agilent_SureSelectXT_allexons_V6_UTR.bed \
               --logfile results/strelka_${type}_${mapper}.log
        awk -v d="strelka_"$type"_"$mapper"" -F"," 'FNR==1{a="run"} FNR>1{a=d} {print $0",\t"a}' results/strelka_${type}_${mapper}.stats.csv > results/strelka_${type}_${mapper}_formatted.stats.csv
@@ -23,7 +23,7 @@ do
               --output results/mutect2_filtered_${type}_${mapper} \
               --reference /nfsmounts/igenomes/Homo_sapiens/GATK/GRCh38/Sequence/WholeGenomeFasta/Homo_sapiens_assembly38.fasta \
               --normalize-all \
-              --restrict-regions reference_files/somatic_ref/High-Confidence_Regions_v1.2.bed \
+              -f reference_files/somatic_ref/High-Confidence_Regions_v1.2.bed \
               --target-regions reference_files/S07604624_Padded_Agilent_SureSelectXT_allexons_V6_UTR.bed \
               --logfile results/mutect2_filtered_${type}_${mapper}.log
        awk -v d="mutect2_filtered_"$type"_"$mapper"" -F"," 'FNR==1{a="run"} FNR>1{a=d} {print $0",\t"a}' results/mutect2_filtered_${type}_${mapper}.stats.csv > results/mutect2_filtered_${type}_${mapper}_formatted.stats.csv
@@ -33,7 +33,7 @@ do
               --output results/mutect2_${type}_${mapper} \
               --reference /nfsmounts/igenomes/Homo_sapiens/GATK/GRCh38/Sequence/WholeGenomeFasta/Homo_sapiens_assembly38.fasta \
               --normalize-all \
-              --restrict-regions reference_files/somatic_ref/High-Confidence_Regions_v1.2.bed \
+              -f reference_files/somatic_ref/High-Confidence_Regions_v1.2.bed \
               --target-regions reference_files/S07604624_Padded_Agilent_SureSelectXT_allexons_V6_UTR.bed \
               --logfile results/mutect2_${type}_${mapper}.log
        awk -v d="mutect2_"$type"_"$mapper"" -F"," 'FNR==1{a="run"} FNR>1{a=d} {print $0",\t"a}' results/mutect2_${type}_${mapper}.stats.csv > results/mutect2_${type}_${mapper}_formatted.stats.csv
@@ -43,7 +43,7 @@ do
               --output results/freebayes_${type}_${mapper} \
               --reference /nfsmounts/igenomes/Homo_sapiens/GATK/GRCh38/Sequence/WholeGenomeFasta/Homo_sapiens_assembly38.fasta \
               --normalize-all \
-              --restrict-regions reference_files/somatic_ref/High-Confidence_Regions_v1.2.bed \
+              -f reference_files/somatic_ref/High-Confidence_Regions_v1.2.bed \
               --target-regions reference_files/S07604624_Padded_Agilent_SureSelectXT_allexons_V6_UTR.bed \
               --logfile results/freebayes_${type}_${mapper}.log
        awk -v d="freebayes_"$type"_"$mapper"" -F"," 'FNR==1{a="run"} FNR>1{a=d} {print $0",\t"a}' results/freebayes_${type}_${mapper}.stats.csv > results/freebayes_${type}_${mapper}_formatted.stats.csv
@@ -52,4 +52,4 @@ do
 
 done
 
-awk '(NR == 1) || (FNR > 1)' results/*formatted.stats.csv > merged.csv
+awk '(NR == 1) || (FNR > 1)' results/*formatted.stats.csv > merged_30.csv

@@ -103,7 +103,7 @@ plot_scatter <- function (data, title, outputfile) {
     p <- ggplot(data, aes(precision,recall, color= caller, fill = caller, shape = mapper)) +
             ggtitle(title) +
             geom_jitter(width= 0.01, height = 0.01) +
-            scale_y_continuous(limits=seq(0,1))+
+            scale_y_continuous(limits=seq(0,1))+   xlim(-0.1, 1.1) +
             theme_pubr() + 
             guides(colour = guide_legend(override.aes = list(size=2, alpha = 1))) +
             theme(axis.text.x = element_text(size=15),
@@ -123,7 +123,9 @@ plot_score <- function(data, title, outputfilename) {
     theme(axis.text.x = element_text(size=15),
                  axis.text.y = element_text(size=15),
                  axis.title.y = element_text(size=15),
-                 axis.title.x = element_text(size=15))
+                 axis.title.x = element_text(size=15)) +
+    scale_y_continuous(limits=seq(0,1))
+
   
   ggsave(plot=p, filename = paste0(results_folder,outputfilename), device="png", dpi = 600)
   print(p)
