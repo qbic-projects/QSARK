@@ -38,7 +38,7 @@ library(ggpubr)
 library(viridisLite)
 
 theme_set(theme_gray())
-results_folder <- "results/"
+results_folder <- "results/functional/"
 dir.create(results_folder)
 ```
 
@@ -54,7 +54,7 @@ Truth vcf & bed files were downloaded from [here](https://ftp-trace.ncbi.nlm.nih
 
 See `script.sh` for details on how `som.py` was run. 
 
-```{r input, echo=FALSE}
+```{r input, echo=FALSE, message=FALSE}
 data_30 <- read.table(file = "../data/functional/merged_30.csv", sep = ',', header = TRUE) %>%
         mutate('mapper' = case_when(
           grepl("dragmap", run) ~ "Dragmap",
@@ -86,24 +86,47 @@ data_27 <- read.table(file = "../data/functional/merged_27.csv", sep = ',', head
       mutate("f_score" = 2 * ((precision*recall)/(precision+recall)))
 ```
 
+```{r echo=FALSE, message=FALSE}
+data_snvs_30 =  data_30 %>% filter(type !='indels')
+data_snvs_27 =  data_27 %>% filter(type !='indels')
+
+data_indels_30 =  data_30 %>% filter(type !='SNVs')
+data_indels_27 =  data_27 %>% filter(type !='SNVs')
+
+```
+
 # Methods
 
 ```{r}
 
-plot_scatter <- function (data, title) {
-    ggplot(data, aes(precision,recall, color= caller, fill = caller, shape = mapper)) +
-    geom_jitter(width= 0.02, height = 0.02) +
-    scale_y_continuous(limits=seq(0,1))+
-  # ggscatter(data , x = "precision", y = "recall", 
-  #           color = "caller", fill = "caller", 
-  #           shape ="mapper", size = 2, 
-  #           title = title, ylim= c(0,1), xlim = c(0,1), 
-  #           palette = "npg", position = position_jitter()) + 
-    guides(colour = guide_legend(override.aes = list(size=2, alpha = 1))) +
-    theme(axis.text.x = element_text(angle=90, hjust=1, size=10),
-         axis.text.y = element_text(size=10),
-         axis.title.x = element_blank(),
-         legend.position="top",  legend.box="vertical", legend.margin=margin())
+plot_scatter <- function (data, title, outputfile) {
+    p <- ggplot(data, aes(precision,recall, color= caller, fill = caller, shape = mapper)) +
+            ggtitle(title) +
+            geom_jitter(width= 0.01, height = 0.01) +
+            scale_y_continuous(limits=seq(0,1))+
+            theme_pubr() + 
+            guides(colour = guide_legend(override.aes = list(size=2, alpha = 1))) +
+            theme(axis.text.x = element_text(size=15),
+                 axis.text.y = element_text(size=15),
+                 axis.title.y = element_text(size=15),
+                 axis.title.x = element_text(size=15),
+                 legend.position="top",  legend.box="vertical", legend.margin=margin())
+  
+    ggsave(plot=p, filename = paste0(results_folder,outputfile), device="png", dpi = 600)
+    print(p)
+  
+}
+
+plot_score <- function(data, title, outputfilename) {
+  p <- ggbarplot(data, x="caller", y = "f_score", fill = "mapper", position=position_dodge(), title = title)  +
+    geom_text(aes(label = round(f_score,3), group = mapper), position = position_dodge(.9), vjust = -0.5) +
+    theme(axis.text.x = element_text(size=15),
+                 axis.text.y = element_text(size=15),
+                 axis.title.y = element_text(size=15),
+                 axis.title.x = element_text(size=15))
+  
+  ggsave(plot=p, filename = paste0(results_folder,outputfilename), device="png", dpi = 600)
+  print(p)
 }
 
 
@@ -115,21 +138,17 @@ plot_scatter <- function (data, title) {
 
 
 ```{r snvs , echo=FALSE, fig.show="hold", out.width = "50%"}
-data_snvs_30 =  data_30 %>% filter(type !='indels')
-plot_scatter(data_snvs_30, "Sarek 3.1.1")
-
-data_snvs_27 =  data_27 %>% filter(type !='indels')
-plot_scatter(data_snvs_27, "Sarek 2.7.2")
+plot_scatter(data_snvs_30, "Sarek 3.1.1", "snvs_prec_recall_311.png")
+plot_scatter(data_snvs_27, "Sarek 2.7.2", "snvs_prec_recall_272.png")
 ```
 
 ### F_score
 
 ```{r , echo=FALSE,  fig.show="hold", out.width = "50%"}
 
-ggbarplot(data_snvs_30, x="caller", y = "f_score", fill = "mapper", position=position_dodge(), title = "Sarek 3.1.1")  +
-   geom_text(aes(label = round(f_score,3), group = mapper), position = position_dodge(.9), vjust = -0.5)
-ggbarplot(data_snvs_27, x="caller", y = "f_score", fill = "mapper", position=position_dodge(), title = "Sarek 2.7.2")  +
-   geom_text(aes(label = round(f_score,3), group = mapper), position = position_dodge(.9), vjust = -0.5)
+plot_score(data_snvs_30, "Sarek 3.1.1", "snvs_fscore_311.png")
+plot_score(data_snvs_27, "Sarek 2.7.2", "snvs_fscore_272.png")
+
 ```
 
 ## Indels {.tabset .tabset-fade .tabset-pills}
@@ -138,21 +157,17 @@ ggbarplot(data_snvs_27, x="caller", y = "f_score", fill = "mapper", position=pos
 
 
 ```{r , echo=FALSE, fig.show="hold", out.width = "50%"}
-data_indels_30 =  data_30 %>% filter(type !='indels')
-plot_scatter(data_indels_30, "Sarek 3.1.1")
-
-data_indels_27 =  data_27 %>% filter(type !='indels')
-plot_scatter(data_indels_27, "Sarek 2.7.1")
+plot_scatter(data_indels_30, "Sarek 3.1.1", "indels_pre_recall_311.png")
+plot_scatter(data_indels_27, "Sarek 2.7.1", "indels_pre_recall_311.png")
 ```
 
 ### F_score
 
 ```{r , echo=FALSE,  fig.show="hold", out.width = "50%"}
 
-ggbarplot(data_indels_30, x="caller", y = "f_score", fill = "mapper", position=position_dodge(), title = "Sarek 3.1.1")  +
-   geom_text(aes(label = round(f_score,3), group = mapper), position = position_dodge(.9), vjust = -0.5)
-ggbarplot(data_indels_27, x="caller", y = "f_score", fill = "mapper", position=position_dodge(), title = "Sarek 2.7.2")  +
-   geom_text(aes(label = round(f_score,3), group = mapper), position = position_dodge(.9), vjust = -0.5)
+plot_score(data_indels_30, "Sarek 3.1.1", "indels_fscore_311.png")
+plot_score(data_indels_27, "Sarek 2.7.2", "indels_fscore_272.png")
+
 ```
 
 Package versions:
