@@ -1,6 +1,6 @@
 ---
 title: "Sarek Paper"
-subtitle: "paper things"
+subtitle: "Dataflow investigation"
 author: "Friederike Hanssen"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output: 
@@ -40,7 +40,7 @@ library(tidyr)
 library(ggpattern)
 
 theme_set(theme_grey())
-results_folder <- "results/"
+results_folder <- "results/dataflow"
 dir.create(results_folder)
 
 source("./functions.R")
@@ -50,19 +50,19 @@ source("./functions.R")
 
 # Introduction
 
-These experiments investigate how splitting affects cpu, memory, runtime, and storage usage.
+These experiments investigate how splitting affects runtime, and storage usage. CPU & memory were kept at the same values if at all possible
 
-### **Goal**
+## **Goal**
 
 We added more options to parallelize along the genome.
 
-#### Run commands
+### Run commands
 
-    nextflow run nf-core/sarek -r 3.0 -profile cfc --input --outdir -c trace.config -c custom.config
+    nextflow run nf-core/sarek -r 3.1.1 -profile cfc --input --outdir -c trace.config -c custom.config
 
     custom.config
 
-#### For each sample: Split fastq, default
+### For each sample: Split fastq (0,4,8,12,16), default
 
 This runs through mapping, duplicate marking, BQSR, and QC for BWA & non-spark GATK implementation.
 
@@ -82,360 +82,386 @@ This runs through mapping, duplicate marking, BQSR, and QC for BWA & non-spark G
 
 Loading all the individual samples. Print sample summary if possible (e.g. metadata sheet).
 
+
+```{r echo=FALSE}
+execution_fastp12_intervals251 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/old_stuff/split_intervals/fastp12_intervals251/execution_trace_2022-08-31_17-07-55.txt', sep = "\t", stringsAsFactors = FALSE)
+
+storage_fastp12_intervals251 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/old_stuff/split_intervals/fastp12_intervals251/folder_sizes.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
+
+storage_fastp6_intervals125 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/old_stuff/split_intervals/fastp6_intervals125/folder_sizes.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
+
+execution_fastp6_intervals125 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/old_stuff/split_intervals/fastp6_intervals125/execution_trace_2022-09-03_23-47-31.txt', sep = "\t", stringsAsFactors = FALSE)
+```
+
 # Methods
 
-Package versions:
+<!-- ## Clean data -->
 
-```{r, echo=F}
-installed.packages()[names(sessionInfo()$otherPkgs), "Version"]
-```
+```{r echo=FALSE}
 
-## Read in files
+storage_fastp12_intervals251 <- rename_storage_columns(storage_fastp12_intervals251)
+storage_fastp6_intervals125 <- rename_storage_columns(storage_fastp6_intervals125)
 
-```{r}
-execution_fastp12_intervals251 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/split_intervals/fastp12_intervals251/execution_trace_2022-08-31_17-07-55.txt', sep = "\t", stringsAsFactors = FALSE)
-
-storage_fastp12_intervals251 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/split_intervals/fastp12_intervals251/folder_sizes.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
-
-execution_fastp6_intervals125 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/split_intervals/fastp6_intervals125/execution_trace_2022-09-03_23-47-31.txt', sep = "\t", stringsAsFactors = FALSE)
-
-storage_fastp6_intervals125 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/split_intervals/fastp6_intervals125/folder_sizes.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
-
-storage_fastp3_intervals375 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/split_intervals/fastp3_interval375/folder_sizes.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
-
-execution_fastp3_intervals375 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/split_intervals/fastp3_interval375/execution_trace_2022-09-04_23-52-48.txt', sep = "\t", stringsAsFactors = FALSE)
-
-storage_fastp24_intervals1 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/split_intervals/fastp24_intervals1/folder_sizes.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
-
-execution_fastp24_intervals1 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/split_intervals/fastp24_intervals1/execution_trace_2022-09-03_23-23-36.txt', sep = "\t", stringsAsFactors = FALSE)
-
-storage_fastp0 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/split_intervals/fastp0/folder_sizes.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
-
-execution_fastp0 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/split_intervals/fastp0/execution_trace_2022-10-08_14-53-46.txt', sep = "\t", stringsAsFactors = FALSE)
-
-storage_fastp3 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/split_intervals/fastp3/folder_sizes.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
-
-execution_fastp3 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/split_intervals/fastp3/execution_trace_2022-10-08_16-25-01.txt', sep = "\t", stringsAsFactors = FALSE)
-
-storage_fastp6 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/split_intervals/fastp6/folder_sizes.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
-
-execution_fastp6 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/split_intervals/fastp6/execution_trace_2022-10-08_17-53-50.txt', sep = "\t", stringsAsFactors = FALSE)
-
-storage_fastp12 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/split_intervals/fastp12/folder_sizes.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
-
-execution_fastp12 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/split_intervals/fastp12/execution_trace_2022-10-08_19-37-10.txt', sep = "\t", stringsAsFactors = FALSE)
-
-storage_fastp16 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/split_intervals/fastp16/folder_sizes.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
-
-execution_fastp16 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/split_intervals/fastp16/execution_trace_2022-10-08_23-22-47.txt', sep = "\t", stringsAsFactors = FALSE)
-
-#storage_fastp24 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/split_intervals/fastp24/folder_sizes.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
-
-#execution_fastp24 <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/split_intervals/fastp24/execution_trace_2022-10-08_21-17-24.txt', sep = "\t", stringsAsFactors = FALSE)
-
-storage_fastp24_repeat <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/split_intervals/fastp24_repeat/folder_sizes.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
-
-execution_fastp24_repeat <- read.csv(file = '/Users/monarchy/Projects/sarek_paper/split_intervals/fastp24_repeat/execution_trace_2022-10-09_07-40-38.txt', sep = "\t", stringsAsFactors = FALSE)
-```
-
-## Clean data
-
-```{r}
-
-# Rename columns from storage files ( no headers by default)
-names(storage_fastp12_intervals251)[names(storage_fastp12_intervals251) == "V2"] <- "workdir"
-names(storage_fastp12_intervals251)[names(storage_fastp12_intervals251) == "V1"] <- "workdir_bytes"
-
-names(storage_fastp6_intervals125)[names(storage_fastp6_intervals125) == "V2"] <- "workdir"
-names(storage_fastp6_intervals125)[names(storage_fastp6_intervals125) == "V1"] <- "workdir_bytes"
-
-names(storage_fastp3_intervals375)[names(storage_fastp3_intervals375) == "V2"] <- "workdir"
-names(storage_fastp3_intervals375)[names(storage_fastp3_intervals375) == "V1"] <- "workdir_bytes"
-
-names(storage_fastp24_intervals1)[names(storage_fastp24_intervals1) == "V2"] <- "workdir"
-names(storage_fastp24_intervals1)[names(storage_fastp24_intervals1) == "V1"] <- "workdir_bytes"
-
-names(storage_fastp0)[names(storage_fastp0) == "V2"] <- "workdir"
-names(storage_fastp0)[names(storage_fastp0) == "V1"] <- "workdir_bytes"
-
-names(storage_fastp3)[names(storage_fastp3) == "V2"] <- "workdir"
-names(storage_fastp3)[names(storage_fastp3) == "V1"] <- "workdir_bytes"
-
-names(storage_fastp6)[names(storage_fastp6) == "V2"] <- "workdir"
-names(storage_fastp6)[names(storage_fastp6) == "V1"] <- "workdir_bytes"
-
-names(storage_fastp12)[names(storage_fastp12) == "V2"] <- "workdir"
-names(storage_fastp12)[names(storage_fastp12) == "V1"] <- "workdir_bytes"
-
-names(storage_fastp16)[names(storage_fastp16) == "V2"] <- "workdir"
-names(storage_fastp16)[names(storage_fastp16) == "V1"] <- "workdir_bytes"
-
-#names(storage_fastp24)[names(storage_fastp24) == "V2"] <- "workdir"
-#names(storage_fastp24)[names(storage_fastp24) == "V1"] <- "workdir_bytes"
-
-names(storage_fastp24_repeat)[names(storage_fastp24_repeat) == "V2"] <- "workdir"
-names(storage_fastp24_repeat)[names(storage_fastp24_repeat) == "V1"] <- "workdir_bytes"
-```
-
-```{r}
 # Merge both tables on key workdir
-merged_fastp12_intervals251 <- merge(execution_fastp12_intervals251, storage_fastp12_intervals251, by = "workdir") %>% mutate('fastp' = 12) %>% mutate('intervals' = 251)
+merged_fastp12_intervals251 <- merge(execution_fastp12_intervals251, storage_fastp12_intervals251, by = "workdir") %>% 
+                                  mutate('fastp' = 12) %>% 
+                                  mutate('intervals' = 251)
+merged_fastp6_intervals125 <- merge(execution_fastp6_intervals125, storage_fastp6_intervals125, by = "workdir") %>% 
+                                  mutate('fastp' = 6) %>% 
+                                  mutate('intervals' = 125)
 
-merged_fastp6_intervals125 <- merge(execution_fastp6_intervals125, storage_fastp6_intervals125, by = "workdir") %>% mutate('fastp' = 6) %>% mutate('intervals' = 125)
+merged <- format_splitting(rbind(merged_fastp12_intervals251, merged_fastp6_intervals125))
 
-merged_fastp3_intervals375 <- merge(execution_fastp3_intervals375, storage_fastp3_intervals375, by = "workdir") %>% mutate('fastp' = 3) %>% mutate('intervals' = 375)
-
-merged_fastp24_intervals1 <- merge(execution_fastp24_intervals1, storage_fastp24_intervals1, by = "workdir") %>% mutate('fastp' = 24) %>% mutate('intervals' = 1)
-
-merged <- rbind(merged_fastp12_intervals251,merged_fastp6_intervals125, merged_fastp3_intervals375,merged_fastp24_intervals1)
-
-merged_fastp0 <- merge(execution_fastp0, storage_fastp0, by = "workdir") %>% mutate('fastp' = "0")
-merged_fastp3 <- merge(execution_fastp3, storage_fastp3, by = "workdir") %>% mutate('fastp' = "3")
-merged_fastp6 <- merge(execution_fastp6, storage_fastp6, by = "workdir") %>% mutate('fastp' = "6")
-merged_fastp12 <- merge(execution_fastp12, storage_fastp12, by = "workdir") %>% mutate('fastp' = "12")
-merged_fastp16 <- merge(execution_fastp16, storage_fastp16, by = "workdir") %>% mutate('fastp' = "16")
-#merged_fastp24 <- merge(execution_fastp24, storage_fastp24, by = "workdir") %>% mutate('fastp' = "24")
-merged_fastp24_repeat <- merge(execution_fastp24_repeat, storage_fastp24_repeat, by = "workdir") %>% mutate('fastp' = "24")
-merged_fastp <- rbind(merged_fastp0,
-                      merged_fastp3, 
-                      merged_fastp6,
-                      merged_fastp12,
-                      merged_fastp16
-#                      merged_fastp24,
-          #            merged_fastp24_repeat
-                      ) %>% filter(grepl('BWAMEM1_MEM|FASTP|GATK4_MARKDUPLICATES', process))
 ```
 
-```{r}
-merged_formatted_fastp <- format_splitting(merged_fastp) %>% filter(grepl('FASTP', process))
-merged_formatted_bwamem <- format_splitting(merged_fastp) %>% filter(grepl('BWAMEM1_MEM', process))
-merged_formatted_markdup <- format_splitting(merged_fastp) %>% filter(grepl('GATK4_MARKDUPLICATES', process))
+<!-- ## Function -->
 
-merge_formatted_splitting <- format_splitting(merged_fastp) %>% filter(grepl('FASTP|BWAMEM1_MEM|GATK4_MARKDUPLICATES', process))
-
-merged_formatted_applybqsr <- format_splitting(merged) %>% filter(grepl('APPLYBQSR', process))
-merged_formatted_strelka <- format_splitting(merged) %>% filter(grepl('STRELKA', process))
-
-### BWA
-merged_formatted_bwamem_line_time <- merged_formatted_bwamem %>% group_by(fastp) %>% summarise(mean_y = mean(realtime_min))
-
-merged_formatted_bwamem_storage_sum <- merged_formatted_bwamem %>% group_by(fastp, status) %>% summarise(sum = sum(workdir_GB))
-merged_formatted_bwamem_storage_sum$fastp <- as.factor(merged_formatted_bwamem_storage_sum$fastp)
-
-### FastP
-merged_formatted_fastp_line_time <- merged_formatted_fastp %>% group_by(fastp) %>% summarise(mean_y = mean(realtime_min))
-
-merged_formatted_fastp_storage_sum <- merged_formatted_fastp %>% group_by(fastp, status) %>% summarise(sum = sum(workdir_GB))
-merged_formatted_fastp_storage_sum$fastp <- as.factor(merged_formatted_fastp_storage_sum$fastp)
-
-### Markdup
-
-merged_formatted_markdup_line_time <- merged_formatted_markdup %>% group_by(fastp) %>% summarise(mean_y = mean(realtime_min))
-
-merged_formatted_markdup_storage_sum <- merged_formatted_markdup %>% group_by(fastp, status) %>% summarise(sum = sum(workdir_GB))
-merged_formatted_markdup_storage_sum$fastp <- as.factor(merged_formatted_markdup_storage_sum$fastp)
-
-### Splitting
-merged_formatted_splitting_line_time_mean <- merge_formatted_splitting %>% group_by(fastp, simple_name, status) %>% summarise(mean_y = mean(realtime_min)) 
-
-merged_formatted_splitting_line_time <- merged_formatted_splitting_line_time_mean %>% group_by(fastp, status) %>% summarise(sum = sum(mean_y))  
-
-merged_formatted_splitting_storage_sum <- merge_formatted_splitting %>% group_by(fastp, status) %>% summarise(sum = sum(workdir_GB))
-
-merged_formatted_splitting_storage_sum$fastp <- as.factor(merged_formatted_splitting_storage_sum$fastp)
-
-### Apply BQSR
-merged_formatted_applybqsr_line_time <- merged_formatted_applybqsr %>% group_by(intervals) %>% summarise(mean_y = mean(realtime_min))
-
-merged_formatted_applybqsr_storage_sum <- merged_formatted_applybqsr %>% group_by(intervals, status) %>% summarise(sum = sum(workdir_GB))
-merged_formatted_applybqsr_storage_sum$intervals <- as.factor(merged_formatted_applybqsr_storage_sum$intervals)
-
-
-merged_formatted_strelka_line_time <- merged_formatted_strelka %>% group_by(intervals) %>% summarise(mean_y = mean(realtime_min))
-
-merged_formatted_strelka_storage_sum <- merged_formatted_strelka %>% group_by(intervals, status) %>% summarise(sum = sum(workdir_GB))
-merged_formatted_strelka_storage_sum$intervals <- as.factor(merged_formatted_strelka_storage_sum$intervals)
-
-results_dir = "/Users/monarchy/Projects/sarek_paper/split_intervals/plots"
-```
-
-## Function
-
-```{r}
+```{r echo=FALSE}
 cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
-plot_time_storage <- function(df_mean_time, df, df_storage, group, title, xaxis, outputname){
-    line <- ggline(df_mean_time, x = group, y = "mean_y", group=1, palette = cbPalette) +
-        scale_x_continuous(breaks = c(0, 3, 6, 12, 16)
-                     , labels = c(0,3,6,12, 16)) +
-        #      scale_x_continuous(breaks = c(1, 125, 251, 375)
-        #             , labels = c(1, 125, 251, 375)) +
-        geom_boxplot(data=df, 
-                    aes_string(x=group, y="realtime_min", group=group)) +
-        geom_jitter(data=df, 
-                    aes_string(x=group, y="realtime_min", group=group, color="status"),
-                    show.legend = F) +
-        labs(y = "Time (min)", x = xaxis) +
-        theme(axis.title.x = element_text(size=15), 
-              axis.title.y = element_text(size=15),
-              plot.title = element_text(size = 20, hjust = 0.)) +
-        expand_limits(x = 0, y = 0)
+plot_time_storage <- function(df_max_time, df, df_storage, group, title, xaxis, outputname, type){
+  
+    x_axis <- function(type) {
+      if(identical('mapping', type)) {
+        scale_x_continuous(breaks = c(0, 4, 8, 12, 16), labels = c(0, 4, 8, 12, 16)) }
+      else {
+        scale_x_continuous(breaks = c(1, 125, 251, 375), labels = c(1, 125, 251, 375))
+      }
+    }
     
-    bar <- ggbarplot(df_storage, x=group, y="sum", fill = "status", color = "status", 
+    line <- ggline(df_max_time, x = group, y = "max_y", group=1, palette = cbPalette, color = "sample") +
+              x_axis(type) +
+              #geom_boxplot(data=df, aes_string(x=group, y="realtime_min", group="sample")) +
+              geom_jitter(data=df, aes_string(x=group, y="realtime_min", 
+                          group="sample", color="sample"), position=position_dodge(0.7),show.legend = F) +
+              labs(y = "Max time/sub-sample (min)", x = xaxis) +
+              theme(axis.title.x = element_text(size=15),
+                    axis.title.y = element_text(size=15),
+                    plot.title = element_text(size = 20, hjust = 0.)) +
+              expand_limits(x = 0, y = 0)
+    
+    bar <- ggbarplot(df_storage, x=group, y="sum", fill = "sample", color = "sample",
                    position = position_dodge(0.7), palette = cbPalette)+
         labs(y = "work dir (GB)", x = xaxis) +
-        theme(axis.title.x = element_text(size=15), 
+        theme(axis.title.x = element_text(size=15),
               axis.title.y = element_text(size=15),
               plot.title = element_text(size = 20, hjust = 0.),
               legend.text = element_text(size = 13)) +
         rremove("legend.title")
-  
-    plot <- ggarrange(line, bar, common.legend = TRUE) 
-  
-  ann_plot <- 
-    annotate_figure(plot, top = text_grob(title, 
+
+    plot <- ggarrange(line, bar, legend.grob = get_legend(bar))
+
+  ann_plot <-
+    annotate_figure(plot, top = text_grob(title,
                 face = "bold", size = 14))
   ann_plot
-  ggsave(plot=ann_plot, filename = paste0(results_dir,outputname, ".png"), device="png", dpi = 600
+  #ggsave(plot=ann_plot, filename = paste0(results_dir,outputname, ".png"), device="png", dpi = 600
         # width = 20, height = 10, units="cm"
-       )
+  #     )
   # ggsave(plot=ann_plot, filename = paste0(results_dir,outputname, ".pdf"), device="pdf", 
   #       width=20, height=10, units="cm")
 }
-```
 
-## FastP
-
-```{r}
-plot_time_storage(df_mean_time = merged_formatted_fastp_line_time, 
-                  df = merged_formatted_fastp,
-                  df_storage = merged_formatted_fastp_storage_sum,
-                  group = "fastp",
-                  title = "FastP",
-                  xaxis = "# shards",
-                  outputname = "fastp")
-```
-
-## BWA Mem
-
-```{r}
-plot_time_storage(df_mean_time = merged_formatted_bwamem_line_time, 
-                  df = merged_formatted_bwamem,
-                  df_storage = merged_formatted_bwamem_storage_sum,
-                  group = "fastp",
-                  title = "BWAMem",
-                  xaxis = "# shards",
-                  outputname = "bwamem")
-```
-
-```{r}
-ggplot(data=merged_formatted_bwamem, aes_string(x="fastp", y="num_cpu", group="fastp")) + 
-  geom_boxplot() +
-    #scale_fill_manual(values = c("#f0027f", "#386cb0"))
-    geom_jitter(shape=16, position=position_jitter(0.1))
-    #guides(colour = guide_legend(override.aes = list(size=2, alpha = 1))) + 
-    #theme(axis.text.x = element_text(angle=90, hjust = 1, size=6), axis.text.y = element_text(size=6),
-    #      axis.title.x = element_blank(),
-     #     legend.position="top") +
-    #facet_grid(~type, scales="free", space="free_x", labeller=variable_labeller_y)
-```
-
-```{r}
-ggplot(data=merged_formatted_bwamem, aes_string(x="fastp", y="vmem_GB", group="fastp")) + 
-  geom_boxplot(outlier.colour="black", outlier.shape=16, outlier.size=.5, notch=FALSE, lwd=.1) +
-    #scale_fill_manual(values = c("#f0027f", "#386cb0"))
-    geom_jitter(shape=16, position=position_jitter(0.1))
-```
-
-## Markduplicates
-
-```{r}
-plot_time_storage(df_mean_time = merged_formatted_markdup_line_time, 
-                  df = merged_formatted_markdup,
-                  df_storage = merged_formatted_markdup_storage_sum,
-                  group = "fastp",
-                  title = "Markduplicates",
-                  xaxis = "# shards",
-                  outputname = "markdup")
-```
-
-## Summarize FastP, BWA Mem, Markduplicates
-
-```{r}
-# line_sum <- ggline(merged_formatted_splitting_line_time, 
-#                    x="fastp", y = "sum", group="status", color="status") +
-#         #scale_colour_grey() + 
-#         labs(y = "Time (min)", x = "# shards") +
-#         theme(axis.title.x = element_text(size=15), 
-#               axis.title.y = element_text(size=15),
-#               plot.title = element_text(size = 20, hjust = 0.)) + 
-#         expand_limits(x = 0, y = 0)
-# 
-# bar_sum <- ggbarplot(merged_formatted_splitting_storage_sum, x="fastp", y="sum",
-#                   fill = "status", color = "status") + #, palette= "grey") +
-#         labs(y = "work dir (GB)", x = "# shards") +
-#         theme(axis.title.x = element_text(size=15), 
-#               axis.title.y = element_text(size=15),
-#               plot.title = element_text(size = 20, hjust = 0.))
-# 
-# plot_sum <- ggarrange(line_sum, bar_sum, legend = FALSE)
-# 
-# annotate_figure(plot_sum, top = text_grob("Sum: Mean FastP, BWA Mem, Markduplicates", 
-#                 face = "bold", size = 14))
-
-  line <- ggline(merged_formatted_splitting_line_time, x = "fastp", y = "sum", 
-               group="status",color="status", palette = cbPalette, numeric.x.axis = FALSE) +
-        labs(y = "Time (min)", x = "# shards") +
+plot_splitting_summary <- function(df_time, group, xaxis, type, df_storage, title){
+  
+    x_axis <- function(type) {
+      if(identical('mapping', type)) {
+        scale_x_continuous(breaks = c(0, 4, 8, 12, 16), labels = c(0, 4, 8, 12, 16)) }
+      else {
+        scale_x_continuous(breaks = c(1, 125, 251, 375), labels = c(1, 125, 251, 375))
+      }
+    }
+    
+    line <- ggline(df_time, x = group, y = "sum", 
+               group="sample",color="sample", palette = cbPalette, numeric.x.axis = FALSE) +
+        labs(y = "Time (min)", x = xaxis) +
         theme(axis.title.x = element_text(size=15), 
               axis.title.y = element_text(size=15),
               plot.title = element_text(size = 20, hjust = 0.)) + 
         expand_limits(x = 0, y = 0)  +
-    scale_x_continuous(breaks = c(0, 3, 6, 12, 16)
-                     , labels = c(0,3,6,12,16))
+        x_axis(type) 
 
-  bar <- ggbarplot(merged_formatted_splitting_storage_sum, x="fastp", y="sum", 
-                   fill = "status", color = "status", 
-                  position = position_dodge(0.7), palette = cbPalette)+
-        labs(y = "work dir (GB)", x = "# shards") +
-        theme(axis.title.x = element_text(size=15), 
-              axis.title.y = element_text(size=15),
-              plot.title = element_text(size = 20, hjust = 0.),
-              legend.text = element_text(size = 13)) +
-        rremove("legend.title")
+    bar <- ggbarplot(df_storage, x=group, y="sum", 
+                 fill = "sample", color = "sample", 
+                position = position_dodge(0.7), palette = cbPalette)+
+      labs(y = "work dir (GB)", x = xaxis) +
+      theme(axis.title.x = element_text(size=15), 
+            axis.title.y = element_text(size=15),
+            plot.title = element_text(size = 20, hjust = 0.),
+            legend.text = element_text(size = 13)) +
+      rremove("legend.title")
   
     plot <- ggarrange(line, bar, legend.grob = get_legend(bar)) 
   
-  ann_plot <- annotate_figure(plot, 
-                              top = text_grob("Sum: Mean FastP, BWA Mem, Markduplicates", 
-                                              face = "bold", size = 14))
-  
-  ann_plot
-    ggsave(plot=ann_plot, filename = paste0(results_dir,"splitting", ".png"), device="png", dpi = 600)
-    #     width = 20, height = 10, units="cm")
-  #ggsave(plot=ann_plot, filename = paste0(results_dir,"splitting", ".pdf"), device="pdf", 
-  #       width=20, height=10, units="cm")
+    ann_plot <- annotate_figure(plot, top = text_grob(title, face = "bold", size = 14))
+    ann_plot
+#ggsave(plot=ann_plot, filename = paste0(results_dir,"splitting", ".png"), device="png", dpi = 600)
+#     width = 20, height = 10, units="cm")
+#ggsave(plot=ann_plot, filename = paste0(results_dir,"splitting", ".pdf"), device="pdf", 
+#       width=20, height=10, units="cm")
+}
+```
+
+## Mapping {.tabset .tabset-fade .tabset-pills}
+
+```{r echo=FALSE, message = FALSE, warning=FALSE}
+merge_formatted_mapping <- merged %>% filter(grepl('FASTP|BWAMEM1_MEM|GATK4_MARKDUPLICATES', process))
+
+merged_formatted_fastp <- format_process_mapping(merge_formatted_mapping, 'FASTP')
+merged_formatted_bwamem <- format_process_mapping(merge_formatted_mapping, 'BWAMEM1_MEM')
+merged_formatted_markdup <- format_process_mapping(merge_formatted_mapping, 'GATK4_MARKDUPLICATES')
+
+### Combine fastp, bwamem, markdup
+merged_formatted_mapping_line_time_max <- merge_formatted_mapping %>% 
+                                            group_by(fastp, simple_name, sample, status) %>% 
+                                            summarise(max_y = max(realtime_min)) %>% 
+                                            group_by(fastp, sample, status) %>% 
+                                            summarise(sum = sum(max_y))
+
+merged_formatted_mapping_storage_sum <- merge_formatted_mapping %>% 
+                                        group_by(fastp, sample, status) %>% 
+                                        summarise(sum = sum(workdir_GB))
+merged_formatted_mapping_storage_sum$fastp <- as.factor(merged_formatted_mapping_storage_sum$fastp)
+```
+
+### FastP
+
+```{r echo=FALSE}
+plot_time_storage(df_max_time = merged_formatted_fastp$time, 
+                  df = merged_formatted_fastp$process,
+                  df_storage = merged_formatted_fastp$storage,
+                  group = "fastp",
+                  title = "FastP",
+                  xaxis = "# shards",
+                  outputname = "fastp", type = 'mapping')
+```
+
+### BWA Mem
+
+```{r echo=FALSE}
+  plot_time_storage(df_max_time = merged_formatted_bwamem$time, 
+                  df = merged_formatted_bwamem$process,
+                  df_storage = merged_formatted_bwamem$storage,
+                  group = "fastp",
+                  title = "BWAMem",
+                  xaxis = "# shards",
+                  outputname = "bwamem",
+                  type = 'mapping')
+```
+
+### Markduplicates
+
+```{r echo=FALSE}
+plot_time_storage(df_max_time = merged_formatted_markdup$time, 
+                  df = merged_formatted_markdup$process,
+                  df_storage = merged_formatted_markdup$storage,
+                  group = "fastp",
+                  title = "GATK4 Markduplicates",
+                  xaxis = "# shards",
+                  outputname = "markdup",
+                  type = 'mapping')
+```
+
+### Summary
+
+```{r echo=FALSE}
+plot_splitting_summary(df_time = merged_formatted_mapping_line_time_max,
+                       group = "fastp",
+                       xaxis = "# shards",
+                       type = 'mapping',
+                       df_storage = merged_formatted_mapping_storage_sum,
+                       title = "Sum: FastP, max BWA Mem, Markduplicates")
+```
+
+## Base quality score recalibration {.tabset .tabset-fade .tabset-pills}
+
+```{r echo=FALSE, message = FALSE, warning=FALSE}
+merge_formatted_bqsr <- merged %>% filter(grepl('BASERECALIBRATOR|GATHERBQSRREPORTS|APPLYBQSR', process))
+
+merged_formatted_baserecalibrator <- format_process_splitting(merge_formatted_bqsr, 'BASERECALIBRATOR')
+merged_formatted_gatherbqsr <- format_process_splitting(merge_formatted_bqsr, 'GATHERBQSRREPORTS')
+merged_formatted_applybqsr <- format_process_splitting(merge_formatted_bqsr, 'APPLYBQSR')
+
+### Combine BQSR; Gather and apply
+merged_formatted_bqsr_line_time_max <- merge_formatted_bqsr %>% 
+                                            group_by(intervals, simple_name, sample) %>% 
+                                            summarise(max_y = max(realtime_min)) %>% 
+                                            group_by(intervals, sample) %>% 
+                                            summarise(sum = sum(max_y))
+
+merged_formatted_bqsr_storage_sum <- merge_formatted_bqsr %>% 
+                                        group_by(intervals, sample) %>% 
+                                        summarise(sum = sum(workdir_GB))
+merged_formatted_bqsr_storage_sum$intervals <- as.factor(merged_formatted_bqsr_storage_sum$intervals)
+```
+
+### Baserecalibrator
+
+```{r echo=FALSE}
+plot_time_storage(df_max_time = merged_formatted_baserecalibrator$time, 
+                  df = merged_formatted_baserecalibrator$process,
+                  df_storage = merged_formatted_baserecalibrator$storage,
+                  group = "intervals",
+                  title = "GATK4 Baserecalibrator",
+                  xaxis = "# interval groups",
+                  outputname = "baserecalibrator",
+                  type = 'intervals')
+```
+
+### GatherBQSRReports
+
+```{r echo=FALSE}
+plot_time_storage(df_max_time = merged_formatted_gatherbqsr$time, 
+                  df = merged_formatted_gatherbqsr$process,
+                  df_storage = merged_formatted_gatherbqsr$storage,
+                  group = "intervals",
+                  title = "GATK4 GatherBQSRReports",
+                  xaxis = "# interval groups",
+                  outputname = "gatherbqsr",
+                  type = 'intervals')
 ```
 
 ### ApplyBQSR
 
-```{r}
-plot_time_storage(df_mean_time = merged_formatted_applybqsr_line_time, 
-                  df = merged_formatted_applybqsr,
-                  df_storage = merged_formatted_applybqsr_storage_sum,
+```{r echo=FALSE}
+plot_time_storage(df_max_time = merged_formatted_applybqsr$time, 
+                  df = merged_formatted_applybqsr$process,
+                  df_storage = merged_formatted_applybqsr$storage,
                   group = "intervals",
-                  title = "ApplyBQSR",
-                  xaxis = "# groups",
-                  outputname= "applybqsr")
+                  title = "GATK4 ApplyBQSR",
+                  xaxis = "# interval groups",
+                  outputname = "applybqsr",
+                  type = 'intervals')
 ```
 
-## Strelka
+### Summary
 
-```{r}
-plot_time_storage(df_mean_time = merged_formatted_strelka_line_time, 
-                  df = merged_formatted_strelka,
-                  df_storage = merged_formatted_strelka_storage_sum,
+```{r echo=FALSE}
+plot_splitting_summary(df_time = merged_formatted_bqsr_line_time_max,
+                       group = "intervals",
+                       xaxis = "# interval groups",
+                       type = 'intervals',
+                       df_storage = merged_formatted_bqsr_storage_sum,
+                       title = "Sum: BQSR processes")
+```
+
+## Variant calling{.tabset .tabset-fade .tabset-pills}
+
+```{r echo=FALSE, message = FALSE, warning=FALSE}
+merge_formatted_variantcalling <- merged %>% filter(grepl('STRELKA_SOMATIC|MUTECT2|FREEBAYES|MERGE_STRELKA|MERGE_MUTECT|MERGE_FREEBAYES', process))
+
+merged_formatted_mutect2 <- format_process_splitting(merge_formatted_variantcalling, '^MUTECT2')
+merged_formatted_strelka <- format_process_splitting(merge_formatted_variantcalling, '^STRELKA')
+merged_formatted_freebayes <- format_process_splitting(merge_formatted_variantcalling, '^FREEBAYES')
+```
+
+### Variant callers (Somatic) {.tabset .tabset-fade .tabset-pills}
+
+#### Mutect2
+
+```{r echo=FALSE}
+plot_time_storage(df_max_time = merged_formatted_mutect2$time, 
+                  df = merged_formatted_mutect2$process,
+                  df_storage = merged_formatted_mutect2$storage,
+                  group = "intervals",
+                  title = "MUTECT2",
+                  xaxis = "# interval groups",
+                  outputname = "mutec2",
+                  type = 'intervals')
+```
+
+#### Strelka
+
+```{r echo=FALSE}
+plot_time_storage(df_max_time = merged_formatted_strelka$time, 
+                  df = merged_formatted_strelka$process,
+                  df_storage = merged_formatted_strelka$storage,
                   group = "intervals",
                   title = "Strelka",
-                  xaxis = "# groups",
-                  outputname="strelka")
+                  xaxis = "# interval groups",
+                  outputname = "strelka",
+                  type = 'intervals')
+```
+
+#### Freebayes
+
+```{r echo=FALSE}
+plot_time_storage(df_max_time = merged_formatted_freebayes$time, 
+                  df = merged_formatted_freebayes$process,
+                  df_storage = merged_formatted_freebayes$storage,
+                  group = "intervals",
+                  title = "FreeBayes",
+                  xaxis = "# interval groups",
+                  outputname = "freebayes",
+                  type = 'intervals')
+```
+
+#### Summary
+
+Two things: Variantcaller max + merge vcf & all variantcallers
+
+```{r echo = FALSE}
+merged_formatted_vc_line_time_max <- merge_formatted_variantcalling %>% 
+                                            mutate('simple_name' = case_when(
+                                              grepl("MERGE_STRELKA_INDELS", simple_name) ~ "MERGE_STRELKA",
+                                              grepl("MERGE_STRELKA_SNVS", simple_name) ~ "MERGE_STRELKA",
+                                              TRUE ~ as.character (simple_name)
+                                            )) %>%
+                                            group_by(intervals, simple_name, sample) %>%
+                                            summarise(max_y = max(realtime_min)) %>%
+                                            mutate('tool' = case_when(
+                                              grepl("STRELKA", simple_name) ~ "strelka",
+                                              grepl("MUTECT2", simple_name) ~ "mutect2",
+                                              grepl("FREEBAYES", simple_name) ~ "freebayes",
+                                              TRUE ~ "other")) %>%
+                                            group_by(intervals, tool, sample) %>%
+                                            summarise(sum = sum(max_y))
+
+merged_formatted_vc_storage_sum <- merge_formatted_variantcalling %>%
+                                        mutate('tool' = case_when(
+                                              grepl("STRELKA", simple_name) ~ "strelka",
+                                              grepl("MUTECT2", simple_name) ~ "mutect2",
+                                              grepl("FREEBAYES", simple_name) ~ "freebayes",
+                                              TRUE ~ "other")) %>%
+                                        group_by(intervals,tool, sample) %>%
+                                        summarise(sum = sum(workdir_GB))
+merged_formatted_vc_storage_sum$intervals <- as.factor(merged_formatted_vc_storage_sum$intervals)
+
+x_axis <- function(type) {
+      if(identical('mapping', type)) {
+        scale_x_continuous(breaks = c(0, 4, 8, 12, 16), labels = c(0, 4, 8, 12, 16)) }
+      else {
+        scale_x_continuous(breaks = c(1, 125, 251, 375), labels = c(1, 125, 251, 375))
+      }
+    }
+    
+    
+    
+```
+```{r}
+line <- ggline(merged_formatted_vc_line_time_max, x = "intervals", y = "sum", 
+               group="tool",color="tool", palette = cbPalette, numeric.x.axis = FALSE)
+    line
+    
+    bar <- ggbarplot(merged_formatted_vc_storage_sum, x="intervals", y="sum",
+                 fill = "tool", color = "tool",
+                position = position_dodge(0.7), palette = cbPalette) #+
+      # labs(y = "work dir (GB)", x = xaxis) +
+      # theme(axis.title.x = element_text(size=15),
+      #       axis.title.y = element_text(size=15),
+      #       plot.title = element_text(size = 20, hjust = 0.),
+      #       legend.text = element_text(size = 13)) +
+      # rremove("legend.title")
+
+    plot <- ggarrange(line, bar)
+
+    ann_plot <- annotate_figure(plot, top = text_grob("title", face = "bold", size = 14))
+    ann_plot
+```
+ 
+
+# Package versions:
+
+```{r, echo=F}
+installed.packages()[names(sessionInfo()$otherPkgs), "Version"]
 ```
