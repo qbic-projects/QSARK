@@ -4,8 +4,7 @@ load_data_bam_vs_cram <- function(input_folder, input_file, repetition_name, for
   storage <- read.csv(file = Sys.glob(file.path(location, '*tsv')), sep = "\t", stringsAsFactors = FALSE, header = FALSE)
   trace <- read.csv(file = Sys.glob(file.path(location, 'execution*')), sep = "\t", stringsAsFactors = FALSE)
   
-  names(storage)[names(storage) == "V2"] <- "workdir"
-  names(storage)[names(storage) == "V1"] <- "workdir_bytes"
+  storage <- rename_storage_columns(storage)
   trace <- trace %>% mutate('repetition_name' = repetition_name)
   trace <- trace %>% mutate('format' = format)
   
@@ -165,7 +164,9 @@ format_bam_vs_cram <- function(df, format){
       grepl("MUTECT2", simple_name) ~ "SNP",
       grepl("TIDDIT_SV", simple_name) ~ "SV",
       TRUE ~ "other"))
-  )
+  )   %>% 
+  group_by(tag, repetition_name, simple_name) %>% 
+  filter(realtime_min == max(realtime_min))
 }
 
 bam_vs_cram_categories <- list(
@@ -201,7 +202,7 @@ plot_bam_vs_cram_boxplot <- function(df, xaxis, yaxis, boxplot_color, outputname
           axis.text.y = element_text(size=10),
           axis.title.x = element_blank(),
           legend.position="top",  legend.box="vertical", legend.margin=margin()) +
-    labs(y = yaxisname) #+
+    labs(y = yaxisname) + stat_compare_means(aes_string(group = boxplot_color), label = "p.signif")
     #stat_compare_means(aes_string(group = boxplot_color), label = "p.signif")
   
   ### plots each run individually and adds dots per plot
@@ -219,10 +220,10 @@ plot_bam_vs_cram_boxplot <- function(df, xaxis, yaxis, boxplot_color, outputname
   #        legend.position="top",  legend.box="vertical", legend.margin=margin()) +
   #   labs(y = yaxisname)
   
-  # ggsave(plot=my_plot, filename = paste0(results_folder,outputname, ".png"), device="png",
-  #        width = 20, height = 10, units="cm")
-  # ggsave(plot=my_plot, filename = paste0(results_folder,outputname, ".pdf"), device="pdf", 
-  #        width=20, height=10, units="cm")
+  ggsave(plot=my_plot, filename = paste0(results_folder,outputname, ".png"), device="png",
+          width = 20, height = 10, units="cm")
+   ggsave(plot=my_plot, filename = paste0(results_folder,outputname, ".pdf"), device="pdf", 
+          width=20, height=10, units="cm")
   return(my_plot)
 }
 
@@ -235,12 +236,15 @@ plot_cumulative_storage <- function(merged, outputfile) {
     group_by(simple_name, format) %>%
     summarise(storage = sum(workdir_GB), .groups = 'drop')
   
+  blub <- merged_cumulative_storage %>%
+          filter(format != 'bam') %>% summarise(sum(storage))
+  print(blub)
   
   storage_cumulative <-
     ggbarplot(merged_cumulative_storage,
               x = "simple_name", y = "storage", fill = "format",
               position = position_dodge(0.8), orientation = "horiz") +
-    geom_text(aes(label = round(storage,3),  group = format), colour = "black", size = 3,
+    geom_text(aes(label = round(storage,3),  group = format, fontface = "bold"), colour = "black", size = 2.5,
               position = position_dodge(.9),
               hjust = 1.2) +
     rremove("legend.title") +
@@ -252,9 +256,9 @@ plot_cumulative_storage <- function(merged, outputfile) {
     labs(y = "work dir (GB)") +
     scale_y_continuous(
       trans = scales::pseudo_log_trans(base = 10, sigma=0.001),
-      breaks = c(0, 10^(-2:6)))#+
+      breaks = c(0, 10^(-2:6))) #+
     #stat_compare_means(aes(group = format), label = "p.signif")
-  
+
   
   ggsave(plot=storage_cumulative, filename = paste0(results_folder,outputfile), device="png", dpi = 600)
   
@@ -278,7 +282,7 @@ plot_summary <- function(merged, file_name) {
           strip.text.y = element_text(size = 10) ,
           legend.position="top", legend.box="vertical", legend.margin=margin(),
           legend.text = element_text(size = 10)) #+ 
-  # stat_compare_means(aes(group = format), label = "p.signif")
+  #stat_compare_means(aes(group = format), label = "p.signif", paired = TRUE)
   #
   
   ggsave(plot=summary_plot, filename = paste0(results_folder, file_name), device="png", 
@@ -294,7 +298,7 @@ format_splitting <- function(df){
             #filter(vmem != '0') %>%
             # Only keep relevant processes
             #filter(grepl('BWAMEM1_MEM|FASTP|GATK4_MARKDUPLICATES', process))
-            filter(grepl('BWAMEM1_MEM|FASTP|GATK4_MARKDUPLICATES|APPLYBQSR|STRELKA|MUTECT2', process)) %>%
+            filter(grepl('BWAMEM1_MEM|FASTP|GATK4_MARKDUPLICATES|BASERECALIBRATOR|GATHERBQSRREPORTS|APPLYBQSR|STRELKA|MUTECT2', process)) %>%
             mutate_all(type.convert, as.is=TRUE) %>%
             # Convert vmem to megabytes and gigabytes
             #mutate('vmem_MB' = bytesto(vmem, 'm')) %>%
@@ -326,8 +330,37 @@ format_splitting <- function(df){
               grepl("CHC912", tag) ~ "CHC912", 
               grepl("CHC2111", tag) ~ "CHC2111", 
               grepl("CHC2113", tag) ~ "CHC2113",
-              grepl("HCC1395", tag) ~ "HCC1395",
+              grepl("HCC1395N", tag) ~ "HCC1395N (12.5GB)", 
+              grepl("HCC1395T", tag) ~ "HCC1395T (14.8GB)",
               TRUE ~ "other"))
  
   )
+}
+
+rename_storage_columns <- function(df) {
+  names(df)[names(df) == "V2"] <- "workdir"
+  names(df)[names(df) == "V1"] <- "workdir_bytes"
+  return (df)
+}
+
+format_process_mapping <- function(df, process_name){
+  df_process <- df %>% filter(grepl(process_name, simple_name))
+  
+  df_time <- df_process %>% group_by(fastp, sample) %>% summarise(max_y = max(realtime_min))
+  
+  df_storage <- df_process %>% group_by(fastp, sample) %>% summarise(sum = sum(workdir_GB))
+  df_storage$fastp <- as.factor(df_storage$fastp)
+  
+  return(list(process = df_process, time= df_time, storage=df_storage))
+}
+
+format_process_splitting <- function(df, process_name){
+  df_process <- df %>% filter(grepl(process_name, simple_name))
+  
+  df_time <- df_process %>% group_by(intervals, sample) %>% summarise(max_y = max(realtime_min))
+  
+  df_storage <- df_process %>% group_by(intervals, sample) %>% summarise(sum = sum(workdir_GB))
+  df_storage$intervals <- as.factor(df_storage$intervals)
+  
+  return(list(process = df_process, time= df_time, storage=df_storage))
 }
