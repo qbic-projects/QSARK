@@ -1,3 +1,8 @@
+#####################
+## BAM vs CRAM ######
+#####################
+resource_names <- list("max_peak_vmem_GB" = "Mem(GB)","max_num_cpu" = "CPUs","avg_realtime_min" = "Time(min)")
+
 load_data_bam_vs_cram <- function(input_folder, input_file, repetition_name, format) {
   
   location <- paste0(input_folder, input_file, "")
@@ -13,35 +18,9 @@ load_data_bam_vs_cram <- function(input_folder, input_file, repetition_name, for
   return(merged)
 }
 
-format_aws_costs <- function(cost_table, date) {
-  
-  # transpose data frame & use first column from original dataframe as column headers in transposed dataframe
-  cost_table_formatted <- setNames(data.frame(t(cost_table[,-1])), cost_table[,1])
-  
-  # Rename the `date` column to costs, since it carries the costs for that date for better handling
-  names(cost_table_formatted)[2] <- "costs"
-
-  # create a new column named 'type' that has the current row names (needed for ggplot2)
-  cost_table_formatted <- tibble::rownames_to_column(cost_table_formatted, "type")
-
-  # Round too last 3 digits & remove costs below 0.00$
-  cost_table_formatted <- cost_table_formatted %>% mutate_if(is.numeric, round, digits=3)
-  cost_table_formatted <- filter(cost_table_formatted, costs >= 0.001 , .preserve = FALSE)
-  return (cost_table_formatted)
-}
-
-bytesto <- function(bytes, to, bsize=1024){
-  a <- data.frame ( unit = c('k', 'm', 'g', 't', 'p', 'e' ), factor = c(1,2,3,4,5,6), stringsAsFactors=FALSE)
-
-  get_factor <- a$factor
-  names(get_factor) <- a$unit
-  
-  return (bytes / (bsize ^ get_factor[to]))
-}
-
 format_bam_vs_cram <- function(df, format){
   
-  df <- df %>%   
+  df_filter <- df %>%   
     # Get last element (by :) from process name
     mutate('simple_name' = sub("^.*:", "", process)) %>%
     # Remove unrelevant processes
@@ -63,7 +42,6 @@ format_bam_vs_cram <- function(df, format){
     filter(simple_name != 'GATHERPILEUPSUMMARIES_TUMOR') %>%
     filter(simple_name != 'GATHERBQSRREPORTS') %>%
     filter(simple_name != 'SAMTOOLS_BAMTOCRAM') %>%
-    #filter(simple_name != 'GATK4_MARKDUPLICATES') %>%
     filter(simple_name != 'LEARNREADORIENTATIONMODEL') %>%
     filter(simple_name != 'MAKEGRAPH') %>%
     filter(simple_name != 'MERGE_DEEPVARIANT_GVCF') %>%
@@ -98,132 +76,94 @@ format_bam_vs_cram <- function(df, format){
     mutate(simple_name = recode(simple_name, 'GETPILEUPSUMMARIES_NORMAL' = 'GETPILEUPSUMMARIES')) %>%
     mutate(simple_name = recode(simple_name, 'GETPILEUPSUMMARIES_TUMOR' = 'GETPILEUPSUMMARIES'))
   
+  return (df_filter %>% 
+         # Remove rows with column value '-' and cast columns to numeric
+         filter(vmem !='-') %>%
+         #filter(vmem !='0') %>%
+         mutate_all(type.convert, as.is=TRUE) %>%
+         # Convert vmem to megabytes and gigabytes
+         mutate('vmem_MB' = bytesto(vmem, 'm')) %>%
+         mutate('vmem_GB' = bytesto(vmem, 'g')) %>%
+         # Convert peak_vmem to megabytes and gigabytes
+         mutate('peak_vmem_MB' = bytesto(peak_vmem, 'm')) %>%
+         mutate('peak_vmem_GB' = bytesto(peak_vmem, 'g')) %>%
+         # Convert requested memory to megabytes and gigabytes
+         mutate('memory_MB' = bytesto(memory, 'm')) %>%
+         mutate('memory_GB' = bytesto(memory, 'g')) %>%
+         # Get an actual CPU number by dividing the used cpu number by 100
+         mutate('num_cpu' = X.cpu/100) %>%
+         # Convert workdir storage to megabytes and gigabytes
+         mutate('workdir_MB' = bytesto(workdir_bytes, 'm')) %>%
+         mutate('workdir_GB' = bytesto(workdir_bytes, 'g')) %>%
+         mutate('workdir_TB' = bytesto(workdir_bytes, 't')) %>%
+         # Convert seconds to minutes
+         mutate('realtime_min' = realtime/(60*1000)) %>%
+         # Get tumor/normal
+         mutate('status' = case_when(
+           grepl("vs", tag) ~ "paired",
+           grepl("N", tag) ~ "normal", 
+           grepl("T", tag) ~ "tumor",
+           TRUE ~ "other")) %>%
+         filter(status !='other') %>%
+         mutate('sample' = case_when(
+           grepl("CHC892", tag) ~ "CHC892", 
+           grepl("CHC912", tag) ~ "CHC912", 
+           grepl("CHC2111", tag) ~ "CHC2111", 
+           grepl("CHC2113", tag) ~ "CHC2113",
+           grepl("CHC2115", tag) ~ "CHC2115",
+           grepl("HCC1395", tag) ~ "HCC1395",
+           TRUE ~ "other")) 
+    )
   
-  return (df %>% 
-    # Remove rows with column value '-' and cast columns to numeric
-    filter(vmem !='-') %>%
-    #filter(vmem !='0') %>%
-    mutate_all(type.convert, as.is=TRUE) %>%
-    # Convert vmem to megabytes and gigabytes
-    mutate('vmem_MB' = bytesto(vmem, 'm')) %>%
-    mutate('vmem_GB' = bytesto(vmem, 'g')) %>%
-    # Convert peak_vmem to megabytes and gigabytes
-    mutate('peak_vmem_MB' = bytesto(peak_vmem, 'm')) %>%
-    mutate('peak_vmem_GB' = bytesto(peak_vmem, 'g')) %>%
-    # Convert requested memory to megabytes and gigabytes
-    mutate('memory_MB' = bytesto(memory, 'm')) %>%
-    mutate('memory_GB' = bytesto(memory, 'g')) %>%
-    # Get an actual CPU number by dividing the used cpu number by 100
-    mutate('num_cpu' = X.cpu/100) %>%
-    # Convert workdir storage to megabytes and gigabytes
-    mutate('workdir_MB' = bytesto(workdir_bytes, 'm')) %>%
-    mutate('workdir_GB' = bytesto(workdir_bytes, 'g')) %>%
-    mutate('workdir_TB' = bytesto(workdir_bytes, 't')) %>%
-    # Convert seconds to minutes
-    mutate('realtime_min' = realtime/(60*1000)) %>%
-    # Get tumor/normal
-    mutate('status' = case_when(
-      grepl("vs", tag) ~ "paired",
-      grepl("N", tag) ~ "normal", 
-      grepl("T", tag) ~ "tumor",
-      TRUE ~ "other")) %>%
-    filter(status !='other') %>%
-    mutate('sample' = case_when(
-      grepl("CHC892", tag) ~ "CHC892", 
-      grepl("CHC912", tag) ~ "CHC912", 
-      grepl("CHC2111", tag) ~ "CHC2111", 
-      grepl("CHC2113", tag) ~ "CHC2113",
-      grepl("CHC2115", tag) ~ "CHC2115",
-      grepl("HCC1395", tag) ~ "HCC1395",
-      TRUE ~ "other")) %>%
-    # Classify processes into subcategories
-    mutate('type' = case_when(
-      grepl("APPLYBQSR", simple_name) ~ "Pre-processing", 
-      grepl("ASCAT", simple_name) ~ "CNV",
-      grepl("BASERECALIBRATOR", simple_name) ~ "Pre-processing", 
-      grepl("CALCULATECONTAMINATION", simple_name) ~ "SNP",
-      grepl("CNVKIT_BATCH", simple_name) ~ "CNV",
-      grepl("FREEBAYES", simple_name) ~ "SNP",
-      grepl("GATHERBQSRREPORT", simple_name) ~ "Pre-processing", 
-      grepl("MARKDUPLICATES", simple_name) ~ "Pre-processing", 
-      grepl("GETPILEUPSUMMARIES_NORMAL", simple_name) ~ "SNP",
-      grepl("GETPILEUPSUMMARIES_TUMOR", simple_name) ~ "SNP",
-      grepl("HAPLOTYPECALLER", simple_name) ~ "SNP",
-      grepl("INDEX_CRAM", simple_name) ~ "Pre-processing", 
-      grepl("MANTA_GERMLINE", simple_name) ~ "SV",
-      grepl("MANTA_SOMATIC", simple_name) ~ "SV",
-      grepl("MERGE_CRAM", simple_name) ~ "Pre-processing", 
-      grepl("MANTA_DIPLOID", simple_name) ~ "SV",
-      grepl("MOSDEPTH", simple_name) ~ "Pre-processing", 
-      grepl("MSISENSORPRO_MSI_SOMATIC", simple_name) ~ "SNP",
-      grepl("SAMTOOLS_BAMTOCRAM", simple_name) ~ "Pre-processing", 
-      grepl("SAMTOOLS_STATS", simple_name) ~ "Pre-processing", 
-      grepl("SAMTOOLS_STATS_CRAM", simple_name) ~ "Pre-processing", 
-      grepl("STRELKA_SINGLE", simple_name) ~ "SNP",
-      grepl("STRELKA_SOMATIC", simple_name) ~ "SNP",
-      grepl("MUTECT2", simple_name) ~ "SNP",
-      grepl("TIDDIT_SV", simple_name) ~ "SV",
-      TRUE ~ "other"))
-  )   %>% 
-  group_by(tag, repetition_name, simple_name) %>% 
-  filter(realtime_min == max(realtime_min))
 }
 
-bam_vs_cram_categories <- list(
-  "CNV" = "CNV",
-  "Pre-processing" = "Preprocessing",
-  "SNP" = "SNP/Indels",
-  "SV"  = "SV"
-  
-)
-
-resource_names <- list(
-  "peak_vmem_GB" = "Mem(GB)",
-  "num_cpu" = "CPUs",
-  "workdir_GB" = "storage(GB)",
-  "realtime_min" = "Time(min)"
-)
-
-variable_labeller_y <- function(variable,value){
-  if (variable=='measure') {
-    return(resource_names[value])
-  } else {
-    return(bam_vs_cram_categories)
-  }
+collect_compute_values <- function(df) {
+  return (df %>%     
+          # Of processes that are split across many sub-samples, i.e. ApplyBQSR only keep the one with the max time per sample & repetition -> 30 data points for each process
+          group_by(tag, repetition_name, simple_name) %>%
+          filter(realtime_min == max(realtime_min)) %>%
+          ungroup() %>%
+          
+          ## Use average time, max cpus, and max memory over the 3 repetitions per sample
+          group_by(tag, format, simple_name) %>%
+          mutate(avg_realtime_min = mean(realtime_min)) %>%
+          mutate(max_num_cpu = max(num_cpu)) %>%
+          mutate(max_vmem_GB = max(vmem_GB)) %>%
+          mutate(max_peak_vmem_GB = max(peak_vmem_GB)) %>%
+          ungroup() %>%
+          
+          ## Collapse repetitions -> 10 data points left per preprocessing process
+          select(simple_name, sample, tag, format, cpus, memory_GB, avg_realtime_min,
+                 max_num_cpu, max_peak_vmem_GB, max_vmem_GB) %>%
+          group_by(simple_name, tag, format) %>%
+          distinct(avg_realtime_min, max_num_cpu, max_peak_vmem_GB, max_vmem_GB,  .keep_all = TRUE))
 }
 
-
-plot_bam_vs_cram_boxplot <- function(df, xaxis, yaxis, boxplot_color, outputname, results_folder, yaxisname) {
+plot_bam_vs_cram_boxplot <- function(df, xaxis, yaxis, boxplot_color, outputname, results_folder, yaxisname, reference) {
+  
   my_plot <- 
-    ggboxplot(df, x=xaxis, y=yaxis, fill = boxplot_color) + 
+    ggboxplot(df, x=xaxis, y=yaxis, width = 0.5, outlier.size=.5, color = boxplot_color) + 
+    # Plot requested resources as black triangles
+    { if(!is.null(reference)) geom_point(shape=6, mapping = aes(!!!ensyms(fill=boxplot_color, y=reference)), position = position_jitterdodge(jitter.width = 0)) }+
+    
     # Increase point size in the legend
     guides(colour = guide_legend(override.aes = list(size=2, alpha = 1))) +
-    theme(axis.text.x = element_text(angle=90, hjust=1, size=10),
-          axis.text.y = element_text(size=10),
+    theme(axis.text.x = element_text(angle=45, hjust=1, size=9),
+          axis.text.y = element_text(size=9),
+          axis.title.y = element_text(size=10),
           axis.title.x = element_blank(),
           legend.position="top",  legend.box="vertical", legend.margin=margin()) +
-    labs(y = yaxisname) + stat_compare_means(aes_string(group = boxplot_color), label = "p.signif")
-    #stat_compare_means(aes_string(group = boxplot_color), label = "p.signif")
+    labs(y = yaxisname) + 
+    # Add sign marker for paired wolcoxon test
+    stat_compare_means(mapping = aes(!!!ensyms(group = boxplot_color)), label = "p.signif",  method = "wilcox.test", paired = TRUE, hide.ns = TRUE, vjust = 1)
   
-  ### plots each run individually and adds dots per plot
-  # my_plot <- 
-  #   ggboxplot(df, x=xaxis, y=yaxis, fill = boxplot_color, outlier.colour="black", outlier.shape=16, outlier.size=.5, notch=FALSE, lwd =.1, width = 0.5) +
-  #   # Add dots for each (sub)sample
-  #   geom_point(shape=16, aes_string(fill=boxplot_color, colour = jitter_color), size = 0.1, alpha = 1, position = position_jitterdodge(jitter.width = 0.05)) +
-  #   # Plot requested resources as black *
-  #   { if(!is.null(reference)) geom_point(shape=8, aes_string(fill=boxplot_color, y=reference), position = position_jitterdodge(jitter.width = 0)) }+
-  #   # Increase point size in the legend
-  #   guides(colour = guide_legend(override.aes = list(size=2, alpha = 1))) +
-  #   theme(axis.text.x = element_text(angle=90, hjust=1, size=10),
-  #        axis.text.y = element_text(size=10),
-  #        axis.title.x = element_blank(),
-  #        legend.position="top",  legend.box="vertical", legend.margin=margin()) +
-  #   labs(y = yaxisname)
-  
-  ggsave(plot=my_plot, filename = paste0(results_folder,outputname, ".png"), device="png",
+  if(!is.null(outputname)) {
+    ggsave(plot=my_plot, filename = paste0(results_folder,outputname, ".png"), device="png",
           width = 20, height = 10, units="cm")
-   ggsave(plot=my_plot, filename = paste0(results_folder,outputname, ".pdf"), device="pdf", 
+    ggsave(plot=my_plot, filename = paste0(results_folder,outputname, ".pdf"), device="pdf", 
           width=20, height=10, units="cm")
+  }
+  
   return(my_plot)
 }
 
@@ -236,69 +176,103 @@ plot_cumulative_storage <- function(merged, outputfile) {
     group_by(simple_name, format) %>%
     summarise(storage = sum(workdir_GB), .groups = 'drop')
   
-  blub <- merged_cumulative_storage %>%
-          filter(format != 'bam') %>% summarise(sum(storage))
-  print(blub)
-  
   storage_cumulative <-
     ggbarplot(merged_cumulative_storage,
-              x = "simple_name", y = "storage", fill = "format",
+              x = "simple_name", y = "storage", fill = "format", color = "format",
               position = position_dodge(0.8), orientation = "horiz") +
-    geom_text(aes(label = round(storage,3),  group = format, fontface = "bold"), colour = "black", size = 2.5,
-              position = position_dodge(.9),
-              hjust = 1.2) +
+    geom_text(aes(label = round(storage,3),  group = format, fontface = "bold"), colour = "white", size = 2.5,
+              position = position_dodge(.85),
+              hjust = 1.1) +
     rremove("legend.title") +
-    theme(axis.text.x = element_text(angle=45, hjust = 1, size=15),
-          axis.text.y = element_text(size=15),legend.position="top",
+    theme(axis.text.x = element_text(size=10),
+          axis.text.y = element_text(size=10),legend.position="top",
           axis.title.y = element_blank(),
-          axis.title.x = element_text(size=15),
-          legend.text = element_text(size = 15)) +
+          axis.title.x = element_text(size=10),
+          legend.text = element_text(size = 10)) +
     labs(y = "work dir (GB)") +
     scale_y_continuous(
       trans = scales::pseudo_log_trans(base = 10, sigma=0.001),
-      breaks = c(0, 10^(-2:6))) #+
-    #stat_compare_means(aes(group = format), label = "p.signif")
+      breaks = c(0, 10^(-2:6))) +
+    stat_compare_means(aes(group = format), label = "p.signif", vjust = 1, hide.ns = TRUE, paired=TRUE)
 
-  
   ggsave(plot=storage_cumulative, filename = paste0(results_folder,outputfile), device="png", dpi = 600)
   
   return(storage_cumulative)
 }
 
-plot_summary <- function(merged, file_name) {
-  summary_plot <- ggboxplot(merged, x="simple_name", 
-                               y="value", fill = "format", outlier.colour="black", outlier.shape=16, 
-                               outlier.size=.5, notch=FALSE, lwd =.1, width = 0.5) + 
-    rremove("legend.title") +
-    #geom_point(shape=16, aes_string(fill="format", colour = "sample"), 
-    #           size = 0.1, alpha = 1, position = position_jitterdodge(jitter.width = 0.05)) + 
-    guides(colour = guide_legend(override.aes = list(size=2, alpha = 1))) + 
-    facet_grid(measure~., scales="free", space="free_x", 
-               labeller=variable_labeller_y, switch="y") +
-    theme(axis.text.x = element_text(angle=45, hjust = 1, size=10), 
-          axis.text.y = element_text(size=10),
-          axis.title.x = element_blank(), 
-          axis.title.y = element_blank(),
-          strip.text.y = element_text(size = 10) ,
-          legend.position="top", legend.box="vertical", legend.margin=margin(),
-          legend.text = element_text(size = 10)) #+ 
-  #stat_compare_means(aes(group = format), label = "p.signif", paired = TRUE)
+plot_summary <- function(df, file_name, results_folder) {
+  # summary_plot <- ggboxplot(merged, x="simple_name", 
+  #                              y="value", fill = "format", outlier.colour="black", outlier.shape=16, 
+  #                              outlier.size=.5, notch=FALSE, lwd =.1, width = 0.5) + 
+  #   rremove("legend.title") +
+  #   #geom_point(shape=16, aes_string(fill="format", colour = "sample"), 
+  #   #           size = 0.1, alpha = 1, position = position_jitterdodge(jitter.width = 0.05)) + 
+  #   guides(colour = guide_legend(override.aes = list(size=2, alpha = 1))) + 
+  #   facet_grid(measure~., scales="free", space="free_x", 
+  #              labeller=variable_labeller_y, switch="y") +
+  #   theme(axis.text.x = element_text(angle=45, hjust = 1, size=10), 
+  #         axis.text.y = element_text(size=10),
+  #         axis.title.x = element_blank(), 
+  #         axis.title.y = element_blank(),
+  #         strip.text.y = element_text(size = 10) ,
+  #         legend.position="top", legend.box="vertical", legend.margin=margin(),
+  #         legend.text = element_text(size = 10)) + 
+  #   stat_compare_means(aes(group = format), label = "p.signif", paired = TRUE, vjust = 1, hide.ns = TRUE)
+  # 
+  # ggsave(plot=summary_plot, filename = paste0(results_folder, file_name), device="png", 
+  #        dpi = 600)
   #
   
-  ggsave(plot=summary_plot, filename = paste0(results_folder, file_name), device="png", 
-         dpi = 600)
+  cpu <- plot_bam_vs_cram_boxplot(df=df,
+                                  xaxis="simple_name",
+                                  yaxis="max_num_cpu",
+                                  boxplot_color="format",
+                                  yaxisname = "CPUs",
+                                  reference = NULL,
+                                  outputname = NULL,
+                                  results_folder = NULL) +
+    theme(axis.title.x = element_blank(), axis.text.x = element_blank()) +
+    rremove("legend.title")
   
+  mem <- plot_bam_vs_cram_boxplot(df=df, 
+                                  xaxis="simple_name", 
+                                  yaxis="max_peak_vmem_GB", 
+                                  boxplot_color="format",
+                                  yaxisname = "Memory (GB)",
+                                  reference = NULL,
+                                  outputname = NULL,
+                                  results_folder = NULL)  + 
+    theme(axis.text.x = element_text(angle=20, size=8)) +
+    rremove("legend.title")
+  
+  time <- plot_bam_vs_cram_boxplot(df=df, 
+                                   xaxis="simple_name", 
+                                   yaxis="avg_realtime_min", 
+                                   boxplot_color="format",
+                                   yaxisname = "Time (min)",
+                                   reference = NULL,
+                                   outputname = NULL,
+                                   results_folder = NULL) +
+    theme(axis.title.x = element_blank(), axis.text.x = element_blank()) +
+    rremove("legend.title")
+  
+  summary_plot <-ggpubr::ggarrange(time, cpu, mem, ncol=1, nrow=3, common.legend = TRUE, align = "v", heights = c(0.7,0.7,1)) 
+  ggsave(plot=summary_plot, filename = paste0(results_folder, file_name), device="png", dpi = 600)
+
   return(summary_plot)
 }
 
+#####################
+##### Dataflow ######
+#####################
 format_splitting <- function(df){
   return (df %>% 
-            # Remove rows with column value '-' and cast columns to numeric
-            #filter(vmem != '-') %>%
+            # Remove rows with status FAILED
+            filter(status != 'FAILED') %>%
             #filter(vmem != '0') %>%
             # Only keep relevant processes
             #filter(grepl('BWAMEM1_MEM|FASTP|GATK4_MARKDUPLICATES', process))
-            filter(grepl('BWAMEM1_MEM|FASTP|GATK4_MARKDUPLICATES|BASERECALIBRATOR|GATHERBQSRREPORTS|APPLYBQSR|STRELKA|MUTECT2', process)) %>%
+            filter(grepl('BWAMEM1_MEM|FASTP|GATK4_MARKDUPLICATES|GATK4_BASERECALIBRATOR|GATK4_GATHERBQSRREPORTS|GATK4_APPLYBQSR|MERGE_CRAM|STRELKA_SOMATIC|MUTECT2_PAIRED|MERGE_MUTECT|FREEBAYES', process)) %>%
             mutate_all(type.convert, as.is=TRUE) %>%
             # Convert vmem to megabytes and gigabytes
             #mutate('vmem_MB' = bytesto(vmem, 'm')) %>%
@@ -310,26 +284,29 @@ format_splitting <- function(df){
             #mutate('memory_MB' = bytesto(memory, 'm')) %>%
             #mutate('memory_GB' = bytesto(memory, 'g')) %>%
             # Get an actual CPU number by dividing the used cpu number by 100
-            #mutate('num_cpu' = X.cpu/100) %>%
+            mutate('num_cpu' = X.cpu/100) %>%
             # Get last element (by :) from process name
             mutate('simple_name' = sub("^.*:", "", process)) %>%
             # Convert workdir storage to megabytes and gigabytes
             mutate('workdir_MB' = bytesto(workdir_bytes, 'm')) %>%
             mutate('workdir_GB' = bytesto(workdir_bytes, 'g')) %>%
-            # Convert seconds to minutes
+            # Convert milli-seconds to minutes
             mutate('realtime_min' = realtime/(60*1000)) %>%
+            mutate('realtime_h' = realtime/(3600*1000)) %>%
+            mutate('cpu_h' = realtime_h * num_cpu) %>%
             # Get tumor/normal
             mutate('status' = case_when(
-              grepl("vs", tag) ~ "paired",
-              grepl("N", tag) ~ "sample1 (12.5GB)", 
-              grepl("T", tag) ~ "sample2 (14.8GB)",
-              TRUE ~ "other")) %>%
+               grepl("vs", tag) ~ "paired",
+               grepl("N", tag) ~ "normal", 
+               grepl("T", tag) ~ "tumor",
+               TRUE ~ "other")) %>%
             filter(status !='other') %>%
             mutate('sample' = case_when(
               grepl("CHC892", tag) ~ "CHC892", 
               grepl("CHC912", tag) ~ "CHC912", 
               grepl("CHC2111", tag) ~ "CHC2111", 
               grepl("CHC2113", tag) ~ "CHC2113",
+              grepl("CHC2115", tag) ~ "CHC2115",
               grepl("HCC1395N", tag) ~ "HCC1395N (12.5GB)", 
               grepl("HCC1395T", tag) ~ "HCC1395T (14.8GB)",
               TRUE ~ "other"))
@@ -346,9 +323,11 @@ rename_storage_columns <- function(df) {
 format_process_mapping <- function(df, process_name){
   df_process <- df %>% filter(grepl(process_name, simple_name))
   
-  df_time <- df_process %>% group_by(fastp, sample) %>% summarise(max_y = max(realtime_min))
+  df_time <- df_process %>% group_by(fastp, sample, status, sample_status) %>% summarise(
+    across(realtime_min, max, .names = 'max_sample_realtime'),
+    across(cpu_h, sum, .names = 'sum_sample_cpuh'))
   
-  df_storage <- df_process %>% group_by(fastp, sample) %>% summarise(sum = sum(workdir_GB))
+  df_storage <- df_process %>% group_by(fastp, sample, status, sample_status) %>% summarise(sum = sum(workdir_GB))
   df_storage$fastp <- as.factor(df_storage$fastp)
   
   return(list(process = df_process, time= df_time, storage=df_storage))
@@ -357,10 +336,43 @@ format_process_mapping <- function(df, process_name){
 format_process_splitting <- function(df, process_name){
   df_process <- df %>% filter(grepl(process_name, simple_name))
   
-  df_time <- df_process %>% group_by(intervals, sample) %>% summarise(max_y = max(realtime_min))
+  df_time <- df_process %>% group_by(intervals, sample, status, sample_status) %>% summarise(across(realtime_min, max, .names = 'max_sample_realtime'),
+                                                                                             across(cpu_h, sum, .names = 'sum_sample_cpuh'))
   
-  df_storage <- df_process %>% group_by(intervals, sample) %>% summarise(sum = sum(workdir_GB))
+  df_storage <- df_process %>% group_by(intervals, sample, status, sample_status) %>% summarise(sum = sum(workdir_GB))
   df_storage$intervals <- as.factor(df_storage$intervals)
   
   return(list(process = df_process, time= df_time, storage=df_storage))
+}
+
+#####################
+######## AWS ########
+#####################
+format_aws_costs <- function(cost_table, date) {
+  
+  # transpose data frame & use first column from original dataframe as column headers in transposed dataframe
+  cost_table_formatted <- setNames(data.frame(t(cost_table[,-1])), cost_table[,1])
+  
+  # Rename the `date` column to costs, since it carries the costs for that date for better handling
+  names(cost_table_formatted)[2] <- "costs"
+  
+  # create a new column named 'type' that has the current row names (needed for ggplot2)
+  cost_table_formatted <- tibble::rownames_to_column(cost_table_formatted, "type")
+  
+  # Round too last 3 digits & remove costs below 0.00$
+  cost_table_formatted <- cost_table_formatted %>% mutate_if(is.numeric, round, digits=3)
+  cost_table_formatted <- filter(cost_table_formatted, costs >= 0.001 , .preserve = FALSE)
+  return (cost_table_formatted)
+}
+
+#####################
+###### Helper #######
+#####################
+bytesto <- function(bytes, to, bsize=1024){
+  a <- data.frame ( unit = c('k', 'm', 'g', 't', 'p', 'e' ), factor = c(1,2,3,4,5,6), stringsAsFactors=FALSE)
+  
+  get_factor <- a$factor
+  names(get_factor) <- a$unit
+  
+  return (bytes / (bsize ^ get_factor[to]))
 }
