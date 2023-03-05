@@ -180,8 +180,7 @@ cpu_preprocessing <- plot_bam_vs_cram_boxplot(df=merged_preprocessing_formatted_
                          outputname="/cpu_preprocessing_boxplot",
                          results_folder=results_folder,
                          yaxisname = "Num CPUs",
-                         reference = "cpus"
-                         )
+                         reference = "cpus")
 cpu_preprocessing
 ```
 
@@ -195,14 +194,11 @@ cpu_variantcalling <- plot_bam_vs_cram_boxplot(df=merged_variantcalling_formatte
                          outputname="/cpu_variantcalling_boxplot", 
                          results_folder=results_folder,
                          yaxisname = "Num CPUs",
-                         reference = "cpus"
-                         ) 
+                         reference = "cpus") 
 cpu_variantcalling 
 ```
 
 ## Memory Usage {.tabset .tabset-fade .tabset-pills}
-
-##  {.unnumbered}
 
 ### Vmem {.tabset .tabset-fade .tabset-pills}
 
@@ -217,8 +213,7 @@ memory_preprocessing <- plot_bam_vs_cram_boxplot(df=merged_preprocessing_formatt
                          outputname="/mem_preprocessing", 
                          results_folder=results_folder,
                          yaxisname = "Memory (GB)",
-                         reference = "memory_GB"
-                         )
+                         reference = "memory_GB")
 memory_preprocessing
 ```
 
@@ -232,9 +227,7 @@ memory_variantcalling <- plot_bam_vs_cram_boxplot(df=merged_variantcalling_forma
                          outputname="/mem_variantcalling", 
                          results_folder=results_folder,
                          yaxisname = "Memory (GB)",
-                         reference = "memory_GB"
-                         )
-
+                         reference = "memory_GB")
 memory_variantcalling
 ```
 
@@ -283,9 +276,7 @@ time_preprocessing <- plot_bam_vs_cram_boxplot(df=merged_preprocessing_formatted
                          results_folder=results_folder,
                          yaxisname = "Time (min)",
                          reference = NULL)
-
 time_preprocessing 
-
 ```
 
 ### Variant calling
@@ -299,9 +290,7 @@ time_variantcalling <- plot_bam_vs_cram_boxplot(df=merged_variantcalling_formatt
                          results_folder=results_folder,
                          yaxisname = "Time (min)",
                          reference = NULL)
-
 time_variantcalling
-
 ```
 
 ## Storage usage (cumulative) {.tabset .tabset-fade .tabset-pills}
@@ -324,16 +313,6 @@ storage_variantcalling_cumulative
 
 ## Combine plots {.tabset .tabset-fade .tabset-pills}
 
-```{r, echo=FALSE, results='hide', fig.keep='all'}
-# 
-# merged_preprocessing_default_long <- tidyr::gather(merged_preprocessing_default_compute, key="measure", 
-#                                                    value="value", c("max_num_cpu","max_peak_vmem_GB", "avg_realtime_min"))
-# merged_variantcalling_long <- tidyr::gather(merged_variantcalling_formatted_compute, key="measure", value="value", 
-#                                             c("max_num_cpu","max_peak_vmem_GB", "avg_realtime_min"))
-# summary_preprocessing <- plot_summary(merged_preprocessing_default_long, "/summary_preprocessing.png")
-# summary_preprocessing 
-```
-
 ### Preprocessing
 
 Here, the data is filtered:
@@ -353,7 +332,7 @@ summary_plot
 ```{r, echo=FALSE, results='hide', fig.keep='all'}
 summary_variantcalling <- plot_summary(merged_variantcalling_formatted_compute, 
                                        file_name ="/summary_variantcalling.png", 
-                                        results_folder=results_folder)# plot_summary(merged_variantcalling_long, "/summary_variantcalling.png")
+                                        results_folder=results_folder)
 summary_variantcalling
 ```
 

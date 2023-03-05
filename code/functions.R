@@ -272,7 +272,7 @@ format_splitting <- function(df){
             #filter(vmem != '0') %>%
             # Only keep relevant processes
             #filter(grepl('BWAMEM1_MEM|FASTP|GATK4_MARKDUPLICATES', process))
-            filter(grepl('BWAMEM1_MEM|FASTP|GATK4_MARKDUPLICATES|GATK4_BASERECALIBRATOR|GATK4_GATHERBQSRREPORTS|GATK4_APPLYBQSR|MERGE_CRAM|STRELKA_SOMATIC|MUTECT2_PAIRED|MERGE_MUTECT|FREEBAYES', process)) %>%
+            filter(grepl('BWAMEM1_MEM|FASTP|GATK4_MARKDUPLICATES|GATK4_BASERECALIBRATOR|GATK4_GATHERBQSRREPORTS|GATK4_APPLYBQSR|MERGE_CRAM|STRELKA|MUTECT2|FREEBAYES', process)) %>%
             mutate_all(type.convert, as.is=TRUE) %>%
             # Convert vmem to megabytes and gigabytes
             #mutate('vmem_MB' = bytesto(vmem, 'm')) %>%
@@ -343,6 +343,76 @@ format_process_splitting <- function(df, process_name){
   df_storage$intervals <- as.factor(df_storage$intervals)
   
   return(list(process = df_process, time= df_time, storage=df_storage))
+}
+
+x_axis_dataflow <- function(type) {
+  if(identical('fastp', type)) {
+    scale_x_discrete(breaks = c(1, 4, 8, 12, 16), labels = c(1, 4, 8, 12, 16)) }
+  else {
+    scale_x_discrete(breaks = c(1, 21, 40, 78, 124), labels = c(1, 21, 40, 78, 124))
+  }
+}
+
+dataflow_theme = theme(axis.title.x = element_text(size=15),
+              axis.title.y = element_text(size=15),
+              plot.title = element_text(size = 20, hjust = 0.))
+
+plot_dataflow_single_process <- function(df_max_time, df, df_storage, group, title, xaxis, outputname, results_folder){
+
+  line <-  ggviolin(data=df_max_time, x=group, y="max_sample_realtime", draw_quantile = 0.5, color=group, width = 0.9) +
+            x_axis_dataflow(group) +
+            labs(y = "time (min)", x = xaxis) +
+            dataflow_theme
+
+  line_cpuh <- ggviolin(data=df_max_time, x=group, y="sum_sample_cpuh", draw_quantile = 0.5, color = group,  width = 0.9) +
+                x_axis_dataflow(group) +
+                labs(y = "CPUh", x = xaxis) +
+                dataflow_theme
+
+  bar <- ggviolin(df_storage, x=group, y="sum", draw_quantile = 0.5, color = group, width = 0.9) +
+          labs(y = "work dir (GB)", x = xaxis) +
+          dataflow_theme +
+          theme(legend.text = element_text(size = 8))
+
+  plot <- ggpubr::ggarrange(line, bar, line_cpuh, legend= "none", ncol=3)
+  ann_plot <- annotate_figure(plot, top = text_grob(title, face = "bold", size = 14))
+
+  ggsave(plot=ann_plot, filename = paste0(results_folder,outputname, ".png"), device="png",
+         dpi = 600)
+  ggsave(plot=ann_plot, filename = paste0(results_folder,outputname, ".pdf"), device="pdf",
+         width=20, height=10, units="cm")
+
+  return(ann_plot)
+}
+
+plot_splitting_summary <- function(df_time, group, xaxis, type, df_storage, title, outputname){
+  
+  line <- ggviolin(data=df_time, x=group, y="sum_combined_per_sample_realtime", draw_quantile = 0.5, color = group,  width = 0.9) +
+          x_axis_dataflow(group) +
+          labs(y = "time (min)", x = xaxis) +
+          dataflow_theme
+              
+  line_cpuh <-  ggviolin(data=df_time, x=group, y="sum_combined_per_sample_cpuh", draw_quantile = 0.5, color = group, width = 0.9) +
+                x_axis_dataflow(group) +
+                labs(y = "CPUh", x = xaxis) +
+                dataflow_theme
+  
+  bar <- ggviolin(data=df_storage, x=group, y="sum",  draw_quantile = 0.5, color = group, width = 0.9) +
+            x_axis_dataflow(group) +
+            labs(y = "work dir (GB)", x = xaxis) +
+            dataflow_theme +
+            theme(legend.text = element_text(size = 8)) +
+            rremove("legend.title")
+  
+  plot <- ggpubr::ggarrange(line, bar, line_cpuh, legend = "none", ncol = 3)
+  ann_plot <- annotate_figure(plot, top = text_grob(title, face = "bold", size = 14))
+  
+  ggsave(plot=ann_plot, filename = paste0(results_folder,outputname, ".png"), device="png",
+         width=20, height=10, units="cm")
+  ggsave(plot=ann_plot, filename = paste0(results_folder,outputname, ".pdf"), device="pdf", 
+         width=20, height=10, units="cm")
+  
+  return(ann_plot)
 }
 
 #####################
