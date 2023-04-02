@@ -46,17 +46,41 @@ dir.create(results_folder)
 
 # Introduction
 
+For germline benchmarking the datatsets HG002-HG004 were run through the pipeline by combining each mapper with all variant callers. 
 For somatic benchmarking a dataset from the HCC1395 cell line was run through the pipeline by combining each mapper with all variant callers. 
 
 # Loading the dataset
+
+## Germline
+
+Truth vcfs and & bed files were downloaded from 
+
+```{r echo=FALSE}
+data_30_germline <- read.table(file = "../data/functional/merged_30_germline.csv", sep = ',', header = TRUE) %>%
+        mutate('aligner' = case_when(
+          grepl("dragmap", run) ~ "Dragmap",
+          grepl("bwamem2", run) ~ "BwaMem2",
+          grepl("bwa", run) ~ "bwa",
+           TRUE ~ "other")) %>%
+        mutate('caller' = case_when(
+            grepl("strelka", run) ~ "Strelka2_BP",
+            grepl("haplotypecaller", run) & !grepl("filtered", run) ~ "HaplotypeCaller",
+            grepl("haplotypecaller_filtered", run) ~ "HaplotypeCaller (filtered)",
+            grepl("freebayes", run) ~ "FreeBayes",
+            grepl("deepvariant", run) ~ "DeepVariant",
+             TRUE ~ "other")) %>%
+      filter(Filter !='ALL') %>%
+      mutate("version" = "sarek3")
+```
+## Somatic
 
 Truth vcf & bed files were downloaded from [here](https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/seqc/Somatic_Mutation_WG/release/v1.2/), following the links from this [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8506910/).
 
 See `script.sh` for details on how `som.py` was run. 
 
 ```{r input, echo=FALSE, message=FALSE}
-data_30 <- read.table(file = "../data/functional/merged_30.csv", sep = ',', header = TRUE) %>%
-        mutate('mapper' = case_when(
+data_30_somatic <- read.table(file = "../data/functional/merged_30_trimmed.csv", sep = ',', header = TRUE) %>%
+        mutate('aligner' = case_when(
           grepl("dragmap", run) ~ "Dragmap",
           grepl("bwamem2", run) ~ "BwaMem2",
           grepl("bwa", run) ~ "bwa",
@@ -68,14 +92,15 @@ data_30 <- read.table(file = "../data/functional/merged_30.csv", sep = ',', head
             grepl("freebayes", run) ~ "FreeBayes",
              TRUE ~ "other")) %>%
       filter(type !='records') %>%
-      mutate("f_score" = 2 * ((precision*recall)/(precision+recall)))
+      mutate("f_score" = 2 * ((precision*recall)/(precision+recall))) %>%
+      mutate("version" = "sarek3")
 
-data_27 <- read.table(file = "../data/functional/merged_27.csv", sep = ',', header = TRUE) %>%
-        mutate('mapper' = case_when(
+data_27_somatic <- read.table(file = "../data/functional/merged_27.csv", sep = ',', header = TRUE) %>%
+        mutate('aligner' = case_when(
           grepl("bwamem2", run) ~ "BwaMem2",
           grepl("bwa", run) ~ "bwa",
            TRUE ~ "other")) %>%
-        mutate('caller' = case_when(
+        mutate('Variant caller' = case_when(
             grepl("strelka_", run)  ~ "Strelka2",
             grepl("strelkabp_", run)  ~ "Strelka2_BP",
             grepl("mutect2", run) & !grepl("filtered", run) ~ "Mutect2",
@@ -83,94 +108,178 @@ data_27 <- read.table(file = "../data/functional/merged_27.csv", sep = ',', head
             grepl("freebayes", run) ~ "FreeBayes",
              TRUE ~ "other")) %>%
       filter(type !='records') %>%
-      mutate("f_score" = 2 * ((precision*recall)/(precision+recall)))
-```
-
-```{r echo=FALSE, message=FALSE}
-data_snvs_30 =  data_30 %>% filter(type !='indels')
-data_snvs_27 =  data_27 %>% filter(type !='indels')
-
-data_indels_30 =  data_30 %>% filter(type !='SNVs')
-data_indels_27 =  data_27 %>% filter(type !='SNVs')
-
+      mutate("f_score" = 2 * ((precision*recall)/(precision+recall)))%>%
+      mutate("version" = "sarek2")
 ```
 
 # Methods
 
-```{r}
+```{r echo = FALSE}
 
-plot_scatter <- function (data, title, outputfile) {
-    p <- ggplot(data, aes(precision,recall, color= caller, fill = caller, shape = mapper)) +
-            ggtitle(title) +
-            geom_jitter(width= 0.01, height = 0.01) +
-            scale_y_continuous(limits=seq(0,1))+   xlim(-0.1, 1.1) +
-            theme_pubr() + 
-            guides(colour = guide_legend(override.aes = list(size=2, alpha = 1))) +
-            theme(axis.text.x = element_text(size=15),
-                 axis.text.y = element_text(size=15),
-                 axis.title.y = element_text(size=15),
-                 axis.title.x = element_text(size=15),
-                 legend.position="top",  legend.box="vertical", legend.margin=margin())
-  
-    ggsave(plot=p, filename = paste0(results_folder,outputfile), device="png", dpi = 600)
-    print(p)
-  
+my_palette = palette.colors(palette = "Dark2")
+
+plot_scatter <- function (data, recall, precision, title, outputfile) {
+    p <- ggplot(data, aes(!!!ensyms(x=recall, y=precision)), environment = environment()) +
+          ggtitle(title) +
+          geom_jitter(aes(color=caller, shape = aligner),size = 4, width = 0.001, height = 0.001) +
+          theme_pubr() +
+          guides(colour = guide_legend(override.aes = list(size=2, alpha = 1))) +
+          theme(axis.text.x = element_text(size=12),
+               axis.text.y = element_text(size=12),
+               axis.title.y = element_text(size=15),
+               axis.title.x = element_text(size=15),
+               legend.position="top",  legend.box="vertical", legend.margin=margin()) +
+          labs(x="Recall", y = "Precision") +
+          scale_color_manual(values = my_palette)
+
+    if(!is.na(outputfile)) {
+      ggsave(plot=p, filename = paste0(results_folder,outputfile), device="png", width=10, height=10, units="cm")
+    }
+    return(p)
+
 }
 
-plot_score <- function(data, title, outputfilename) {
-  p <- ggbarplot(data, x="caller", y = "f_score", fill = "mapper", position=position_dodge(), title = title)  +
-    geom_text(aes(label = round(f_score,3), group = mapper), position = position_dodge(.9), vjust = -0.5) +
-    theme(axis.text.x = element_text(size=15),
-                 axis.text.y = element_text(size=15),
-                 axis.title.y = element_text(size=15),
-                 axis.title.x = element_text(size=15)) +
-    scale_y_continuous(limits=seq(0,1))
+plot_score <- function(data, f1, title, outputfilename) {
+  p <- ggbarplot(data, x="aligner", y = f1, fill = "caller", color = "caller", position=position_dodge(width = 0.8), title = title, add = "mean_sd")  +
+    theme(axis.text.x = element_text(size=12, angle = 20, hjust=1),
+          axis.text.y = element_text(size=12),
+          axis.title.y = element_text(size=15),
+          axis.title.x = element_blank()) +
+    labs(y= "F1-Score") +
+    scale_y_continuous(limits=seq(0,1)) +
+    scale_fill_manual(values = my_palette) + scale_color_manual(values = my_palette)
 
+  if(!is.na(outputfilename)){
+    ggsave(plot=p, filename = paste0(results_folder,outputfilename), device="png", dpi = 600)
+  }
   
-  ggsave(plot=p, filename = paste0(results_folder,outputfilename), device="png", dpi = 600)
-  print(p)
+  return(p)
 }
 
+plot_summary <- function(scatter, score, outputfilename){
+  
+  p <- ggpubr::ggarrange(scatter + labs(shape=NULL, colour=NULL, title=NULL), 
+                        score + labs(title=NULL),
+                        ncol=2, nrow=1, common.legend = T, legend = "right") 
+  ggsave(plot=p, filename = paste0(results_folder, outputfilename), device="png", width = 25, height = 10, units = "cm")
+  
+  return(p)
+}
 
 ```
 
-## SNVs {.tabset .tabset-fade .tabset-pills}
+## Germline 
 
-### Recall & Precision
+### Overview {.tabset .tabset-fade .tabset-pills}
+
+```{r, echo=FALSE}
+
+data_30_germline_snps = data_30_germline %>% filter(Type !='INDEL')
+data_30_germline_indels = data_30_germline %>% filter(Type !='SNP')
+
+data_30_germline_mean <- data_30_germline %>%
+                          group_by(aligner, caller, Type) %>%
+                          summarise(across(METRIC.Recall, mean, .names = 'mean_recall'),
+                                    across(METRIC.Recall, sd, .names = 'sd_recall'),
+                                    across(METRIC.Precision, mean, .names = 'mean_precision'),
+                                    across(METRIC.Precision, sd, .names = 'sd_precision'),
+                                    across(METRIC.F1_Score, mean, .names = 'mean_f1'),
+                                    across(METRIC.F1_Score, sd, .names = 'sd_f1'))
+
+data_30_germline_mean_snps <- data_30_germline_mean %>% filter(Type !='INDEL') 
+data_30_germline_mean_indels <- data_30_germline_mean %>% filter(Type !='SNP')
+```
+
+#### SNVs
+
+```{r, echo=FALSE}
+knitr::kable(data_30_germline_mean_snps) %>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+    scroll_box(width = "100%")
+```
+
+#### Indels
+
+```{r, echo=FALSE}
+knitr::kable(data_30_germline_mean_indels) %>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+    scroll_box(width = "100%")
+```
+
+### Plots {.tabset .tabset-fade .tabset-pills}
+
+#### SNVs
+
+```{r, echo=FALSE, fig.show="hold", out.width = "50%"}
+scatter_snps_germline <- plot_scatter(data_30_germline_mean_snps, "mean_recall", "mean_precision", "Sarek 3.1.1 SNPs Germline", "snps_prec_recall_30_germline.png")
+score_snps_germline <- plot_score(data_30_germline_snps , 'METRIC.F1_Score', "Sarek 3.1.1 SNPs Germline", "snps_fscore_311_germline.png")
+  
+scatter_snps_germline
+score_snps_germline
+
+plot_summary(scatter_snps_germline, score_snps_germline, "germline_30_snps_summary.png")
+```
+
+#### Indels
+
+```{r echo=FALSE, fig.show="hold", out.width = "50%"}
+scatter_indels_germline <- plot_scatter(data_30_germline_mean_indels, 'mean_recall', 'mean_precision', "Sarek 3.1.1 Indels Germline", "indels_prec_recall_30_germline.png")
+score_indels_germline <- plot_score(data_30_germline_indels , 'METRIC.F1_Score', "Sarek 3.1.1 Indels Germline", "indels_fscore_311_germline.png")
+
+scatter_indels_germline
+score_indels_germline
+
+plot_summary(scatter_indels_germline, score_indels_germline, "germline_30_indels_summary.png")
+```
+
+
+## Somatic {.tabset .tabset-fade .tabset-pills}
+
+```{r echo=FALSE}
+data_snvs_30_somatic =  data_30_somatic %>% filter(type !='indels')
+data_snvs_27_somatic =  data_27_somatic %>% filter(type !='indels')
+
+data_indels_30_somatic =  data_30_somatic %>% filter(type !='SNVs')
+data_indels_27_somatic =  data_27_somatic %>% filter(type !='SNVs')
+```
+### SNVs {.tabset .tabset-fade .tabset-pills}
+
+#### Recall & Precision
 
 
 ```{r snvs , echo=FALSE, fig.show="hold", out.width = "50%"}
-plot_scatter(data_snvs_30, "Sarek 3.1.1", "snvs_prec_recall_311.png")
-plot_scatter(data_snvs_27, "Sarek 2.7.2", "snvs_prec_recall_272.png")
+#test <- rbind(data_snvs_30_somatic, data_snvs_2_somatic7) %>% mutate(fill = ifelse(version == "sarek2", caller, NA))
+plot_scatter(data_snvs_30_somatic, 'recall', 'precision', "SNVs", "snvs_prec_recall_30_somatic.png")
+#plot_scatter(data_snvs_27_somatic, 'recall', 'precision', "Sarek 2.7.2", "snvs_prec_recall_272_somatic.png")
 ```
 
-### F_score
+#### F_score
 
 ```{r , echo=FALSE,  fig.show="hold", out.width = "50%"}
 
-plot_score(data_snvs_30, "Sarek 3.1.1", "snvs_fscore_311.png")
-plot_score(data_snvs_27, "Sarek 2.7.2", "snvs_fscore_272.png")
+plot_score(data_snvs_30_somatic, 'f_score', "Sarek 3.1.1", "snvs_fscore_311_somatic.png")
+#plot_score(data_snvs_27_somatic, 'f_score', "Sarek 2.7.2", "snvs_fscore_272_somatic.png")
 
 ```
 
-## Indels {.tabset .tabset-fade .tabset-pills}
+<!-- ### Indels {.tabset .tabset-fade .tabset-pills} -->
 
-### Recall & Precision
+<!-- #### Recall & Precision -->
 
 
-```{r , echo=FALSE, fig.show="hold", out.width = "50%"}
-plot_scatter(data_indels_30, "Sarek 3.1.1", "indels_pre_recall_311.png")
-plot_scatter(data_indels_27, "Sarek 2.7.1", "indels_pre_recall_311.png")
-```
+<!-- ```{r , echo=FALSE, fig.show="hold", out.width = "50%"} -->
+<!-- plot_scatter(data_indels_30_somatic, 'recall', 'precision', "Sarek 3.1.1", "indels_pre_recall_311_somatic.png") -->
+<!-- plot_scatter(data_indels_27_somatic, 'recall', 'precision', "Sarek 2.7.1", "indels_pre_recall_311_somatic.png") -->
+<!-- ``` -->
 
-### F_score
+<!-- #### F_score -->
 
-```{r , echo=FALSE,  fig.show="hold", out.width = "50%"}
+<!-- ```{r , echo=FALSE,  fig.show="hold", out.width = "50%"} -->
 
-plot_score(data_indels_30, "Sarek 3.1.1", "indels_fscore_311.png")
-plot_score(data_indels_27, "Sarek 2.7.2", "indels_fscore_272.png")
+<!-- plot_score(data_indels_30_somatic, 'f_score', "Sarek 3.1.1", "indels_fscore_311_somatic.png") -->
+<!-- plot_score(data_indels_27_somatic, 'f_score', "Sarek 2.7.2", "indels_fscore_272_somatic.png") -->
 
-```
+<!-- ``` -->
 
 Package versions:
 

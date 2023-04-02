@@ -58,9 +58,11 @@ We added more options to parallelise along the genome.
 
 ### Run commands
 
-    nextflow run nf-core/sarek -r 3.1.1 -profile cfc --input --outdir -c trace.config -c custom.config --nucleotides_per_second 
+```         
+nextflow run nf-core/sarek -r 3.1.1 -profile cfc --input --outdir -c trace.config -c custom.config --nucleotides_per_second 
 
-    custom.config
+custom.config
+```
 
 This runs through mapping, duplicate marking, BQSR, and QC, Variant calling for BWA & non-spark GATK implementation.
 
@@ -69,7 +71,7 @@ This runs through mapping, duplicate marking, BQSR, and QC, Variant calling for 
 Loading all the individual samples. Print sample summary if possible (e.g. metadata sheet).
 
 | name               | nucleotides_per_second (number of intervals) | num of cpus for fastp         | tower id                                                                                | work sizes | trace |
-|----------|----------|----------|----------------------|----------|----------|
+|------------|------------|------------|------------|------------|------------|
 | fastp4_intervals78 | 10001 (78)                                   | 4, \--split_fastq 10000000000 | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/PE2um0F1SrwRi>  | yes        | yes   |
 | fastp8_intervals40 | 70000 (40)                                   | 8, \--split_fastq 500000000   | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/52L0P2tE99JYXs> | yes        | yes   |
 | fastp16_intervals1 | 5000000 (1)                                  | 16, \--split_fastq 100000000  | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/2uPwaXSKrcUaKq> | yes        | yes   |
@@ -90,11 +92,11 @@ storage_fastp8_intervals40 <- read.csv(file = '../data/intervals/fastp8_interval
 execution_fastp8_intervals40 <- read.csv(file = '../data/intervals/fastp8_intervals40/execution_trace_2023-02-22_15-42-27.txt', sep = "\t", stringsAsFactors = FALSE)
 
 ## Fastp 12, intervals 124
-execution_fastp12_intervals124_preprocessing <- read.csv(file = '../data/bam_vs_cram/results_new_cfc/data/cram/cram_nospark_preprocessing_1/execution_trace_2022-11-29_16-01-52.txt', sep = "\t", stringsAsFactors = FALSE)
-execution_fastp12_intervals124_variantcalling <- read.csv(file = '../data/bam_vs_cram/results_new_cfc/data/cram/cram_variantcalling_2/execution_trace_2022-12-11_15-17-56.txt', sep = "\t", stringsAsFactors = FALSE)
+execution_fastp12_intervals124_preprocessing <- read.csv(file = '../data/bam_vs_cram/cram/cram_nospark_preprocessing_1/execution_trace_2022-11-29_16-01-52.txt', sep = "\t", stringsAsFactors = FALSE)
+execution_fastp12_intervals124_variantcalling <- read.csv(file = '../data/bam_vs_cram/cram/cram_variantcalling_1/execution_trace_2023-03-30_10-23-49.txt', sep = "\t", stringsAsFactors = FALSE)
 
-storage_fastp12_intervals124_preprocessing <- read.csv(file = '../data/bam_vs_cram/results_new_cfc/data/cram/cram_nospark_preprocessing_1/folder_sizes.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
-storage_fastp12_intervals124_variantcalling <- read.csv(file = '../data/bam_vs_cram/results_new_cfc/data/cram/cram_variantcalling_2/folder_sizes.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
+storage_fastp12_intervals124_preprocessing <- read.csv(file = '../data/bam_vs_cram/cram/cram_nospark_preprocessing_1/folder_sizes.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
+storage_fastp12_intervals124_variantcalling <- read.csv(file = '../data/bam_vs_cram/cram/cram_variantcalling_1/folder_size.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
 
 execution_fastp12_intervals124 = rbind(execution_fastp12_intervals124_preprocessing, execution_fastp12_intervals124_variantcalling)
 storage_fastp12_intervals124 = rbind(storage_fastp12_intervals124_preprocessing, storage_fastp12_intervals124_variantcalling)
@@ -216,7 +218,6 @@ plot_dataflow_single_process(df_max_time = merged_formatted_markdup$time,
 mapping_summary <- plot_splitting_summary(df_time = merged_formatted_mapping_line_time_max,
                        group = "fastp",
                        xaxis = "# shards",
-                       type = 'mapping',
                        df_storage = merged_formatted_mapping_storage_sum,
                        title = "Sum: Mapping processes",
                        outputname = "summary_mapping")
@@ -306,7 +307,6 @@ plot_dataflow_single_process(df_max_time = merged_formatted_mergecram$time,
 bqsr_summary <- plot_splitting_summary(df_time = merged_formatted_bqsr_line_time_max,
                        group = "intervals",
                        xaxis = "# interval groups",
-                       type = 'intervals',
                        df_storage = merged_formatted_bqsr_storage_sum,
                        title = "Sum: BQSR processes",
                        outputname = "summary_bqsr")
@@ -316,12 +316,150 @@ bqsr_summary
 
 ## Variant calling {.tabset .tabset-fade .tabset-pills}
 
-```{r echo=FALSE, message = FALSE, warning=FALSE}
-merge_formatted_variantcalling <- merged %>% filter(grepl('STRELKA', process))
+### Variant callers (Germline) {.tabset .tabset-fade .tabset-pills}
 
-merged_formatted_strelka <- format_process_splitting(merge_formatted_variantcalling, 'STRELKA')
-#merged_formatted_freebayes <- format_process_splitting(merge_formatted_variantcalling, '^FREEBAYES')
+#### Deepvariant
 
+```{r echo=FALSE}
+merged_formatted_deepvariant <- merged %>% filter(grepl('DEEPVARIANT', process))
+
+merged_formatted_deepvariant_time_max <-  merged_formatted_deepvariant %>%
+                                            mutate('simple_name_combined' = case_when(
+                                                grepl("MERGE_DEEPVARIANT_VCF", simple_name) ~ "MERGE_DEEPVARIANT",
+                                                grepl("MERGE_DEEPVARIANT_GVCF", simple_name) ~ "MERGE_DEEPVARIANT",
+                                                grepl("TABIX_VC_DEEPVARIANT_VCF", simple_name) ~ "TABIX_DEEPVARIANT",
+                                                grepl("TABIX_VC_DEEPVARIANT_GVCF", simple_name) ~ "TABIX_DEEPVARIANT",
+                                                TRUE ~ simple_name)) %>%
+                                            group_by(intervals, simple_name_combined, sample_status) %>%
+                                            summarise(across(realtime_min, max, .names = 'max_sample_realtime'),
+                                                      across(cpu_h, sum, .names = 'sum_sample_cpuh')) %>%
+                                            group_by(intervals, sample_status) %>%
+                                            summarise(across(max_sample_realtime, sum, .names = 'sum_combined_per_sample_realtime'),
+                                                      across(sum_sample_cpuh, sum, .names = 'sum_combined_per_sample_cpuh'))%>%
+                                        mutate(caller = 'Deepvariant')
+
+merged_formatted_deepvariant_storage_sum <- merged_formatted_deepvariant %>%
+                                        group_by(intervals, sample_status) %>%
+                                        summarise(sum = sum(workdir_GB)) %>%
+                                        mutate(caller = 'Deepvariant')
+merged_formatted_deepvariant_storage_sum$intervals <- as.factor(merged_formatted_deepvariant_storage_sum$intervals)
+
+plot_splitting_summary(df_time = merged_formatted_deepvariant_time_max,
+                        group = "intervals",
+                        xaxis = "# interval groups",
+                        df_storage = merged_formatted_deepvariant_storage_sum,
+                        title = "Sum: Deepvariant",
+                        outputname = "deepvariant")
+```
+
+#### Freebayes
+
+```{r echo=FALSE}
+merged_formatted_freebayes_germline <- merged %>% filter(grepl('FREEBAYES', process) & status=='normal')
+
+merged_formatted_freebayes_germline_time_max <-  merged_formatted_freebayes_germline %>%
+                                            group_by(intervals, simple_name, sample_status) %>%
+                                            summarise(across(realtime_min, max, .names = 'max_sample_realtime'),
+                                                      across(cpu_h, sum, .names = 'sum_sample_cpuh')) %>%
+                                            group_by(intervals, sample_status) %>%
+                                            summarise(across(max_sample_realtime, sum, .names = 'sum_combined_per_sample_realtime'),
+                                                      across(sum_sample_cpuh, sum, .names = 'sum_combined_per_sample_cpuh')) %>%
+                                            mutate(caller = 'Freebayes')
+
+merged_formatted_freebayes_germline_storage_sum <- merged_formatted_freebayes_germline %>%
+                                        group_by(intervals, sample_status) %>%
+                                        summarise(sum = sum(workdir_GB)) %>%
+                                        mutate(caller = 'Freebayes')
+
+merged_formatted_freebayes_germline_storage_sum$intervals <- as.factor(merged_formatted_freebayes_germline_storage_sum$intervals)
+
+plot_splitting_summary(df_time = merged_formatted_freebayes_germline_time_max,
+                        group = "intervals",
+                        xaxis = "# interval groups",
+                        df_storage = merged_formatted_freebayes_germline_storage_sum,
+                        title = "Sum: FreeBayes (Normal)",
+                        outputname = "freebayes_normal")
+```
+
+#### Haplotypecaller
+
+```{r echo=FALSE}
+merged_formatted_haplotypecaller <- merged %>% filter(grepl('HAPLOTYPECALLER', process))
+
+merged_formatted_haplotypecaller_time_max <-  merged_formatted_haplotypecaller %>%
+                                            group_by(intervals, simple_name, sample_status) %>%
+                                            summarise(across(realtime_min, max, .names = 'max_sample_realtime'),
+                                                      across(cpu_h, sum, .names = 'sum_sample_cpuh')) %>%
+                                            group_by(intervals, sample_status) %>%
+                                            summarise(across(max_sample_realtime, sum, .names = 'sum_combined_per_sample_realtime'),
+                                                      across(sum_sample_cpuh, sum, .names = 'sum_combined_per_sample_cpuh')) %>%
+                                            mutate(caller = 'Haplotypecaller')
+
+merged_formatted_haplotypecaller_storage_sum <- merged_formatted_haplotypecaller %>%
+                                        group_by(intervals, sample_status) %>%
+                                        summarise(sum = sum(workdir_GB)) %>%
+                                        mutate(caller = 'Haplotypecaller')
+
+merged_formatted_haplotypecaller_storage_sum$intervals <- as.factor(merged_formatted_haplotypecaller_storage_sum$intervals)
+
+plot_splitting_summary(df_time = merged_formatted_haplotypecaller_time_max,
+                        group = "intervals",
+                        xaxis = "# interval groups",
+                        df_storage = merged_formatted_haplotypecaller_storage_sum,
+                        title = "Sum: Haplotypecaller",
+                        outputname = "haplotypecaller_normal")
+```
+
+#### Strelka
+
+```{r echo=FALSE}
+merged_formatted_strelka_germline <- merged %>% filter(grepl('STRELKA', process) & status=='normal')
+
+merged_formatted_strelka_germline_time_max <-  merged_formatted_strelka_germline %>%
+                                            mutate('simple_name_combined' = case_when(
+                                                grepl("MERGE_STRELKA_GENOME", simple_name) ~ "MERGE_STRELKA",
+                                                TRUE ~ simple_name)) %>%
+                                            group_by(intervals, simple_name_combined, sample_status) %>%
+                                            summarise(across(realtime_min, max, .names = 'max_sample_realtime'),
+                                                      across(cpu_h, sum, .names = 'sum_sample_cpuh')) %>%
+                                            group_by(intervals, sample_status) %>%
+                                            summarise(across(max_sample_realtime, sum, .names = 'sum_combined_per_sample_realtime'),
+                                                      across(sum_sample_cpuh, sum, .names = 'sum_combined_per_sample_cpuh'))%>%
+                                        mutate(caller = 'Strelka2')
+
+merged_formatted_strelka_germline_storage_sum <- merged_formatted_strelka_germline %>%
+                                        group_by(intervals, sample_status) %>%
+                                        summarise(sum = sum(workdir_GB)) %>%
+                                        mutate(caller = 'Strelka2')
+merged_formatted_strelka_germline_storage_sum$intervals <- as.factor(merged_formatted_strelka_germline_storage_sum$intervals)
+
+plot_splitting_summary(df_time = merged_formatted_strelka_germline_time_max,
+                        group = "intervals",
+                        xaxis = "# interval groups",
+                        df_storage = merged_formatted_strelka_germline_storage_sum,
+                        title = "Sum: Strelka (Normal)",
+                        outputname = "strelka_normal")
+```
+
+#### Combine Plot
+
+```{r, echo=FALSE}
+
+germline_vc_time <- rbind(merged_formatted_deepvariant_time_max,
+                          merged_formatted_freebayes_germline_time_max,
+                          merged_formatted_haplotypecaller_time_max,
+                          merged_formatted_strelka_germline_time_max)
+germline_vc_storage <- rbind(merged_formatted_deepvariant_storage_sum,
+                             merged_formatted_freebayes_germline_storage_sum,
+                             merged_formatted_haplotypecaller_storage_sum,
+                             merged_formatted_strelka_germline_storage_sum)
+
+
+plot_variantcaller_summary(df_time = germline_vc_time,
+                           group = 'intervals',
+                           df_storage = germline_vc_storage,
+                           title = 'Germline short variant caller',
+                           outputname = 'germline_short_vc_summary')
 ```
 
 ### Variant callers (Somatic) {.tabset .tabset-fade .tabset-pills}
@@ -329,186 +467,111 @@ merged_formatted_strelka <- format_process_splitting(merge_formatted_variantcall
 #### Mutect2
 
 ```{r echo=FALSE}
-merged_formatted_mutect_time_max <-  merged %>% filter(grepl('MUTECT2_PAIRED|MERGE_MUTECT2', process)) %>%
+
+merged_formatted_mutect_somatic <- merged %>% filter(grepl('MUTECT2_PAIRED|MERGE_MUTECT2', process) & status == 'paired')
+
+merged_formatted_mutect_time_max <-  merged_formatted_mutect_somatic %>%
                                             group_by(intervals, simple_name, sample_status) %>%
                                             summarise(across(realtime_min, max, .names = 'max_sample_realtime'),
-                                                      across(cpu_h, sum, .names = 'sum_sample_cpuh')) %>%                             
+                                                      across(cpu_h, sum, .names = 'sum_sample_cpuh')) %>%
                                             group_by(intervals, sample_status) %>%
                                             summarise(across(max_sample_realtime, sum, .names = 'sum_combined_per_sample_realtime'),
-                                                      across(sum_sample_cpuh, sum, .names = 'sum_combined_per_sample_cpuh'))
-                                            
-merged_formatted_mutect_storage_sum <-  merged %>% filter(grepl('MUTECT2_PAIRED|MERGE_MUTECT2', process))  %>%
+                                                      across(sum_sample_cpuh, sum, .names = 'sum_combined_per_sample_cpuh')) %>%
+                                        mutate(caller = 'Mutect2')
+
+merged_formatted_mutect_storage_sum <-  merged_formatted_mutect_somatic %>%
                                         group_by(intervals, sample_status) %>%
-                                        summarise(sum = sum(workdir_GB))
+                                        summarise(sum = sum(workdir_GB)) %>%
+                                        mutate(caller = 'Mutect2')
 merged_formatted_mutect_storage_sum$intervals <- as.factor(merged_formatted_mutect_storage_sum$intervals)
 
 plot_splitting_summary(df_time = merged_formatted_mutect_time_max,
                        group = "intervals",
                        xaxis = "# interval groups",
-                       type = 'intervals',
                        df_storage = merged_formatted_mutect_storage_sum,
-                       title = "Sum: Mutect2",
-                       outputname = "mutect")
+                       title = "Sum: Mutect2 (Paired)",
+                       outputname = "mutect_somatic")
 ```
 
 #### Strelka
 
 ```{r echo=FALSE}
-plot_dataflow_single_process(df_max_time = merged_formatted_strelka$time,
-                  df = merged_formatted_strelka$process,
-                  df_storage = merged_formatted_strelka$storage,
-                  group = "intervals",
-                  title = "Strelka",
-                  xaxis = "# interval groups",
-                  outputname = "strelka",
-                  results_folder = results_folder)
+merged_formatted_strelka_somatic <- merged %>% filter(grepl('STRELKA', process) & status=='paired')
 
-# get the maximum value of colA for groups x and y combined
-# max_merge_normal <- df %>%
-#   filter(simple_name %in% c("MERGE_STRELKA", "MERGE_STRELKA_GENOME")) %>%
-#   summarise(across(realtime_min, max, .names = 'max_sample_realtime'),
-#             across(cpu_h, sum, .names = 'sum_sample_cpuh'))
-
-merged_formatted_strelka_time_max <-  merged %>% filter(grepl('STRELKA_SINGLE|STRELKA_SOMATIC|MERGE_STRELKA', process)) %>%
-                                            group_by(intervals, simple_name, sample_status) %>%
+merged_formatted_strelka_somatic_time_max <-  merged_formatted_strelka_somatic %>%
+                                            mutate('simple_name_combined' = case_when(
+                                                grepl("MERGE_STRELKA_INDELS", simple_name) ~ "MERGE_STRELKA",
+                                                grepl("MERGE_STRELKA_SNVS", simple_name) ~ "MERGE_STRELKA",
+                                                TRUE ~ simple_name)) %>%
+                                            group_by(intervals, simple_name_combined, sample_status) %>%
                                             summarise(across(realtime_min, max, .names = 'max_sample_realtime'),
-                                                      across(cpu_h, sum, .names = 'sum_sample_cpuh')) %>%  
-                                             group_by(intervals, sample_status) %>%
-                                             filter(grepl('MERGE_STRELKA', simple_name))
-                                            
-#                                             summarise(across(max_sample_realtime, sum, .names = 'sum_combined_per_sample_realtime'),
-#                                                       across(sum_sample_cpuh, sum, .names = 'sum_combined_per_sample_cpuh'))
-#                                             
-# merged_formatted_mutect_storage_sum <-  merged %>% filter(grepl('MUTECT2_PAIRED|MERGE_MUTECT2', process))  %>%
-#                                         group_by(intervals, sample_status) %>%
-#                                         summarise(sum = sum(workdir_GB))
-# merged_formatted_mutect_storage_sum$intervals <- as.factor(merged_formatted_mutect_storage_sum$intervals)
-# 
-# plot_splitting_summary(df_time = merged_formatted_mutect_time_max,
-#                        group = "intervals",
-#                        xaxis = "# interval groups",
-#                        type = 'intervals',
-#                        df_storage = merged_formatted_mutect_storage_sum,
-#                        title = "Sum: Mutect2",
-#                        outputname = "mutect")
+                                                      across(cpu_h, sum, .names = 'sum_sample_cpuh')) %>%
+                                            group_by(intervals, sample_status) %>%
+                                            summarise(across(max_sample_realtime, sum, .names = 'sum_combined_per_sample_realtime'),
+                                                      across(sum_sample_cpuh, sum, .names = 'sum_combined_per_sample_cpuh'))%>%
+                                        mutate(caller = 'Strelka2')
+
+merged_formatted_strelka_somatic_storage_sum <- merged_formatted_strelka_somatic %>%
+                                        group_by(intervals, sample_status) %>%
+                                        summarise(sum = sum(workdir_GB)) %>%
+                                        mutate(caller = 'Strelka2')
+merged_formatted_strelka_somatic_storage_sum$intervals <- as.factor(merged_formatted_strelka_somatic_storage_sum$intervals)
+
+plot_splitting_summary(df_time = merged_formatted_strelka_somatic_time_max,
+                        group = "intervals",
+                        xaxis = "# interval groups",
+                        df_storage = merged_formatted_strelka_somatic_storage_sum,
+                        title = "Sum: Strelka (Paired)",
+                        outputname = "strelka_paired")
 ```
 
 #### Freebayes
 
 ```{r echo=FALSE}
-plot_dataflow_single_process(df_max_time = merged_formatted_freebayes$time,
-                  df = merged_formatted_freebayes$process,
-                  df_storage = merged_formatted_freebayes$storage,
-                  group = "intervals",
-                  title = "FreeBayes",
-                  xaxis = "# interval groups",
-                  outputname = "freebayes",
-                  results_folder = results_folder)
+merged_formatted_freebayes_somatic <- merged %>% filter(grepl('FREEBAYES', process) & status=='paired')
+
+merged_formatted_freebayes_somatic_time_max <-  merged_formatted_freebayes_somatic %>%
+                                            group_by(intervals, simple_name, sample_status) %>%
+                                            summarise(across(realtime_min, max, .names = 'max_sample_realtime'),
+                                                      across(cpu_h, sum, .names = 'sum_sample_cpuh')) %>%
+                                            group_by(intervals, sample_status) %>%
+                                            summarise(across(max_sample_realtime, sum, .names = 'sum_combined_per_sample_realtime'),
+                                                      across(sum_sample_cpuh, sum, .names = 'sum_combined_per_sample_cpuh')) %>%
+                                            mutate(caller = 'Freebayes')
+
+merged_formatted_freebayes_somatic_storage_sum <- merged_formatted_freebayes_somatic %>%
+                                        group_by(intervals, sample_status) %>%
+                                        summarise(sum = sum(workdir_GB)) %>%
+                                        mutate(caller = 'Freebayes')
+
+merged_formatted_freebayes_somatic_storage_sum$intervals <- as.factor(merged_formatted_freebayes_somatic_storage_sum$intervals)
+
+plot_splitting_summary(df_time = merged_formatted_freebayes_somatic_time_max,
+                        group = "intervals",
+                        xaxis = "# interval groups",
+                        df_storage = merged_formatted_freebayes_somatic_storage_sum,
+                        title = "Sum: FreeBayes (Paired)",
+                        outputname = "freebayes_somatic")
 ```
 
-<!-- #### Summary -->
+#### Combined plot
 
-<!-- Two things: Variantcaller max + merge vcf & all variantcallers -->
+```{r, echo=FALSE}
 
-<!-- ```{r echo = FALSE} -->
+somatic_vc_time <- rbind(merged_formatted_mutect_time_max,
+                         merged_formatted_strelka_somatic_time_max,
+                         merged_formatted_freebayes_somatic_time_max)
+somatic_vc_storage <- rbind(merged_formatted_mutect_storage_sum,
+                            merged_formatted_strelka_somatic_storage_sum,
+                            merged_formatted_freebayes_somatic_storage_sum)
 
-<!-- merged_formatted_vc_line_time_max <- merge_formatted_variantcalling %>%  -->
 
-<!--                                             mutate('simple_name' = case_when( -->
-
-<!--                                               grepl("MERGE_STRELKA_INDELS", simple_name) ~ "MERGE_STRELKA", -->
-
-<!--                                               grepl("MERGE_STRELKA_SNVS", simple_name) ~ "MERGE_STRELKA", -->
-
-<!--                                               TRUE ~ as.character (simple_name) -->
-
-<!--                                             )) %>% -->
-
-<!--                                             group_by(intervals, simple_name, sample) %>% -->
-
-<!--                                             summarise(max_y = max(realtime_min)) %>% -->
-
-<!--                                             mutate('tool' = case_when( -->
-
-<!--                                               grepl("STRELKA", simple_name) ~ "strelka", -->
-
-<!--                                               grepl("MUTECT2", simple_name) ~ "mutect2", -->
-
-<!--                                               grepl("FREEBAYES", simple_name) ~ "freebayes", -->
-
-<!--                                               TRUE ~ "other")) %>% -->
-
-<!--                                             group_by(intervals, tool, sample) %>% -->
-
-<!--                                             summarise(sum = sum(max_y)) -->
-
-<!-- merged_formatted_vc_storage_sum <- merge_formatted_variantcalling %>% -->
-
-<!--                                         mutate('tool' = case_when( -->
-
-<!--                                               grepl("STRELKA", simple_name) ~ "strelka", -->
-
-<!--                                               grepl("MUTECT2", simple_name) ~ "mutect2", -->
-
-<!--                                               grepl("FREEBAYES", simple_name) ~ "freebayes", -->
-
-<!--                                               TRUE ~ "other")) %>% -->
-
-<!--                                         group_by(intervals,tool, sample) %>% -->
-
-<!--                                         summarise(sum = sum(workdir_GB)) -->
-
-<!-- merged_formatted_vc_storage_sum$intervals <- as.factor(merged_formatted_vc_storage_sum$intervals) -->
-
-<!-- x_axis <- function(type) { -->
-
-<!--       if(identical('mapping', type)) { -->
-
-<!--         scale_x_continuous(breaks = c(0, 4, 8, 12, 16), labels = c(0, 4, 8, 12, 16)) } -->
-
-<!--       else { -->
-
-<!--         scale_x_continuous(breaks = c(1, 125, 124, 375), labels = c(1, 125, 124, 375)) -->
-
-<!--       } -->
-
-<!--     } -->
-
-<!-- ``` -->
-
-<!-- ```{r} -->
-
-<!-- line <- ggline(merged_formatted_vc_line_time_max, x = "intervals", y = "sum",  -->
-
-<!--                group="tool",color="tool", palette = cbPalette, numeric.x.axis = FALSE) -->
-
-<!--     line -->
-
-<!--     bar <- ggbarplot(merged_formatted_vc_storage_sum, x="intervals", y="sum", -->
-
-<!--                  fill = "tool", color = "tool", -->
-
-<!--                 position = position_dodge(0.7), palette = cbPalette) #+ -->
-
-<!--       # labs(y = "work dir (GB)", x = xaxis) + -->
-
-<!--       # theme(axis.title.x = element_text(size=15), -->
-
-<!--       #       axis.title.y = element_text(size=15), -->
-
-<!--       #       plot.title = element_text(size = 20, hjust = 0.), -->
-
-<!--       #       legend.text = element_text(size = 13)) + -->
-
-<!--       # rremove("legend.title") -->
-
-<!--     plot <- ggarrange(line, bar) -->
-
-<!--     ann_plot <- annotate_figure(plot, top = text_grob("title", face = "bold", size = 14)) -->
-
-<!--     ann_plot -->
-
-<!-- ``` -->
+plot_variantcaller_summary(df_time = somatic_vc_time,
+                           group = 'intervals',
+                           df_storage = somatic_vc_storage,
+                           title = 'Somatic short variant caller',
+                           outputname = 'somatic_short_vc_summary')
+```
 
 # Package versions:
 
