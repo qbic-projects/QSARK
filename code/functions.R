@@ -31,6 +31,7 @@ format_bam_vs_cram <- function(df, format){
     filter(simple_name != 'CAT_MPILEUP') %>%
     filter(simple_name != 'CNNSCOREVARIANTS') %>%
     filter(simple_name != 'CREATE_INTERVALS_BED') %>%
+    filter(simple_name != 'FREEC_SOMATIC') %>%
     filter(simple_name != 'BWAMEM1_MEM') %>%
     filter(simple_name != 'FASTP') %>%
     filter(simple_name != 'FASTQC') %>%
@@ -74,8 +75,12 @@ format_bam_vs_cram <- function(df, format){
     mutate(simple_name = recode(simple_name, 'MERGE_CRAM' = 'MERGE_RECALIBRATED')) %>%
     mutate(simple_name = recode(simple_name, 'GATK4_HAPLOTYPECALLER' = 'HAPLOTYPECALLER')) %>%
     mutate(simple_name = recode(simple_name, 'GETPILEUPSUMMARIES_NORMAL' = 'GETPILEUPSUMMARIES')) %>%
-    mutate(simple_name = recode(simple_name, 'GETPILEUPSUMMARIES_TUMOR' = 'GETPILEUPSUMMARIES'))
-  
+    mutate(simple_name = recode(simple_name, 'GETPILEUPSUMMARIES_TUMOR' = 'GETPILEUPSUMMARIES')) %>%
+    mutate(simple_name = recode(simple_name, 'STRELKA_SINGLE' = 'STRELKA')) %>%
+    mutate(simple_name = recode(simple_name, 'STRELKA_SOMATIC' = 'STRELKA')) %>%
+    mutate(simple_name = recode(simple_name, 'MANTA_GERMLINE' = 'MANTA')) %>%
+    mutate(simple_name = recode(simple_name, 'MANTA_SOMATIC' = 'MANTA'))
+    
   return (df_filter %>% 
          # Remove rows with column value '-' and cast columns to numeric
          filter(vmem !='-') %>%
@@ -180,49 +185,27 @@ plot_cumulative_storage <- function(merged, outputfile) {
     ggbarplot(merged_cumulative_storage,
               x = "simple_name", y = "storage", fill = "format", color = "format",
               position = position_dodge(0.8), orientation = "horiz") +
-    geom_text(aes(label = round(storage,3),  group = format, fontface = "bold"), colour = "white", size = 2.5,
+    geom_text(aes(label = round(storage,3),  group = format, fontface = "bold"), colour = "white", size = 5,
               position = position_dodge(.85),
               hjust = 1.1) +
     rremove("legend.title") +
-    theme(axis.text.x = element_text(size=10),
-          axis.text.y = element_text(size=10),legend.position="top",
+    theme(axis.text.x = element_text(size=15),
+          axis.text.y = element_text(size=15), legend.position="top",
           axis.title.y = element_blank(),
-          axis.title.x = element_text(size=10),
-          legend.text = element_text(size = 10)) +
+          axis.title.x = element_text(size=15),
+          legend.text = element_text(size = 15)) +
     labs(y = "work dir (GB)") +
     scale_y_continuous(
       trans = scales::pseudo_log_trans(base = 10, sigma=0.001),
       breaks = c(0, 10^(-2:6))) +
     stat_compare_means(aes(group = format), label = "p.signif", vjust = 1, hide.ns = TRUE, paired=TRUE)
 
-  ggsave(plot=storage_cumulative, filename = paste0(results_folder,outputfile), device="png", dpi = 600)
+  ggsave(plot=storage_cumulative, filename = paste0(results_folder,outputfile), device="png", width =10, height = 10)
   
   return(storage_cumulative)
 }
 
 plot_summary <- function(df, file_name, results_folder) {
-  # summary_plot <- ggboxplot(merged, x="simple_name", 
-  #                              y="value", fill = "format", outlier.colour="black", outlier.shape=16, 
-  #                              outlier.size=.5, notch=FALSE, lwd =.1, width = 0.5) + 
-  #   rremove("legend.title") +
-  #   #geom_point(shape=16, aes_string(fill="format", colour = "sample"), 
-  #   #           size = 0.1, alpha = 1, position = position_jitterdodge(jitter.width = 0.05)) + 
-  #   guides(colour = guide_legend(override.aes = list(size=2, alpha = 1))) + 
-  #   facet_grid(measure~., scales="free", space="free_x", 
-  #              labeller=variable_labeller_y, switch="y") +
-  #   theme(axis.text.x = element_text(angle=45, hjust = 1, size=10), 
-  #         axis.text.y = element_text(size=10),
-  #         axis.title.x = element_blank(), 
-  #         axis.title.y = element_blank(),
-  #         strip.text.y = element_text(size = 10) ,
-  #         legend.position="top", legend.box="vertical", legend.margin=margin(),
-  #         legend.text = element_text(size = 10)) + 
-  #   stat_compare_means(aes(group = format), label = "p.signif", paired = TRUE, vjust = 1, hide.ns = TRUE)
-  # 
-  # ggsave(plot=summary_plot, filename = paste0(results_folder, file_name), device="png", 
-  #        dpi = 600)
-  #
-  
   cpu <- plot_bam_vs_cram_boxplot(df=df,
                                   xaxis="simple_name",
                                   yaxis="max_num_cpu",
@@ -269,20 +252,9 @@ format_splitting <- function(df){
   return (df %>% 
             # Remove rows with status FAILED
             filter(status != 'FAILED') %>%
-            #filter(vmem != '0') %>%
             # Only keep relevant processes
-            #filter(grepl('BWAMEM1_MEM|FASTP|GATK4_MARKDUPLICATES', process))
-            filter(grepl('BWAMEM1_MEM|FASTP|GATK4_MARKDUPLICATES|GATK4_BASERECALIBRATOR|GATK4_GATHERBQSRREPORTS|GATK4_APPLYBQSR|MERGE_CRAM|STRELKA|MUTECT2|FREEBAYES', process)) %>%
+            filter(grepl('BWAMEM1_MEM|FASTP|GATK4_MARKDUPLICATES|GATK4_BASERECALIBRATOR|GATK4_GATHERBQSRREPORTS|GATK4_APPLYBQSR|MERGE_CRAM|DEEPVARIANT|HAPLOTYPECALLER|STRELKA|MUTECT2|FREEBAYES', process)) %>%
             mutate_all(type.convert, as.is=TRUE) %>%
-            # Convert vmem to megabytes and gigabytes
-            #mutate('vmem_MB' = bytesto(vmem, 'm')) %>%
-            #mutate('vmem_GB' = bytesto(vmem, 'g')) %>%
-            # Convert peak_vmem to megabytes and gigabytes
-            #mutate('peak_vmem_MB' = bytesto(peak_vmem, 'm')) %>%
-            #mutate('peak_vmem_GB' = bytesto(peak_vmem, 'g')) %>%
-            # Convert requested memory to megabytes and gigabytes
-            #mutate('memory_MB' = bytesto(memory, 'm')) %>%
-            #mutate('memory_GB' = bytesto(memory, 'g')) %>%
             # Get an actual CPU number by dividing the used cpu number by 100
             mutate('num_cpu' = X.cpu/100) %>%
             # Get last element (by :) from process name
@@ -307,10 +279,7 @@ format_splitting <- function(df){
               grepl("CHC2111", tag) ~ "CHC2111", 
               grepl("CHC2113", tag) ~ "CHC2113",
               grepl("CHC2115", tag) ~ "CHC2115",
-              grepl("HCC1395N", tag) ~ "HCC1395N (12.5GB)", 
-              grepl("HCC1395T", tag) ~ "HCC1395T (14.8GB)",
               TRUE ~ "other"))
- 
   )
 }
 
@@ -370,6 +339,7 @@ plot_dataflow_single_process <- function(df_max_time, df, df_storage, group, tit
                 dataflow_theme
 
   bar <- ggviolin(df_storage, x=group, y="sum", draw_quantile = 0.5, color = group, width = 0.9) +
+          x_axis_dataflow(group) +
           labs(y = "work dir (GB)", x = xaxis) +
           dataflow_theme +
           theme(legend.text = element_text(size = 8))
@@ -377,15 +347,14 @@ plot_dataflow_single_process <- function(df_max_time, df, df_storage, group, tit
   plot <- ggpubr::ggarrange(line, bar, line_cpuh, legend= "none", ncol=3)
   ann_plot <- annotate_figure(plot, top = text_grob(title, face = "bold", size = 14))
 
-  ggsave(plot=ann_plot, filename = paste0(results_folder,outputname, ".png"), device="png",
-         dpi = 600)
-  ggsave(plot=ann_plot, filename = paste0(results_folder,outputname, ".pdf"), device="pdf",
-         width=20, height=10, units="cm")
+  ggsave(plot=ann_plot, filename = paste0(results_folder,outputname, ".png"), device="png", width=20, height=20, units="cm")
+  #ggsave(plot=ann_plot, filename = paste0(results_folder,outputname, ".pdf"), device="pdf",
+  #       width=20, height=20, units="cm")
 
   return(ann_plot)
 }
 
-plot_splitting_summary <- function(df_time, group, xaxis, type, df_storage, title, outputname){
+plot_splitting_summary <- function(df_time, group, xaxis, df_storage, title, outputname){
   
   line <- ggviolin(data=df_time, x=group, y="sum_combined_per_sample_realtime", draw_quantile = 0.5, color = group,  width = 0.9) +
           x_axis_dataflow(group) +
@@ -409,12 +378,37 @@ plot_splitting_summary <- function(df_time, group, xaxis, type, df_storage, titl
   
   ggsave(plot=ann_plot, filename = paste0(results_folder,outputname, ".png"), device="png",
          width=20, height=10, units="cm")
-  ggsave(plot=ann_plot, filename = paste0(results_folder,outputname, ".pdf"), device="pdf", 
-         width=20, height=10, units="cm")
+  #ggsave(plot=ann_plot, filename = paste0(results_folder,outputname, ".pdf"), device="pdf", 
+  #      width=20, height=10, units="cm")
   
   return(ann_plot)
 }
 
+plot_variantcaller_summary <-  function(df_time, group, df_storage, title, outputname) {
+  
+  line <- facet(ggboxplot(data=df_time, x=group, y="sum_combined_per_sample_realtime", color = 'caller') +
+                  labs(y = "time (min)") +
+                  theme(axis.title.x = element_blank(), axis.text.x = element_blank()),
+                  facet.by = 'caller',
+                  panel.labs.font = list(face = "bold"), nrow=1)
+  
+  line_cpuh <-  facet(ggboxplot(data=df_time, x=group, y="sum_combined_per_sample_cpuh", color = 'caller') +
+                        labs(y = "CPUh", x = "#interval groups") +
+                        theme(strip.text = element_blank()),
+                        facet.by  = 'caller', nrow=1)
+  
+  bar <- facet(ggboxplot(data=df_storage, x=group, y="sum",color = 'caller') +
+                 labs(y = "work dir (GB)") +
+                 theme(legend.text = element_text(size = 8)) +
+                 rremove("legend.title") + 
+                 theme(axis.title.x = element_blank(), axis.text.x = element_blank(), strip.text = element_blank()),
+                facet.by  = 'caller', nrow=1)
+  
+  plot <- ggpubr::ggarrange(line, bar, line_cpuh, legend='none', ncol=1, align = "v")
+  ann_plot <- annotate_figure(plot, top = text_grob(title, face = "bold", size = 14))
+  ggsave(plot=ann_plot, filename = paste0(results_folder,outputname, ".png"), device="png", dpi=600 )
+  ann_plot
+}
 #####################
 ######## AWS ########
 #####################
