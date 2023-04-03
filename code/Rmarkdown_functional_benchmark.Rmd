@@ -1,6 +1,6 @@
 ---
 title: "Sarek Paper"
-subtitle: "Evaluate Benchmark of HCC1395"
+subtitle: "Plot Giab and HCC1395 validation results"
 author: "Friederike Hanssen"
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 output: 
@@ -49,68 +49,6 @@ dir.create(results_folder)
 For germline benchmarking the datatsets HG002-HG004 were run through the pipeline by combining each mapper with all variant callers. 
 For somatic benchmarking a dataset from the HCC1395 cell line was run through the pipeline by combining each mapper with all variant callers. 
 
-# Loading the dataset
-
-## Germline
-
-Truth vcfs and & bed files were downloaded from 
-
-```{r echo=FALSE}
-data_30_germline <- read.table(file = "../data/functional/merged_30_germline.csv", sep = ',', header = TRUE) %>%
-        mutate('aligner' = case_when(
-          grepl("dragmap", run) ~ "Dragmap",
-          grepl("bwamem2", run) ~ "BwaMem2",
-          grepl("bwa", run) ~ "bwa",
-           TRUE ~ "other")) %>%
-        mutate('caller' = case_when(
-            grepl("strelka", run) ~ "Strelka2_BP",
-            grepl("haplotypecaller", run) & !grepl("filtered", run) ~ "HaplotypeCaller",
-            grepl("haplotypecaller_filtered", run) ~ "HaplotypeCaller (filtered)",
-            grepl("freebayes", run) ~ "FreeBayes",
-            grepl("deepvariant", run) ~ "DeepVariant",
-             TRUE ~ "other")) %>%
-      filter(Filter !='ALL') %>%
-      mutate("version" = "sarek3")
-```
-## Somatic
-
-Truth vcf & bed files were downloaded from [here](https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/seqc/Somatic_Mutation_WG/release/v1.2/), following the links from this [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8506910/).
-
-See `script.sh` for details on how `som.py` was run. 
-
-```{r input, echo=FALSE, message=FALSE}
-data_30_somatic <- read.table(file = "../data/functional/merged_30_trimmed.csv", sep = ',', header = TRUE) %>%
-        mutate('aligner' = case_when(
-          grepl("dragmap", run) ~ "Dragmap",
-          grepl("bwamem2", run) ~ "BwaMem2",
-          grepl("bwa", run) ~ "bwa",
-           TRUE ~ "other")) %>%
-        mutate('caller' = case_when(
-            grepl("strelka", run) ~ "Strelka2_BP",
-            grepl("mutect2", run) & !grepl("filtered", run) ~ "Mutect2",
-            grepl("mutect2_filtered", run) ~ "Mutect2 (filtered)",
-            grepl("freebayes", run) ~ "FreeBayes",
-             TRUE ~ "other")) %>%
-      filter(type !='records') %>%
-      mutate("f_score" = 2 * ((precision*recall)/(precision+recall))) %>%
-      mutate("version" = "sarek3")
-
-data_27_somatic <- read.table(file = "../data/functional/merged_27.csv", sep = ',', header = TRUE) %>%
-        mutate('aligner' = case_when(
-          grepl("bwamem2", run) ~ "BwaMem2",
-          grepl("bwa", run) ~ "bwa",
-           TRUE ~ "other")) %>%
-        mutate('Variant caller' = case_when(
-            grepl("strelka_", run)  ~ "Strelka2",
-            grepl("strelkabp_", run)  ~ "Strelka2_BP",
-            grepl("mutect2", run) & !grepl("filtered", run) ~ "Mutect2",
-            grepl("mutect2_filtered", run) ~ "Mutect2 (filtered)",
-            grepl("freebayes", run) ~ "FreeBayes",
-             TRUE ~ "other")) %>%
-      filter(type !='records') %>%
-      mutate("f_score" = 2 * ((precision*recall)/(precision+recall)))%>%
-      mutate("version" = "sarek2")
-```
 
 # Methods
 
@@ -170,9 +108,31 @@ plot_summary <- function(scatter, score, outputfilename){
 
 ## Germline 
 
+### Loading datasets
+
+Truth vcfs and & bed files were downloaded from 
+
+```{r echo=FALSE}
+data_30_germline <- read.table(file = "../data/functional/germline/sarek_30/merged_30_germline.csv", sep = ',', header = TRUE) %>%
+        mutate('aligner' = case_when(
+          grepl("dragmap", run) ~ "Dragmap",
+          grepl("bwamem2", run) ~ "BwaMem2",
+          grepl("bwa", run) ~ "bwa",
+           TRUE ~ "other")) %>%
+        mutate('caller' = case_when(
+            grepl("strelka", run) ~ "Strelka2_BP",
+            grepl("haplotypecaller", run) & !grepl("filtered", run) ~ "HaplotypeCaller",
+            grepl("haplotypecaller_filtered", run) ~ "HaplotypeCaller (filtered)",
+            grepl("freebayes", run) ~ "FreeBayes",
+            grepl("deepvariant", run) ~ "DeepVariant",
+             TRUE ~ "other")) %>%
+      filter(Filter !='ALL') %>%
+      mutate("version" = "sarek3")
+```
+
 ### Overview {.tabset .tabset-fade .tabset-pills}
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, message=FALSE}
 
 data_30_germline_snps = data_30_germline %>% filter(Type !='INDEL')
 data_30_germline_indels = data_30_germline %>% filter(Type !='SNP')
@@ -235,6 +195,47 @@ plot_summary(scatter_indels_germline, score_indels_germline, "germline_30_indels
 
 ## Somatic {.tabset .tabset-fade .tabset-pills}
 
+### Loading datasets
+
+Truth vcf & bed files were downloaded from [here](https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/seqc/Somatic_Mutation_WG/release/v1.2/), following the links from this [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8506910/).
+
+See `script.sh` for details on how `som.py` was run. 
+
+```{r input, echo=FALSE, message=FALSE}
+data_30_somatic <- read.table(file = "../data/functional/merged_30_trimmed.csv", sep = ',', header = TRUE) %>%
+        mutate('aligner' = case_when(
+          grepl("dragmap", run) ~ "Dragmap",
+          grepl("bwamem2", run) ~ "BwaMem2",
+          grepl("bwa", run) ~ "bwa",
+           TRUE ~ "other")) %>%
+        mutate('caller' = case_when(
+            grepl("strelka", run) ~ "Strelka2_BP",
+            grepl("mutect2", run) & !grepl("filtered", run) ~ "Mutect2",
+            grepl("mutect2_filtered", run) ~ "Mutect2 (filtered)",
+            grepl("freebayes", run) ~ "FreeBayes",
+             TRUE ~ "other")) %>%
+      filter(type !='records') %>%
+      mutate("f_score" = 2 * ((precision*recall)/(precision+recall))) %>%
+      mutate("version" = "sarek3")
+
+data_27_somatic <- read.table(file = "../data/functional/merged_27.csv", sep = ',', header = TRUE) %>%
+        mutate('aligner' = case_when(
+          grepl("bwamem2", run) ~ "BwaMem2",
+          grepl("bwa", run) ~ "bwa",
+           TRUE ~ "other")) %>%
+        mutate('Variant caller' = case_when(
+            grepl("strelka_", run)  ~ "Strelka2",
+            grepl("strelkabp_", run)  ~ "Strelka2_BP",
+            grepl("mutect2", run) & !grepl("filtered", run) ~ "Mutect2",
+            grepl("mutect2_filtered", run) ~ "Mutect2 (filtered)",
+            grepl("freebayes", run) ~ "FreeBayes",
+             TRUE ~ "other")) %>%
+      filter(type !='records') %>%
+      mutate("f_score" = 2 * ((precision*recall)/(precision+recall)))%>%
+      mutate("version" = "sarek2")
+```
+
+
 ```{r echo=FALSE}
 data_snvs_30_somatic =  data_30_somatic %>% filter(type !='indels')
 data_snvs_27_somatic =  data_27_somatic %>% filter(type !='indels')
@@ -242,6 +243,7 @@ data_snvs_27_somatic =  data_27_somatic %>% filter(type !='indels')
 data_indels_30_somatic =  data_30_somatic %>% filter(type !='SNVs')
 data_indels_27_somatic =  data_27_somatic %>% filter(type !='SNVs')
 ```
+
 ### SNVs {.tabset .tabset-fade .tabset-pills}
 
 #### Recall & Precision
