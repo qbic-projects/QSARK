@@ -103,7 +103,7 @@ This runs through mapping, duplicate marking, BQSR, and QC for BWA & non-spark G
 +--------------------------------------+----------------+----------------+-----------+-----------------------------------------------------------------------------------------------------+----------------+-----------+----------------------------------------------------------------------------------------------------+
 | Pre-Processing (Spark)               | 3              |                |           |                                                                                                     |                |           |                                                                                                    |
 +--------------------------------------+----------------+----------------+-----------+-----------------------------------------------------------------------------------------------------+----------------+-----------+----------------------------------------------------------------------------------------------------+
-| Variant calling (germline & somatic) | 1              | yes            | yes       | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/2HREZ7WsVnjDE3>\            | yes            | yes       | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/Tug8hE0p6xf9t> running     |
+| Variant calling (germline & somatic) | 1              | yes            | yes       | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/2HREZ7WsVnjDE3>\            | yes            | yes       | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/Tug8hE0p6xf9t> successful  |
 |                                      |                |                |           | successful                                                                                          |                |           |                                                                                                    |
 +--------------------------------------+----------------+----------------+-----------+-----------------------------------------------------------------------------------------------------+----------------+-----------+----------------------------------------------------------------------------------------------------+
 | Variant calling (germline & somatic) | 2              | yes            | yes       | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/1ZMUocwVOySuN> successful   | yes            | yes       | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/56Ce7nXg3bPzst> successful |
@@ -144,7 +144,7 @@ merged_preprocessing_default <- rbind(cram_preprocessing_1,
 merged_variantcalling <- rbind(cram_variantcalling_1, 
                                 cram_variantcalling_2,
                                 cram_variantcalling_3,
-                                #bam_variantcalling_1,
+                                bam_variantcalling_1,
                                 bam_variantcalling_2,
                                 bam_variantcalling_3
                                )
