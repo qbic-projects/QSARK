@@ -202,7 +202,7 @@ Truth vcf & bed files were downloaded from [here](https://ftp-trace.ncbi.nlm.nih
 See `script.sh` for details on how `som.py` was run. 
 
 ```{r input, echo=FALSE, message=FALSE}
-data_30_somatic <- read.table(file = "../data/functional/merged_30_trimmed.csv", sep = ',', header = TRUE) %>%
+data_30_somatic <- read.table(file = "../data/functional/somatic/merged.txt", header = TRUE) %>%
         mutate('aligner' = case_when(
           grepl("dragmap", run) ~ "Dragmap",
           grepl("bwamem2", run) ~ "BwaMem2",
@@ -214,34 +214,51 @@ data_30_somatic <- read.table(file = "../data/functional/merged_30_trimmed.csv",
             grepl("mutect2_filtered", run) ~ "Mutect2 (filtered)",
             grepl("freebayes", run) ~ "FreeBayes",
              TRUE ~ "other")) %>%
-      filter(type !='records') %>%
-      mutate("f_score" = 2 * ((precision*recall)/(precision+recall))) %>%
+        mutate('type' = case_when(
+            grepl("SNV", run) ~ "SNV",
+            grepl("INDEL", run) ~ "INDEL",
+            TRUE ~ "other")) %>%
       mutate("version" = "sarek3")
-
-data_27_somatic <- read.table(file = "../data/functional/merged_27.csv", sep = ',', header = TRUE) %>%
-        mutate('aligner' = case_when(
-          grepl("bwamem2", run) ~ "BwaMem2",
-          grepl("bwa", run) ~ "bwa",
-           TRUE ~ "other")) %>%
-        mutate('Variant caller' = case_when(
-            grepl("strelka_", run)  ~ "Strelka2",
-            grepl("strelkabp_", run)  ~ "Strelka2_BP",
-            grepl("mutect2", run) & !grepl("filtered", run) ~ "Mutect2",
-            grepl("mutect2_filtered", run) ~ "Mutect2 (filtered)",
-            grepl("freebayes", run) ~ "FreeBayes",
-             TRUE ~ "other")) %>%
-      filter(type !='records') %>%
-      mutate("f_score" = 2 * ((precision*recall)/(precision+recall)))%>%
-      mutate("version" = "sarek2")
+# data_30_somatic <- read.table(file = "../data/functional/merged_30_trimmed.csv", sep = ',', header = TRUE) %>%
+#         mutate('aligner' = case_when(
+#           grepl("dragmap", run) ~ "Dragmap",
+#           grepl("bwamem2", run) ~ "BwaMem2",
+#           grepl("bwa", run) ~ "bwa",
+#            TRUE ~ "other")) %>%
+#         mutate('caller' = case_when(
+#             grepl("strelka", run) ~ "Strelka2_BP",
+#             grepl("mutect2", run) & !grepl("filtered", run) ~ "Mutect2",
+#             grepl("mutect2_filtered", run) ~ "Mutect2 (filtered)",
+#             grepl("freebayes", run) ~ "FreeBayes",
+#              TRUE ~ "other")) %>%
+#       filter(type !='records') %>%
+#       mutate("f_score" = 2 * ((precision*recall)/(precision+recall))) %>%
+#       mutate("version" = "sarek3")
+# 
+# data_27_somatic <- read.table(file = "../data/functional/merged_27.csv", sep = ',', header = TRUE) %>%
+#         mutate('aligner' = case_when(
+#           grepl("bwamem2", run) ~ "BwaMem2",
+#           grepl("bwa", run) ~ "bwa",
+#            TRUE ~ "other")) %>%
+#         mutate('Variant caller' = case_when(
+#             grepl("strelka_", run)  ~ "Strelka2",
+#             grepl("strelkabp_", run)  ~ "Strelka2_BP",
+#             grepl("mutect2", run) & !grepl("filtered", run) ~ "Mutect2",
+#             grepl("mutect2_filtered", run) ~ "Mutect2 (filtered)",
+#             grepl("freebayes", run) ~ "FreeBayes",
+#              TRUE ~ "other")) %>%
+#       filter(type !='records') %>%
+#       mutate("f_score" = 2 * ((precision*recall)/(precision+recall)))%>%
+#       mutate("version" = "sarek2")
 ```
 
 
 ```{r echo=FALSE}
-data_snvs_30_somatic =  data_30_somatic %>% filter(type !='indels')
-data_snvs_27_somatic =  data_27_somatic %>% filter(type !='indels')
+data_snvs_30_somatic =  data_30_somatic %>% filter(type !='INDEL')
+#data_snvs_27_somatic =  data_27_somatic %>% filter(type !='indels')
 
-data_indels_30_somatic =  data_30_somatic %>% filter(type !='SNVs')
-data_indels_27_somatic =  data_27_somatic %>% filter(type !='SNVs')
+data_indels_30_somatic =  data_30_somatic %>% filter(type !='SNV')
+#data_indels_27_somatic =  data_27_somatic %>% filter(type !='SNVs')
 ```
 
 ### SNVs {.tabset .tabset-fade .tabset-pills}
@@ -251,15 +268,23 @@ data_indels_27_somatic =  data_27_somatic %>% filter(type !='SNVs')
 
 ```{r snvs , echo=FALSE, fig.show="hold", out.width = "50%"}
 #test <- rbind(data_snvs_30_somatic, data_snvs_2_somatic7) %>% mutate(fill = ifelse(version == "sarek2", caller, NA))
-plot_scatter(data_snvs_30_somatic, 'recall', 'precision', "SNVs", "snvs_prec_recall_30_somatic.png")
-#plot_scatter(data_snvs_27_somatic, 'recall', 'precision', "Sarek 2.7.2", "snvs_prec_recall_272_somatic.png")
+somatic_snvs_scatter <- plot_scatter(data_snvs_30_somatic, 'Sensitivity', 'Precision', "SNVs", "snvs_prec_recall_30_somatic.png")
+somatic_snvs_fscore <- plot_score(data_snvs_30_somatic, 'F.measure', "Sarek 3.1.1 SNVS", "snvs_fscore_311_somatic.png")
+
+plot_summary(somatic_snvs_scatter, somatic_snvs_fscore, "somatic_30_snvs_summary.png")
 ```
 
 #### F_score
 
 ```{r , echo=FALSE,  fig.show="hold", out.width = "50%"}
 
-plot_score(data_snvs_30_somatic, 'f_score', "Sarek 3.1.1", "snvs_fscore_311_somatic.png")
+
+#plot_score(data_snvs_27_somatic, 'f_score', "Sarek 2.7.2", "snvs_fscore_272_somatic.png")
+```
+
+```{r , echo=FALSE,  fig.show="hold", out.width = "50%"}
+
+plot_score(data_indels_30_somatic, 'F.measure', "Sarek 3.1.1 Indels", "snvs_fscore_311_somatic.png")
 #plot_score(data_snvs_27_somatic, 'f_score', "Sarek 2.7.2", "snvs_fscore_272_somatic.png")
 
 ```
