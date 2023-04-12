@@ -68,6 +68,8 @@ format_bam_vs_cram <- function(df, format){
     # Rename process to something less convoluted
     mutate(simple_name = recode(simple_name, 'SAMTOOLS_STATS_CRAM' = 'SAMTOOLS_STATS')) %>% 
     mutate(simple_name = recode(simple_name, 'GATK4_MARKDUPLICATES' = 'MARKDUPLICATES')) %>%
+    mutate(simple_name = recode(simple_name, 'GATK4_MARKDUPLICATES_SPARK' = 'MARKDUPLICATES_SPARK')) %>%
+    mutate(simple_name = recode(simple_name, 'GATK4_ESTIMATELIBRARYCOMPLEXITY' = 'ESTIMATELIBRARYCOMPLEXITY')) %>%
     mutate(simple_name = recode(simple_name, 'GATK4_BASERECALIBRATOR' = 'BASERECALIBRATOR')) %>%
     mutate(simple_name = recode(simple_name, 'GATK4_APPLYBQSR' = 'APPLYBQSR')) %>%
     mutate(simple_name = recode(simple_name, 'GATK4_GATHERBQSRREPORTS' = 'GATHERBQSRREPORTS')) %>%

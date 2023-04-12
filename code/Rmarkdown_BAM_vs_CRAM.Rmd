@@ -97,11 +97,11 @@ This runs through mapping, duplicate marking, BQSR, and QC for BWA & non-spark G
 +--------------------------------------+----------------+----------------+-----------+-----------------------------------------------------------------------------------------------------+----------------+-----------+----------------------------------------------------------------------------------------------------+
 | Pre-Processing                       | 3              | yes            | yes       | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/5xVT47YBvOiFCB> successful  | yes            | yes       | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/1S1cMvqzMVON2t> successful |
 +--------------------------------------+----------------+----------------+-----------+-----------------------------------------------------------------------------------------------------+----------------+-----------+----------------------------------------------------------------------------------------------------+
-| Pre-Processing (Spark)               | 1              |                |           |                                                                                                     |                |           |                                                                                                    |
+| Pre-Processing (Spark)               | 1              | yes            | yes       |                                                                                                     | yes            | yes       |                                                                                                    |
 +--------------------------------------+----------------+----------------+-----------+-----------------------------------------------------------------------------------------------------+----------------+-----------+----------------------------------------------------------------------------------------------------+
-| Pre-Processing (Spark)               | 2              |                |           |                                                                                                     |                |           |                                                                                                    |
+| Pre-Processing (Spark)               | 2              | yes            | yes       |                                                                                                     | yes            | yes       |                                                                                                    |
 +--------------------------------------+----------------+----------------+-----------+-----------------------------------------------------------------------------------------------------+----------------+-----------+----------------------------------------------------------------------------------------------------+
-| Pre-Processing (Spark)               | 3              |                |           |                                                                                                     |                |           |                                                                                                    |
+| Pre-Processing (Spark)               | 3              | yes            | yes       |                                                                                                     | yes            | yes       |                                                                                                    |
 +--------------------------------------+----------------+----------------+-----------+-----------------------------------------------------------------------------------------------------+----------------+-----------+----------------------------------------------------------------------------------------------------+
 | Variant calling (germline & somatic) | 1              | yes            | yes       | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/2HREZ7WsVnjDE3>\            | yes            | yes       | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/Tug8hE0p6xf9t> successful  |
 |                                      |                |                |           | successful                                                                                          |                |           |                                                                                                    |
@@ -119,6 +119,13 @@ cram_preprocessing_1 <- load_data_bam_vs_cram(cram_directiory, "cram_nospark_pre
 cram_preprocessing_2 <- load_data_bam_vs_cram(cram_directiory, "cram_nospark_preprocessing_2", "cram_2", "cram")
 cram_preprocessing_3 <- load_data_bam_vs_cram(cram_directiory, "cram_nospark_preprocessing_3", "cram_3", "cram")
 
+cram_spark_preprocessing_1 <- load_data_bam_vs_cram(cram_directiory, "cram_sparkpreprocessing_1", "cram_1", "cram") %>%
+  filter(grepl("GATK4_ESTIMATELIBRARYCOMPLEXITY",process) | grepl("GATK4_MARKDUPLICATES_SPARK",process)) 
+cram_spark_preprocessing_2 <- load_data_bam_vs_cram(cram_directiory, "cram_sparkpreprocessing_2", "cram_2", "cram") %>%
+  filter(grepl("GATK4_ESTIMATELIBRARYCOMPLEXITY",process) | grepl("GATK4_MARKDUPLICATES_SPARK",process)) 
+cram_spark_preprocessing_3 <- load_data_bam_vs_cram(cram_directiory, "cram_sparkpreprocessing_3", "cram_3", "cram") %>%
+  filter(grepl("GATK4_ESTIMATELIBRARYCOMPLEXITY",process) | grepl("GATK4_MARKDUPLICATES_SPARK",process)) 
+
 cram_variantcalling_1 <- load_data_bam_vs_cram(cram_directiory, "cram_variantcalling_1", "cram_1", "cram")
 cram_variantcalling_2 <- load_data_bam_vs_cram(cram_directiory, "cram_variantcalling_2", "cram_2", "cram")
 cram_variantcalling_3 <- load_data_bam_vs_cram(cram_directiory, "cram_variantcalling_3", "cram_3", "cram")
@@ -129,6 +136,13 @@ bam_preprocessing_1 <- load_data_bam_vs_cram(bam_directiory, "bam_nospark_prepro
 bam_preprocessing_2 <- load_data_bam_vs_cram(bam_directiory, "bam_nospark_preprocessing_2", "bam_2", "bam")
 bam_preprocessing_3 <- load_data_bam_vs_cram(bam_directiory, "bam_nospark_preprocessing_3", "bam_3", "bam")
 
+bam_spark_preprocessing_1 <- load_data_bam_vs_cram(bam_directiory, "bam_sparkpreprocessing_1", "bam_1", "bam") %>%
+  filter(grepl("GATK4_ESTIMATELIBRARYCOMPLEXITY",process) | grepl("GATK4_MARKDUPLICATES_SPARK",process)) 
+bam_spark_preprocessing_2 <- load_data_bam_vs_cram(bam_directiory, "bam_sparkpreprocessing_2", "bam_2", "bam") %>%
+  filter(grepl("GATK4_ESTIMATELIBRARYCOMPLEXITY",process) | grepl("GATK4_MARKDUPLICATES_SPARK",process)) 
+bam_spark_preprocessing_3 <- load_data_bam_vs_cram(bam_directiory, "bam_sparkpreprocessing_3", "bam_3", "bam") %>%
+  filter(grepl("GATK4_ESTIMATELIBRARYCOMPLEXITY",process) | grepl("GATK4_MARKDUPLICATES_SPARK",process)) 
+
 bam_variantcalling_1 <- load_data_bam_vs_cram(bam_directiory, "bam_variantcalling_1", "bam_1", "bam")
 bam_variantcalling_2 <- load_data_bam_vs_cram(bam_directiory, "bam_variantcalling_2", "bam_2", "bam")
 bam_variantcalling_3 <- load_data_bam_vs_cram(bam_directiory, "bam_variantcalling_3", "bam_3", "bam")
@@ -136,9 +150,15 @@ bam_variantcalling_3 <- load_data_bam_vs_cram(bam_directiory, "bam_variantcallin
 merged_preprocessing_default <- rbind(cram_preprocessing_1, 
                                       cram_preprocessing_2,
                                       cram_preprocessing_3,
+                                      cram_spark_preprocessing_1,
+                                      cram_spark_preprocessing_2,
+                                      cram_spark_preprocessing_3,
                                       bam_preprocessing_1,
                                       bam_preprocessing_2,
-                                      bam_preprocessing_3
+                                      bam_preprocessing_3,
+                                      bam_spark_preprocessing_1,
+                                      bam_spark_preprocessing_2,
+                                      bam_spark_preprocessing_3
                                       )
 
 merged_variantcalling <- rbind(cram_variantcalling_1, 
@@ -149,12 +169,14 @@ merged_variantcalling <- rbind(cram_variantcalling_1,
                                 bam_variantcalling_3
                                )
 
+
+test <- format_bam_vs_cram(cram_spark_preprocessing_1)
 ```
 
 ```{r format_input, echo=FALSE}
 merged_preprocessing_formatted_all <- format_bam_vs_cram(merged_preprocessing_default)
 
-merged_preprocessing_formatted_all$simple_name <- factor(merged_preprocessing_formatted_all$simple_name, levels = c("MARKDUPLICATES", "INDEX_MARKDUPLICATES", "BASERECALIBRATOR", "GATHERBQSRREPORTS", "APPLYBQSR", "MERGE_RECALIBRATED", "INDEX_RECALIBRATED", "MOSDEPTH", "SAMTOOLS_STATS"))
+merged_preprocessing_formatted_all$simple_name <- factor(merged_preprocessing_formatted_all$simple_name, levels = c("MARKDUPLICATES", "MARKDUPLICATES_SPARK", "INDEX_MARKDUPLICATES", "BASERECALIBRATOR", "GATHERBQSRREPORTS", "APPLYBQSR", "MERGE_RECALIBRATED", "INDEX_RECALIBRATED", "ESTIMATELIBRARYCOMPLEXITY", "MOSDEPTH", "SAMTOOLS_STATS"))
 
 merged_variantcalling_formatted_all <- format_bam_vs_cram(merged_variantcalling) 
 merged_variantcalling_formatted_all$simple_name <- factor(merged_variantcalling_formatted_all$simple_name, levels = c("DEEPVARIANT", "FREEBAYES", "HAPLOTYPECALLER", "MUTECT2_PAIRED", "GETPILEUPSUMMARIES", "STRELKA", "MANTA", "TIDDIT_SV", "ASCAT", "CNVKIT_BATCH",  "SAMTOOLS_MPILEUP", "MSISENSORPRO_MSI_SOMATIC"))
