@@ -1,0 +1,17 @@
+Threshold  True-pos-baseline  True-pos-call  False-pos  False-neg  Precision  Sensitivity  F-measure	run
+     None                 63             63     376247         10     0.0002       0.8630     0.0003	freebayes_INDEL_bwamem2
+     None                 63             63     376247         10     0.0002       0.8630     0.0003	freebayes_INDEL_bwa
+     None               1532           1510     374800        137     0.0040       0.9179     0.0080	freebayes_SNV_bwamem2
+     None               1532           1510     374800        137     0.0040       0.9179     0.0080	freebayes_SNV_bwa
+     None                 46             46       1232         27     0.0360       0.6301     0.0681	mutect2_filtered_INDEL_bwamem2
+     None                 46             46       1232         27     0.0360       0.6301     0.0681	mutect2_filtered_INDEL_bwa
+     None               1195           1177        101        474     0.9210       0.7160     0.8057	mutect2_filtered_SNV_bwamem2
+     None               1195           1177        101        474     0.9210       0.7160     0.8057	mutect2_filtered_SNV_bwa
+     None                 65             65       5988          8     0.0107       0.8904     0.0212	mutect2_INDEL_bwamem2
+     None                 65             65       5988          8     0.0107       0.8904     0.0212	mutect2_INDEL_bwa
+     None               1452           1432       4621        217     0.2366       0.8700     0.3720	mutect2_SNV_bwamem2
+     None               1452           1432       4621        217     0.2366       0.8700     0.3720	mutect2_SNV_bwa
+     None                 58             58        130         15     0.3085       0.7945     0.4444	strelka_INDEL_bwamem2
+     None                 58             58        130         15     0.3085       0.7945     0.4444	strelka_INDEL_bwa
+     None               1419           1419       1078        250     0.5683       0.8502     0.6812	strelka_SNV_bwamem2
+     None               1419           1419       1078        250     0.5683       0.8502     0.6812	strelka_SNV_bwa
