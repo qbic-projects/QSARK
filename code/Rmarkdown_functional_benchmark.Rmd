@@ -98,6 +98,7 @@ plot_summary <- function(scatter, score, outputfilename){
   
   p <- ggpubr::ggarrange(scatter + labs(shape=NULL, colour=NULL, title=NULL), 
                         score + labs(title=NULL),
+                        labels = c("A", "B"),
                         ncol=2, nrow=1, common.legend = T, legend = "right") 
   ggsave(plot=p, filename = paste0(results_folder, outputfilename), device="png", width = 25, height = 10, units = "cm")
   
@@ -193,7 +194,7 @@ plot_summary(scatter_indels_germline, score_indels_germline, "germline_30_indels
 ```
 
 
-## Somatic {.tabset .tabset-fade .tabset-pills}
+## Somatic
 
 ### Loading datasets
 
@@ -261,33 +262,32 @@ data_indels_30_somatic =  data_30_somatic %>% filter(type !='SNV')
 #data_indels_27_somatic =  data_27_somatic %>% filter(type !='SNVs')
 ```
 
-### SNVs {.tabset .tabset-fade .tabset-pills}
 
-#### Recall & Precision
+### Overview {.tabset .tabset-fade .tabset-pills}
 
+#### SNVs
+#### Indels
+
+### Plots {.tabset .tabset-fade .tabset-pills}
+#### SNVs
 
 ```{r snvs , echo=FALSE, fig.show="hold", out.width = "50%"}
-#test <- rbind(data_snvs_30_somatic, data_snvs_2_somatic7) %>% mutate(fill = ifelse(version == "sarek2", caller, NA))
 somatic_snvs_scatter <- plot_scatter(data_snvs_30_somatic, 'Sensitivity', 'Precision', "SNVs", "snvs_prec_recall_30_somatic.png")
 somatic_snvs_fscore <- plot_score(data_snvs_30_somatic, 'F.measure', "Sarek 3.1.1 SNVS", "snvs_fscore_311_somatic.png")
 
 plot_summary(somatic_snvs_scatter, somatic_snvs_fscore, "somatic_30_snvs_summary.png")
 ```
 
-#### F_score
+#### Indels
 
 ```{r , echo=FALSE,  fig.show="hold", out.width = "50%"}
 
+somatic_indels_scatter <- plot_scatter(data_indels_30_somatic, 'Sensitivity', 'Precision', "INDELs", "indels_prec_recall_30_somatic.png")
+somatic_indels_fscore <- plot_score(data_indels_30_somatic, 'F.measure', "Sarek 3.1.1 INDELs", "indels_fscore_311_somatic.png")
 
-#plot_score(data_snvs_27_somatic, 'f_score', "Sarek 2.7.2", "snvs_fscore_272_somatic.png")
+plot_summary(somatic_indels_scatter, somatic_indels_fscore, "somatic_30_indels_summary.png")
 ```
 
-```{r , echo=FALSE,  fig.show="hold", out.width = "50%"}
-
-plot_score(data_indels_30_somatic, 'F.measure', "Sarek 3.1.1 Indels", "snvs_fscore_311_somatic.png")
-#plot_score(data_snvs_27_somatic, 'f_score', "Sarek 2.7.2", "snvs_fscore_272_somatic.png")
-
-```
 
 <!-- ### Indels {.tabset .tabset-fade .tabset-pills} -->
 

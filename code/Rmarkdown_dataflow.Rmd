@@ -71,9 +71,10 @@ This runs through mapping, duplicate marking, BQSR, and QC, Variant calling for 
 Loading all the individual samples. Print sample summary if possible (e.g. metadata sheet).
 
 | name               | nucleotides_per_second (number of intervals) | num of cpus for fastp         | tower id                                                                                | work sizes | trace |
-|------------|------------|------------|------------|------------|------------|
+|--------------------|----------------------------------------------|-------------------------------|-----------------------------------------------------------------------------------------|------------|-------|
 | fastp4_intervals78 | 10001 (78)                                   | 4, \--split_fastq 10000000000 | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/PE2um0F1SrwRi>  | yes        | yes   |
 | fastp8_intervals40 | 70000 (40)                                   | 8, \--split_fastq 500000000   | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/52L0P2tE99JYXs> | yes        | yes   |
+| fastp12            | skipped                                      | 12, ---split_fastq 100000000  | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/ocENvYnNRQAGC>  | yes        | yes   |
 | fastp16_intervals1 | 5000000 (1)                                  | 16, \--split_fastq 100000000  | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/2uPwaXSKrcUaKq> | yes        | yes   |
 | fastp0_intervals20 | 200000 (21)                                  | 0, \--split-fastq 0           | <http://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/5iFlE6AEOimMO9>  | yes        | yes   |
 
@@ -91,15 +92,23 @@ execution_fastp4_intervals78 <- read.csv(file = '../data/intervals/fastp4_interv
 storage_fastp8_intervals40 <- read.csv(file = '../data/intervals/fastp8_intervals40/folder_size.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
 execution_fastp8_intervals40 <- read.csv(file = '../data/intervals/fastp8_intervals40/execution_trace_2023-02-22_15-42-27.txt', sep = "\t", stringsAsFactors = FALSE)
 
-## Fastp 12, intervals 124
-execution_fastp12_intervals124_preprocessing <- read.csv(file = '../data/bam_vs_cram/cram/cram_nospark_preprocessing_1/execution_trace_2022-11-29_16-01-52.txt', sep = "\t", stringsAsFactors = FALSE)
-execution_fastp12_intervals124_variantcalling <- read.csv(file = '../data/bam_vs_cram/cram/cram_variantcalling_1/execution_trace_2023-03-30_10-23-49.txt', sep = "\t", stringsAsFactors = FALSE)
+## Fastp 12
+execution_fastp12_preprocessing <- read.csv(file = '../data/intervals/fastp12/execution_trace_2023-04-21_16-25-01.txt', sep = "\t", stringsAsFactors = FALSE)
+storage_fastp12_preprocessing <- read.csv(file = '../data/intervals/fastp12/folder_size.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
 
-storage_fastp12_intervals124_preprocessing <- read.csv(file = '../data/bam_vs_cram/cram/cram_nospark_preprocessing_1/folder_sizes.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
-storage_fastp12_intervals124_variantcalling <- read.csv(file = '../data/bam_vs_cram/cram/cram_variantcalling_1/folder_size.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
+##  intervals 124
+execution_intervals124_preprocessing <- read.csv(file = '../data/bam_vs_cram/cram/cram_nospark_preprocessing_1/execution_trace_2022-11-29_16-01-52.txt', sep = "\t", stringsAsFactors = FALSE) %>%
+                                      filter(process != 'NFCORE_SAREK:SAREK:FASTP') %>%
+                                      filter(process != "NFCORE_SAREK:SAREK:FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP:BWAMEM1_MEM") %>%
+                                      filter(!grepl("NFCORE_SAREK:SAREK:BAM_MARKDUPLICATES:*", process))
 
-execution_fastp12_intervals124 = rbind(execution_fastp12_intervals124_preprocessing, execution_fastp12_intervals124_variantcalling)
-storage_fastp12_intervals124 = rbind(storage_fastp12_intervals124_preprocessing, storage_fastp12_intervals124_variantcalling)
+execution_intervals124_variantcalling <- read.csv(file = '../data/bam_vs_cram/cram/cram_variantcalling_1/execution_trace_2023-03-30_10-23-49.txt', sep = "\t", stringsAsFactors = FALSE)
+
+storage_intervals124_preprocessing <- read.csv(file = '../data/bam_vs_cram/cram/cram_nospark_preprocessing_1/folder_sizes.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
+storage_intervals124_variantcalling <- read.csv(file = '../data/bam_vs_cram/cram/cram_variantcalling_1/folder_size.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
+
+execution_fastp12_intervals124 = rbind(execution_fastp12_preprocessing, execution_intervals124_preprocessing, execution_intervals124_variantcalling)
+storage_fastp12_intervals124 = rbind(storage_fastp12_preprocessing, storage_intervals124_preprocessing, storage_intervals124_variantcalling)
 
 ## Fastp 16, intervals 1
 storage_fastp16_intervals1 <- read.csv(file = '../data/intervals/fastp16_intervals0/folder_size.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)

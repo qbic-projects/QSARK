@@ -94,6 +94,12 @@ format_bam_vs_cram <- function(df, format){
          # Convert peak_vmem to megabytes and gigabytes
          mutate('peak_vmem_MB' = bytesto(peak_vmem, 'm')) %>%
          mutate('peak_vmem_GB' = bytesto(peak_vmem, 'g')) %>%
+         # Convert rss to megabytes and gigabytes based on this conversation: https://nextflow.slack.com/archives/C02T98A23U7/p1674832302785499?thread_ts=1674809251.498239&cid=C02T98A23U7
+         mutate('rss_MB' = bytesto(rss, 'm')) %>%
+         mutate('rss_GB' = bytesto(rss, 'g')) %>%
+         # Convert peak_rss to megabytes and gigabytes based on this conversation: https://nextflow.slack.com/archives/C02T98A23U7/p1674832302785499?thread_ts=1674809251.498239&cid=C02T98A23U7
+         mutate('peak_rss_MB' = bytesto(peak_rss, 'm')) %>%
+         mutate('peak_rss_GB' = bytesto(peak_rss, 'g')) %>%
          # Convert requested memory to megabytes and gigabytes
          mutate('memory_MB' = bytesto(memory, 'm')) %>%
          mutate('memory_GB' = bytesto(memory, 'g')) %>%
@@ -135,15 +141,15 @@ collect_compute_values <- function(df) {
           group_by(tag, format, simple_name) %>%
           mutate(avg_realtime_min = mean(realtime_min)) %>%
           mutate(max_num_cpu = max(num_cpu)) %>%
-          mutate(max_vmem_GB = max(vmem_GB)) %>%
-          mutate(max_peak_vmem_GB = max(peak_vmem_GB)) %>%
+          mutate(max_rss_GB = max(rss_GB)) %>%
+          mutate(max_peak_rss_GB = max(peak_rss_GB)) %>%
           ungroup() %>%
           
           ## Collapse repetitions -> 10 data points left per preprocessing process
           select(simple_name, sample, tag, format, cpus, memory_GB, avg_realtime_min,
-                 max_num_cpu, max_peak_vmem_GB, max_vmem_GB) %>%
+                 max_num_cpu, max_peak_rss_GB, max_rss_GB) %>%
           group_by(simple_name, tag, format) %>%
-          distinct(avg_realtime_min, max_num_cpu, max_peak_vmem_GB, max_vmem_GB,  .keep_all = TRUE))
+          distinct(avg_realtime_min, max_num_cpu, max_peak_rss_GB, max_rss_GB,  .keep_all = TRUE))
 }
 
 plot_bam_vs_cram_boxplot <- function(df, xaxis, yaxis, boxplot_color, outputname, results_folder, yaxisname, reference) {
@@ -198,7 +204,7 @@ plot_cumulative_storage <- function(merged, outputfile) {
           legend.text = element_text(size = 15)) +
     labs(y = "work dir (GB)") +
     scale_y_continuous(
-      trans = scales::pseudo_log_trans(base = 10, sigma=0.001),
+      trans = scales::pseudo_log_trans(base = 10, sigma=1),
       breaks = c(0, 10^(-2:6))) +
     stat_compare_means(aes(group = format), label = "p.signif", vjust = 1, hide.ns = TRUE, paired=TRUE)
 
@@ -221,7 +227,7 @@ plot_summary <- function(df, file_name, results_folder) {
   
   mem <- plot_bam_vs_cram_boxplot(df=df, 
                                   xaxis="simple_name", 
-                                  yaxis="max_peak_vmem_GB", 
+                                  yaxis="max_peak_rss_GB", 
                                   boxplot_color="format",
                                   yaxisname = "Memory (GB)",
                                   reference = NULL,
