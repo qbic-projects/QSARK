@@ -171,16 +171,16 @@ plot_bam_vs_cram_boxplot <- function(df, xaxis, yaxis, boxplot_color, outputname
     stat_compare_means(mapping = aes(!!!ensyms(group = boxplot_color)), label = "p.signif",  method = "wilcox.test", paired = TRUE, hide.ns = TRUE, vjust = 1)
   
   if(!is.null(outputname)) {
-    ggsave(plot=my_plot, filename = paste0(results_folder,outputname, ".png"), device="png",
+    ggsave(plot=my_plot, filename = paste0(results_folder, "png", outputname, ".png"), device="png",
           width = 20, height = 10, units="cm")
-    ggsave(plot=my_plot, filename = paste0(results_folder,outputname, ".pdf"), device="pdf", 
+    ggsave(plot=my_plot, filename = paste0(results_folder, "eps", outputname, ".eps"), device="eps", 
           width=20, height=10, units="cm")
   }
   
   return(my_plot)
 }
 
-plot_cumulative_storage <- function(merged, outputfile) {
+sum_storage <- function(merged){
   merged_cumulative_storage <- merged %>%
     filter(repetition_name != 'cram_2') %>%
     filter(repetition_name != 'cram_3') %>%
@@ -189,31 +189,32 @@ plot_cumulative_storage <- function(merged, outputfile) {
     group_by(simple_name, format) %>%
     summarise(storage = sum(workdir_GB), .groups = 'drop')
   
-  storage_cumulative <-
-    ggbarplot(merged_cumulative_storage,
-              x = "simple_name", y = "storage", fill = "format", color = "format",
-              position = position_dodge(0.8), orientation = "horiz") +
-    geom_text(aes(label = round(storage,3),  group = format, fontface = "bold"), colour = "white", size = 5,
-              position = position_dodge(.85),
-              hjust = 1.1) +
-    rremove("legend.title") +
-    theme(axis.text.x = element_text(size=15),
-          axis.text.y = element_text(size=15), legend.position="top",
-          axis.title.y = element_blank(),
-          axis.title.x = element_text(size=15),
-          legend.text = element_text(size = 15)) +
-    labs(y = "work dir (GB)") +
-    scale_y_continuous(
-      trans = scales::pseudo_log_trans(base = 10, sigma=1),
-      breaks = c(0, 10^(-2:6))) +
-    stat_compare_means(aes(group = format), label = "p.signif", vjust = 1, hide.ns = TRUE, paired=TRUE)
+  return(merged_cumulative_storage)
+}
+plot_cumulative_storage <- function(merged_cumulative_storage, outputfile) {
 
-  ggsave(plot=storage_cumulative, filename = paste0(results_folder,outputfile), device="png", width =10, height = 10)
+  storage_cumulative <-
+    facet(ggbarplot(merged_cumulative_storage,
+              x = "simple_name", y = "storage", fill = "format", color = "format",
+              position = position_dodge(0.8)) +
+    labs(y = "work dir (GB)") +
+    rremove("legend.title") +
+      theme(axis.text.x =  element_blank(),
+            axis.text.y = element_text(size=15), legend.position="top",
+            axis.title.y = element_text(size=20),
+            axis.title.x = element_blank(),
+            legend.text = element_text(size = 20),
+            strip.text.x = element_text(size = 15),
+            strip.background = element_rect(color="white", fill="white", size=1.5)),
+    facet.by = "simple_name", scales = "free")
+
+  ggsave(plot=storage_cumulative, filename = paste0(results_folder, "/png", outputfile,".png"), device="png", width =10, height = 10)
+  ggsave(plot=storage_cumulative, filename = paste0(results_folder, "/eps", outputfile,".eps"), device="eps", width =10, height = 10)
   
   return(storage_cumulative)
 }
 
-plot_summary <- function(df, file_name, results_folder) {
+plot_summary <- function(df, file_name, results_folder, legend=NULL, angle = 20) {
   cpu <- plot_bam_vs_cram_boxplot(df=df,
                                   xaxis="simple_name",
                                   yaxis="max_num_cpu",
@@ -223,6 +224,7 @@ plot_summary <- function(df, file_name, results_folder) {
                                   outputname = NULL,
                                   results_folder = NULL) +
     theme(axis.title.x = element_blank(), axis.text.x = element_blank()) +
+    theme(axis.text.y = element_text(size=15), axis.title.y = element_text(size=20)) +
     rremove("legend.title")
   
   mem <- plot_bam_vs_cram_boxplot(df=df, 
@@ -233,7 +235,8 @@ plot_summary <- function(df, file_name, results_folder) {
                                   reference = NULL,
                                   outputname = NULL,
                                   results_folder = NULL)  + 
-    theme(axis.text.x = element_text(angle=20, size=8)) +
+    theme(axis.text.x = element_text(angle=angle, size=15)) +
+    theme(axis.text.y = element_text(size=15), axis.title.y = element_text(size=20)) +
     rremove("legend.title")
   
   time <- plot_bam_vs_cram_boxplot(df=df, 
@@ -245,11 +248,13 @@ plot_summary <- function(df, file_name, results_folder) {
                                    outputname = NULL,
                                    results_folder = NULL) +
     theme(axis.title.x = element_blank(), axis.text.x = element_blank()) +
+    theme(axis.text.y = element_text(size=15), axis.title.y = element_text(size=20)) +
     rremove("legend.title")
   
-  summary_plot <-ggpubr::ggarrange(time, cpu, mem, ncol=1, nrow=3, common.legend = TRUE, align = "v", heights = c(0.7,0.7,1)) 
-  ggsave(plot=summary_plot, filename = paste0(results_folder, file_name), device="png", dpi = 600)
-
+  summary_plot <-ggpubr::ggarrange(time, cpu, mem, ncol=1, nrow=3, common.legend = TRUE, legend=legend, align = "v", heights = c(0.7,0.7,1)) 
+  ggsave(plot=summary_plot, filename = paste0(results_folder, "/png", file_name, ".png"), device="png", dpi = 600)
+  ggsave(plot=summary_plot, filename = paste0(results_folder, "/eps", file_name, ".eps"), device="eps", dpi = 600)
+  
   return(summary_plot)
 }
 
@@ -330,8 +335,8 @@ x_axis_dataflow <- function(type) {
   }
 }
 
-dataflow_theme = theme(axis.title.x = element_text(size=15),
-              axis.title.y = element_text(size=15),
+dataflow_theme = theme(axis.title.x = element_text(size=16), axis.text.x = element_text(size=16),
+              axis.title.y = element_text(size=16), axis.text.y = element_text(size=16),
               plot.title = element_text(size = 20, hjust = 0.))
 
 plot_dataflow_single_process <- function(df_max_time, df, df_storage, group, title, xaxis, outputname, results_folder){
@@ -353,11 +358,10 @@ plot_dataflow_single_process <- function(df_max_time, df, df_storage, group, tit
           theme(legend.text = element_text(size = 8))
 
   plot <- ggpubr::ggarrange(line, bar, line_cpuh, legend= "none", ncol=3)
-  ann_plot <- annotate_figure(plot, top = text_grob(title, face = "bold", size = 14))
+  ann_plot <- annotate_figure(plot, top = text_grob(title, face = "bold", size = 20))
 
-  ggsave(plot=ann_plot, filename = paste0(results_folder,outputname, ".png"), device="png", width=20, height=20, units="cm")
-  #ggsave(plot=ann_plot, filename = paste0(results_folder,outputname, ".pdf"), device="pdf",
-  #       width=20, height=20, units="cm")
+  ggsave(plot=ann_plot, filename = paste0(results_folder, "png/", outputname, ".png"), device="png", width=20, height=20, units="cm")
+  ggsave(plot=ann_plot, filename = paste0(results_folder, "eps/", outputname, ".eps"), device="eps", width=20, height=20, units="cm")
 
   return(ann_plot)
 }
@@ -367,54 +371,69 @@ plot_splitting_summary <- function(df_time, group, xaxis, df_storage, title, out
   line <- ggviolin(data=df_time, x=group, y="sum_combined_per_sample_realtime", draw_quantile = 0.5, color = group,  width = 0.9) +
           x_axis_dataflow(group) +
           labs(y = "time (min)", x = xaxis) +
-          dataflow_theme
+          dataflow_theme +
+          stat_summary(fun.y = median, geom = "text", vjust = -0.5, size = 2,
+                 aes(label = round(..y.., 2), group = group))
               
   line_cpuh <-  ggviolin(data=df_time, x=group, y="sum_combined_per_sample_cpuh", draw_quantile = 0.5, color = group, width = 0.9) +
                 x_axis_dataflow(group) +
                 labs(y = "CPUh", x = xaxis) +
-                dataflow_theme
+                dataflow_theme +
+                stat_summary(fun.y = median, geom = "text", vjust = -0.5, size = 2,
+                 aes(label = round(..y.., 2), group = group))
   
   bar <- ggviolin(data=df_storage, x=group, y="sum",  draw_quantile = 0.5, color = group, width = 0.9) +
             x_axis_dataflow(group) +
             labs(y = "work dir (GB)", x = xaxis) +
             dataflow_theme +
             theme(legend.text = element_text(size = 8)) +
-            rremove("legend.title")
+            rremove("legend.title") +
+            stat_summary(fun.y = median, geom = "text", vjust = -0.5, size = 2,
+                 aes(label = round(..y.., 2), group = group))
   
   plot <- ggpubr::ggarrange(line, bar, line_cpuh, legend = "none", ncol = 3)
-  ann_plot <- annotate_figure(plot, top = text_grob(title, face = "bold", size = 14))
+  ann_plot <- annotate_figure(plot, top = text_grob(title, face = "bold", size = 25))
   
-  ggsave(plot=ann_plot, filename = paste0(results_folder,outputname, ".png"), device="png",
+  ggsave(plot=ann_plot, filename = paste0(results_folder, "png/", outputname, ".png"), device="png",
          width=20, height=10, units="cm")
-  #ggsave(plot=ann_plot, filename = paste0(results_folder,outputname, ".pdf"), device="pdf", 
-  #      width=20, height=10, units="cm")
+  ggsave(plot=ann_plot, filename = paste0(results_folder, "eps/", outputname, ".eps"), device="eps",
+         width=20, height=10, units="cm")
+
   
   return(ann_plot)
 }
+my_palette = c("DeepVariant"="#1B9E77", "FreeBayes"="#D95F02", "HaplotypeCaller"="#E7298A", "Strelka2"="#66A61E", "Mutect2"="#E6AB02", "Mutect2 (filtered)"="#A6761D")
 
 plot_variantcaller_summary <-  function(df_time, group, df_storage, title, outputname) {
   
   line <- facet(ggboxplot(data=df_time, x=group, y="sum_combined_per_sample_realtime", color = 'caller') +
                   labs(y = "time (min)") +
-                  theme(axis.title.x = element_blank(), axis.text.x = element_blank()),
+                  theme(axis.title.x = element_blank(), axis.text.x = element_blank(),
+                        strip.text.x = element_text(size = 15),
+                        strip.background = element_rect(color="white", fill="white", size=1.5)) +
+                  scale_color_manual(values = my_palette),
                   facet.by = 'caller',
-                  panel.labs.font = list(face = "bold"), nrow=1)
+                  nrow=1)
   
   line_cpuh <-  facet(ggboxplot(data=df_time, x=group, y="sum_combined_per_sample_cpuh", color = 'caller') +
                         labs(y = "CPUh", x = "#interval groups") +
-                        theme(strip.text = element_blank()),
+                        theme(strip.text = element_blank())+
+                        scale_color_manual(values = my_palette),
                         facet.by  = 'caller', nrow=1)
   
   bar <- facet(ggboxplot(data=df_storage, x=group, y="sum",color = 'caller') +
                  labs(y = "work dir (GB)") +
                  theme(legend.text = element_text(size = 8)) +
                  rremove("legend.title") + 
-                 theme(axis.title.x = element_blank(), axis.text.x = element_blank(), strip.text = element_blank()),
+                 theme(axis.title.x = element_blank(), axis.text.x = element_blank(), strip.text = element_blank())+
+                 scale_color_manual(values = my_palette),
                 facet.by  = 'caller', nrow=1)
   
   plot <- ggpubr::ggarrange(line, bar, line_cpuh, legend='none', ncol=1, align = "v")
-  ann_plot <- annotate_figure(plot, top = text_grob(title, face = "bold", size = 14))
-  ggsave(plot=ann_plot, filename = paste0(results_folder,outputname, ".png"), device="png", dpi=600 )
+  ann_plot <- annotate_figure(plot, top = text_grob(title, face = "bold", size = 20))
+  ggsave(plot=ann_plot, filename = paste0(results_folder, "png/", outputname, ".png"), device="png", dpi=600 )
+  ggsave(plot=ann_plot, filename = paste0(results_folder, "eps/", outputname, ".eps"), device="eps", dpi=600 )
+  
   ann_plot
 }
 #####################
