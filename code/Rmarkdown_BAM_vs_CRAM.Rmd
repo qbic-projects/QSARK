@@ -243,7 +243,6 @@ peak_rss_variantcalling <- plot_bam_vs_cram_boxplot(df=merged_variantcalling_for
                          xaxis="simple_name", 
                          yaxis="peak_rss_GB", 
                          boxplot_color="format",
-                         # jitter_color="sample",
                          outputname="/peak_rss_variantcalling", 
                          results_folder=results_folder,
                          yaxisname = "Peak RSS (GB)",
@@ -305,7 +304,6 @@ peak_memory_variantcalling <- plot_bam_vs_cram_boxplot(df=merged_variantcalling_
                          xaxis="simple_name", 
                          yaxis="peak_vmem_GB", 
                          boxplot_color="format",
-                         # jitter_color="sample",
                          outputname="/peak_mem_variantcalling", 
                          results_folder=results_folder,
                          yaxisname = "Peak Memory (GB)",
@@ -344,41 +342,7 @@ time_variantcalling <- plot_bam_vs_cram_boxplot(df=merged_variantcalling_formatt
 time_variantcalling
 ```
 
-## Storage usage (cumulative) {.tabset .tabset-fade .tabset-pills}
-
-Sum over all samples, if scatter/gather then all sub-processes have been summed up.
-
-### Preprocessing-reduced (Paper)
-
-```{r, echo=FALSE, results='hide', fig.keep='all'}
-merged_preprocessing_reduced <- merged_preprocessing_formatted_all %>% 
-  filter(simple_name != 'GATHERBQSRREPORTS') %>%
-  filter(simple_name != 'BASERECALIBRATOR') %>%
-  filter(simple_name != 'ESTIMATELIBRARYCOMPLEXITY') %>%
-  filter(simple_name != 'MOSDEPTH') %>%
-  filter(simple_name != 'SAMTOOLS_STATS') %>%
-  filter(simple_name != 'INDEX_MARKDUPLICATES') %>%
-  filter(simple_name != 'INDEX_RECALIBRATED')
-  
-storage_preprocessing_reduced_cumulative <- plot_cumulative_storage(merged_preprocessing_reduced, "/storage_preprocessing_reduced_cumulative.png")
-storage_preprocessing_reduced_cumulative
-```
-
-### Preprocessing
-
-```{r, echo=FALSE, results='hide', fig.keep='all'}
-storage_preprocessing_cumulative <- plot_cumulative_storage(merged_preprocessing_formatted_all, "/storage_preprocessing_cumulative.png")
-storage_preprocessing_cumulative
-```
-
-### Variantcalling
-
-```{r, echo=FALSE, results='hide', fig.keep='all'}
-storage_variantcalling_cumulative <- plot_cumulative_storage(merged_variantcalling_formatted_all, "/storage_variantcalling_cumulative.png")
-storage_variantcalling_cumulative
-```
-
-## Combine plots {.tabset .tabset-fade .tabset-pills}
+## Combine compute resource plots {.tabset .tabset-fade .tabset-pills}
 
 ### Preprocessing
 
@@ -389,22 +353,135 @@ For each process that support scatter/gather, i.e. APPLYBQSR, the process with t
 ```{r, echo=FALSE, results='hide', fig.keep='all'}
 
 summary_plot <- plot_summary(merged_preprocessing_formatted_compute, 
-                             file_name ="/summary_preprocessing.png", 
-                            results_folder=results_folder)
+                             file_name ="/summary_preprocessing", 
+                            results_folder=results_folder, legend ="none")
 summary_plot
+```
+
+### Preprocessing-reduced (Paper)
+
+```{r, echo=FALSE, results='hide', fig.keep='all'}
+merged_preprocessing_formatted_compute_reduced <- merged_preprocessing_formatted_compute %>%
+  filter(simple_name != 'GATHERBQSRREPORTS') %>%
+  filter(simple_name != 'BASERECALIBRATOR') %>%
+  filter(simple_name != 'ESTIMATELIBRARYCOMPLEXITY') %>%
+  filter(simple_name != 'MOSDEPTH') %>%
+  filter(simple_name != 'SAMTOOLS_STATS') %>%
+  filter(simple_name != 'INDEX_MARKDUPLICATES') %>%
+  filter(simple_name != 'INDEX_RECALIBRATED')
+
+summary_plot_reduced <-  plot_summary(merged_preprocessing_formatted_compute_reduced, 
+                             file_name ="/summary_preprocessing_reduced", 
+                            results_folder=results_folder, legend="none", angle = 10)
+summary_plot_reduced
 ```
 
 ### Variant calling
 
 ```{r, echo=FALSE, results='hide', fig.keep='all'}
 summary_variantcalling <- plot_summary(merged_variantcalling_formatted_compute,
-                                       file_name ="/summary_variantcalling.png",
-                                        results_folder=results_folder)
+                                       file_name ="/summary_variantcalling",
+                                        results_folder=results_folder, legend ="none", angle= 30)
 summary_variantcalling
+```
 
+## Storage usage (cumulative) {.tabset .tabset-fade .tabset-pills}
 
-#print(bytesto(65656201694422, 't'))
-#print(bytesto(187347596690457, 't'))
+Sum over all samples, if scatter/gather then all sub-processes have been summed up.
+
+```{r, echo=FALSE}
+merged_preprocessing_sum_storage <- sum_storage(merged_preprocessing_formatted_all)
+merged_variantcalling_sum_storage <- sum_storage(merged_variantcalling_formatted_all)
+```
+
+### Preprocessing-reduced (Paper)
+
+```{r, echo=FALSE, results='hide', fig.keep='all'}
+merged_preprocessing_reduced <- merged_preprocessing_sum_storage %>% 
+  filter(simple_name != 'GATHERBQSRREPORTS') %>%
+  filter(simple_name != 'BASERECALIBRATOR') %>%
+  filter(simple_name != 'ESTIMATELIBRARYCOMPLEXITY') %>%
+  filter(simple_name != 'MOSDEPTH') %>%
+  filter(simple_name != 'SAMTOOLS_STATS') %>%
+  filter(simple_name != 'INDEX_MARKDUPLICATES') %>%
+  filter(simple_name != 'INDEX_RECALIBRATED')
+
+storage_preprocessing_reduced_cumulative_nolog <- plot_cumulative_storage(merged_preprocessing_reduced, "/storage_preprocessing_reduced_cumulative_nolog")
+  
+```
+
+### Preprocessing
+
+```{r, echo=FALSE, results='hide', fig.keep='all'}
+storage_preprocessing_cumulative <- plot_cumulative_storage(merged_preprocessing_sum_storage, "/storage_preprocessing_cumulative")
+storage_preprocessing_cumulative
+```
+
+### Variantcalling
+
+```{r, echo=FALSE, results='hide', fig.keep='all'}
+storage_variantcalling_cumulative <- plot_cumulative_storage(merged_variantcalling_sum_storage, "/storage_variantcalling_cumulative")
+storage_variantcalling_cumulative
+```
+
+## Summary: Combine Storage and compute resources {.tabset .tabset-fade .tabset-pills}
+
+### Paper main text
+
+```{r echo=FALSE, results='hide', fig.keep='all'}
+prep_paper_plot <- ggpubr::ggarrange(summary_plot_reduced, 
+                                     storage_preprocessing_reduced_cumulative_nolog + theme(legend.text = element_text(size = 20)), 
+                                     common.legend = TRUE, ncol=2,
+                                     labels = c("A","B"), font.label = list(size = 20))
+
+ann_plot <- annotate_figure(prep_paper_plot, top = text_grob("", face = "bold", size = 14))
+
+ggsave(plot=ann_plot, filename = paste0(results_folder,"png/paper_preprocessing", ".png"), 
+       device="png", width=40, height=20, units="cm")
+ggsave(plot=ann_plot, filename = paste0(results_folder,"eps/paper_preprocessing", ".eps"), 
+       device="eps", width=40, height=20, units="cm")
+ggsave(plot=ann_plot, filename = paste0(results_folder,"svg/paper_preprocessing", ".svg"), 
+       device="svg", width=40, height=20, units="cm")
+ann_plot
+```
+
+### Preprocessing
+
+```{r echo=FALSE, results='hide', fig.keep='all'}
+prep_suppl_plot <- ggpubr::ggarrange(summary_plot,
+                                     storage_preprocessing_cumulative,
+                                     common.legend=TRUE, ncol=1, align = 'hv', axis="lr", labels = c("A","B"), 
+                                     font.label = list(size = 30), vjust=1, hjust=0.1)
+
+prep_suppl_ann_plot <- annotate_figure(prep_suppl_plot, top = text_grob("", face = "bold", size = 14))
+ 
+ggsave(plot=prep_suppl_ann_plot, filename = paste0(results_folder,"png/supplementary_preprocessing", ".png"), 
+       device="png", width=50, height = 60, units="cm")
+ggsave(plot=prep_suppl_ann_plot, filename = paste0(results_folder,"eps/supplementary_preprocessing", ".eps"), 
+       device="eps", width=50, height = 60,  units="cm")
+ggsave(plot=prep_suppl_ann_plot, filename = paste0(results_folder,"svg/supplementary_preprocessing", ".svg"), 
+       device="svg", width=50, height = 60,  units="cm")
+
+prep_suppl_ann_plot
+```
+
+### Variant calling
+
+```{r echo=FALSE, results='hide', fig.keep='all'}
+vc_suppl_plot <- ggpubr::ggarrange(summary_variantcalling,
+                                   storage_variantcalling_cumulative,
+                                   common.legend=TRUE, ncol=1, align = 'hv', axis = "lr", labels = c("A","B"),  
+                                   font.label = list(size = 30), vjust=1, hjust=0.1)
+vc_suppl_ann_plot <- annotate_figure(vc_suppl_plot, top = text_grob("", face = "bold", size = 14))
+ 
+ggsave(plot=vc_suppl_ann_plot, filename = paste0(results_folder,"png/supplementary_variantcalling", ".png"), 
+       device="png", width=50, height=60, units="cm")
+ggsave(plot=vc_suppl_ann_plot, filename = paste0(results_folder,"eps/supplementary_variantcalling", ".eps"), 
+       device="eps", width=50, height=60, units="cm")
+ggsave(plot=vc_suppl_ann_plot, filename = paste0(results_folder,"svg/supplementary_variantcalling", ".svg"), 
+       device="svg", width=50, height=60, units="cm")
+vc_suppl_ann_plot
+
 ```
 
 # Methods
