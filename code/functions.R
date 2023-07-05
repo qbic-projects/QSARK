@@ -261,6 +261,10 @@ plot_summary <- function(df, file_name, results_folder, legend=NULL, angle = 20)
 #####################
 ##### Dataflow ######
 #####################
+
+my_palette = c("DeepVariant"="#1B9E77", "FreeBayes"="#D95F02", "HaplotypeCaller"="#E7298A", 
+               "Strelka2"="#66A61E", "Mutect2"="#E6AB02", "Mutect2 (filtered)"="#A6761D")
+
 format_splitting <- function(df){
   return (df %>% 
             # Remove rows with status FAILED
@@ -363,7 +367,7 @@ plot_dataflow_single_process <- function(df_max_time, df, df_storage, group, tit
   ggsave(plot=ann_plot, filename = paste0(results_folder, "png/", outputname, ".png"), device="png", width=20, height=20, units="cm")
   ggsave(plot=ann_plot, filename = paste0(results_folder, "eps/", outputname, ".eps"), device="eps", width=20, height=20, units="cm")
 
-  return(ann_plot)
+  return(list(ann_plot, line, bar, line_cpuh))
 }
 
 plot_splitting_summary <- function(df_time, group, xaxis, df_storage, title, outputname){
@@ -371,25 +375,25 @@ plot_splitting_summary <- function(df_time, group, xaxis, df_storage, title, out
   line <- ggviolin(data=df_time, x=group, y="sum_combined_per_sample_realtime", draw_quantile = 0.5, color = group,  width = 0.9) +
           x_axis_dataflow(group) +
           labs(y = "time (min)", x = xaxis) +
-          dataflow_theme +
-          stat_summary(fun.y = median, geom = "text", vjust = -0.5, size = 2,
-                 aes(label = round(..y.., 2), group = group))
+          dataflow_theme #+
+          #stat_summary(fun.y = median, geom = "text", vjust = -0.5, size = 2,
+          #       aes(label = round(..y.., 2), group = group))
               
   line_cpuh <-  ggviolin(data=df_time, x=group, y="sum_combined_per_sample_cpuh", draw_quantile = 0.5, color = group, width = 0.9) +
                 x_axis_dataflow(group) +
                 labs(y = "CPUh", x = xaxis) +
-                dataflow_theme +
-                stat_summary(fun.y = median, geom = "text", vjust = -0.5, size = 2,
-                 aes(label = round(..y.., 2), group = group))
+                dataflow_theme #+
+                #stat_summary(fun.y = median, geom = "text", vjust = -0.5, size = 2,
+                # aes(label = round(..y.., 2), group = group))
   
   bar <- ggviolin(data=df_storage, x=group, y="sum",  draw_quantile = 0.5, color = group, width = 0.9) +
             x_axis_dataflow(group) +
             labs(y = "work dir (GB)", x = xaxis) +
             dataflow_theme +
             theme(legend.text = element_text(size = 8)) +
-            rremove("legend.title") +
-            stat_summary(fun.y = median, geom = "text", vjust = -0.5, size = 2,
-                 aes(label = round(..y.., 2), group = group))
+            rremove("legend.title") #+
+            #stat_summary(fun.y = median, geom = "text", vjust = -0.5, size = 2,
+                 #aes(label = round(..y.., 2), group = group))
   
   plot <- ggpubr::ggarrange(line, bar, line_cpuh, legend = "none", ncol = 3)
   ann_plot <- annotate_figure(plot, top = text_grob(title, face = "bold", size = 25))
@@ -402,7 +406,6 @@ plot_splitting_summary <- function(df_time, group, xaxis, df_storage, title, out
   
   return(ann_plot)
 }
-my_palette = c("DeepVariant"="#1B9E77", "FreeBayes"="#D95F02", "HaplotypeCaller"="#E7298A", "Strelka2"="#66A61E", "Mutect2"="#E6AB02", "Mutect2 (filtered)"="#A6761D")
 
 plot_variantcaller_summary <-  function(df_time, group, df_storage, title, outputname) {
   
@@ -436,25 +439,26 @@ plot_variantcaller_summary <-  function(df_time, group, df_storage, title, outpu
   
   ann_plot
 }
-#####################
-######## AWS ########
-#####################
-format_aws_costs <- function(cost_table, date) {
-  
-  # transpose data frame & use first column from original dataframe as column headers in transposed dataframe
-  cost_table_formatted <- setNames(data.frame(t(cost_table[,-1])), cost_table[,1])
-  
-  # Rename the `date` column to costs, since it carries the costs for that date for better handling
-  names(cost_table_formatted)[2] <- "costs"
-  
-  # create a new column named 'type' that has the current row names (needed for ggplot2)
-  cost_table_formatted <- tibble::rownames_to_column(cost_table_formatted, "type")
-  
-  # Round too last 3 digits & remove costs below 0.00$
-  cost_table_formatted <- cost_table_formatted %>% mutate_if(is.numeric, round, digits=3)
-  cost_table_formatted <- filter(cost_table_formatted, costs >= 0.001 , .preserve = FALSE)
-  return (cost_table_formatted)
-}
+# 
+# #####################
+# ######## AWS ########
+# #####################
+# format_aws_costs <- function(cost_table, date) {
+#   
+#   # transpose data frame & use first column from original dataframe as column headers in transposed dataframe
+#   cost_table_formatted <- setNames(data.frame(t(cost_table[,-1])), cost_table[,1])
+#   
+#   # Rename the `date` column to costs, since it carries the costs for that date for better handling
+#   names(cost_table_formatted)[2] <- "costs"
+#   
+#   # create a new column named 'type' that has the current row names (needed for ggplot2)
+#   cost_table_formatted <- tibble::rownames_to_column(cost_table_formatted, "type")
+#   
+#   # Round too last 3 digits & remove costs below 0.00$
+#   cost_table_formatted <- cost_table_formatted %>% mutate_if(is.numeric, round, digits=3)
+#   cost_table_formatted <- filter(cost_table_formatted, costs >= 0.001 , .preserve = FALSE)
+#   return (cost_table_formatted)
+# }
 
 #####################
 ###### Helper #######

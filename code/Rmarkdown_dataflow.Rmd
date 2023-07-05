@@ -71,7 +71,7 @@ This runs through mapping, duplicate marking, BQSR, and QC, Variant calling for 
 Loading all the individual samples. Print sample summary if possible (e.g. metadata sheet).
 
 | name               | nucleotides_per_second (number of intervals) | num of cpus for fastp         | tower id                                                                                | work sizes | trace |
-|--------------------|----------------------------------------------|-------------------------------|-----------------------------------------------------------------------------------------|------------|-------|
+|----------|----------|----------|----------------------|----------|----------|
 | fastp4_intervals78 | 10001 (78)                                   | 4, \--split_fastq 10000000000 | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/PE2um0F1SrwRi>  | yes        | yes   |
 | fastp8_intervals40 | 70000 (40)                                   | 8, \--split_fastq 500000000   | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/52L0P2tE99JYXs> | yes        | yes   |
 | fastp12            | skipped                                      | 12, ---split_fastq 100000000  | <https://cfgateway1.zdv.uni-tuebingen.de/orgs/QBiC/workspaces/cfc/watch/ocENvYnNRQAGC>  | yes        | yes   |
@@ -183,7 +183,7 @@ merged_formatted_mapping_storage_sum$fastp <- as.factor(merged_formatted_mapping
 ### FastP
 
 ```{r}
-plot_dataflow_single_process(df_max_time = merged_formatted_fastp$time, 
+fastp <- plot_dataflow_single_process(df_max_time = merged_formatted_fastp$time, 
                   df = merged_formatted_fastp$process,
                   df_storage = merged_formatted_fastp$storage,
                   group = "fastp",
@@ -191,12 +191,14 @@ plot_dataflow_single_process(df_max_time = merged_formatted_fastp$time,
                   xaxis = "# shards",
                   outputname = "fastp",
                   results_folder = results_folder)
+
+fastp[[1]]
 ```
 
 ### BWA Mem
 
 ```{r echo=FALSE}
-plot_dataflow_single_process(df_max_time = merged_formatted_bwamem$time, 
+bwa <- plot_dataflow_single_process(df_max_time = merged_formatted_bwamem$time, 
                   df = merged_formatted_bwamem$process,
                   df_storage = merged_formatted_bwamem$storage,
                   group = "fastp",
@@ -205,12 +207,13 @@ plot_dataflow_single_process(df_max_time = merged_formatted_bwamem$time,
                   outputname = "bwamem",
                   results_folder = results_folder
                   )
+bwa[[1]]
 ```
 
 ### Markduplicates
 
 ```{r echo=FALSE}
-plot_dataflow_single_process(df_max_time = merged_formatted_markdup$time, 
+markdup <- plot_dataflow_single_process(df_max_time = merged_formatted_markdup$time, 
                   df = merged_formatted_markdup$process,
                   df_storage = merged_formatted_markdup$storage,
                   group = "fastp",
@@ -219,6 +222,26 @@ plot_dataflow_single_process(df_max_time = merged_formatted_markdup$time,
                   outputname = "markdup",
                   results_folder = results_folder
                   )
+
+markdup[[1]]
+```
+
+### Combine plots
+
+```{r echo=FALSE}
+mapping_arrange <- ggpubr::ggarrange(fastp[[2]], fastp[[3]], fastp[[4]], 
+                                     bwa[[2]], bwa[[3]], bwa[[4]],
+                                     markdup[[2]],markdup[[3]], markdup[[4]],
+                                     ncol=3, nrow=3, legend="none", align="hv", 
+                                     labels = c("A", "", "",
+                                                "B", "", "",
+                                                "C", "", ""))
+
+ggsave(plot=mapping_arrange, filename = paste0(results_folder,"png/supplementary_mapping", ".png"), device="png", width=30, height=30, units="cm")
+ggsave(plot=mapping_arrange, filename = paste0(results_folder,"eps/supplementary_mapping", ".eps"), device="eps", width=30, height=30, units="cm")
+ggsave(plot=mapping_arrange, filename = paste0(results_folder,"svg/supplementary_mapping", ".svg"), device="svg", width=30, height=30, units="cm")
+
+mapping_arrange
 ```
 
 ### Summary
@@ -261,7 +284,7 @@ merged_formatted_bqsr_storage_sum$intervals <- as.factor(merged_formatted_bqsr_s
 ### Baserecalibrator
 
 ```{r echo=FALSE}
-plot_dataflow_single_process(df_max_time = merged_formatted_baserecalibrator$time,
+baserecalibrator <- plot_dataflow_single_process(df_max_time = merged_formatted_baserecalibrator$time,
                   df = merged_formatted_baserecalibrator$process,
                   df_storage = merged_formatted_baserecalibrator$storage,
                   group = "intervals",
@@ -269,12 +292,14 @@ plot_dataflow_single_process(df_max_time = merged_formatted_baserecalibrator$tim
                   xaxis = "# interval groups",
                   outputname = "baserecalibrator",
                   results_folder = results_folder)
+
+baserecalibrator[[1]]
 ```
 
 ### GatherBQSRReports
 
 ```{r echo=FALSE}
-plot_dataflow_single_process(df_max_time = merged_formatted_gatherbqsr$time,
+gather_bqsr <- plot_dataflow_single_process(df_max_time = merged_formatted_gatherbqsr$time,
                   df = merged_formatted_gatherbqsr$process,
                   df_storage = merged_formatted_gatherbqsr$storage,
                   group = "intervals",
@@ -282,12 +307,14 @@ plot_dataflow_single_process(df_max_time = merged_formatted_gatherbqsr$time,
                   xaxis = "# interval groups",
                   outputname = "gatherbqsr",
                   results_folder = results_folder)
+
+gather_bqsr[[1]]
 ```
 
 ### ApplyBQSR
 
 ```{r echo=FALSE}
-plot_dataflow_single_process(df_max_time = merged_formatted_applybqsr$time,
+apply_bqsr <- plot_dataflow_single_process(df_max_time = merged_formatted_applybqsr$time,
                   df = merged_formatted_applybqsr$process,
                   df_storage = merged_formatted_applybqsr$storage,
                   group = "intervals",
@@ -295,12 +322,14 @@ plot_dataflow_single_process(df_max_time = merged_formatted_applybqsr$time,
                   xaxis = "# interval groups",
                   outputname = "applybqsr",
                   results_folder = results_folder)
+
+apply_bqsr[[1]]
 ```
 
 ### Merge CRAM
 
 ```{r echo=FALSE}
-plot_dataflow_single_process(df_max_time = merged_formatted_mergecram$time,
+merge_bqsr <- plot_dataflow_single_process(df_max_time = merged_formatted_mergecram$time,
                   df = merged_formatted_mergecram$process,
                   df_storage = merged_formatted_mergecram$storage,
                   group = "intervals",
@@ -308,6 +337,29 @@ plot_dataflow_single_process(df_max_time = merged_formatted_mergecram$time,
                   xaxis = "# interval groups",
                   outputname = "mergecram",
                   results_folder = results_folder)
+
+merge_bqsr[[1]]
+```
+
+### Combine plots
+
+```{r echo=FALSE}
+
+bqsr_arrange <- ggpubr::ggarrange(baserecalibrator[[2]], baserecalibrator[[3]], baserecalibrator[[4]], 
+                                  gather_bqsr[[2]], gather_bqsr[[3]], gather_bqsr[[4]], 
+                                  apply_bqsr[[2]],apply_bqsr[[3]], apply_bqsr[[4]],
+                                  merge_bqsr[[2]], merge_bqsr[[3]], merge_bqsr[[4]],
+                                  ncol=3, nrow=4,  
+                                  legend="none", align="hv",
+                                  labels = c("A", "", "",
+                                             "B", "", "",
+                                             "C", "", "",
+                                             "D", "", ""))
+ggsave(plot=bqsr_arrange, filename = paste0(results_folder,"png/supplementary_bqsr", ".png"), device="png", width=30, height=40, units="cm")
+ggsave(plot=bqsr_arrange, filename = paste0(results_folder,"eps/supplementary_bqsr", ".eps"), device="eps", width=30, height=40, units="cm")
+ggsave(plot=bqsr_arrange, filename = paste0(results_folder,"svg/supplementary_bqsr", ".svg"), device="svg", width=30, height=40, units="cm")
+
+bqsr_arrange
 ```
 
 ### Summary
@@ -345,12 +397,12 @@ merged_formatted_deepvariant_time_max <-  merged_formatted_deepvariant %>%
                                             group_by(intervals, sample_status) %>%
                                             summarise(across(max_sample_realtime, sum, .names = 'sum_combined_per_sample_realtime'),
                                                       across(sum_sample_cpuh, sum, .names = 'sum_combined_per_sample_cpuh'))%>%
-                                        mutate(caller = 'Deepvariant')
+                                        mutate(caller = 'DeepVariant')
 
 merged_formatted_deepvariant_storage_sum <- merged_formatted_deepvariant %>%
                                         group_by(intervals, sample_status) %>%
                                         summarise(sum = sum(workdir_GB)) %>%
-                                        mutate(caller = 'Deepvariant')
+                                        mutate(caller = 'DeepVariant')
 merged_formatted_deepvariant_storage_sum$intervals <- as.factor(merged_formatted_deepvariant_storage_sum$intervals)
 
 plot_splitting_summary(df_time = merged_formatted_deepvariant_time_max,
@@ -373,12 +425,12 @@ merged_formatted_freebayes_germline_time_max <-  merged_formatted_freebayes_germ
                                             group_by(intervals, sample_status) %>%
                                             summarise(across(max_sample_realtime, sum, .names = 'sum_combined_per_sample_realtime'),
                                                       across(sum_sample_cpuh, sum, .names = 'sum_combined_per_sample_cpuh')) %>%
-                                            mutate(caller = 'Freebayes')
+                                            mutate(caller = 'FreeBayes')
 
 merged_formatted_freebayes_germline_storage_sum <- merged_formatted_freebayes_germline %>%
                                         group_by(intervals, sample_status) %>%
                                         summarise(sum = sum(workdir_GB)) %>%
-                                        mutate(caller = 'Freebayes')
+                                        mutate(caller = 'FreeBayes')
 
 merged_formatted_freebayes_germline_storage_sum$intervals <- as.factor(merged_formatted_freebayes_germline_storage_sum$intervals)
 
@@ -402,12 +454,12 @@ merged_formatted_haplotypecaller_time_max <-  merged_formatted_haplotypecaller %
                                             group_by(intervals, sample_status) %>%
                                             summarise(across(max_sample_realtime, sum, .names = 'sum_combined_per_sample_realtime'),
                                                       across(sum_sample_cpuh, sum, .names = 'sum_combined_per_sample_cpuh')) %>%
-                                            mutate(caller = 'Haplotypecaller')
+                                            mutate(caller = 'HaplotypeCaller')
 
 merged_formatted_haplotypecaller_storage_sum <- merged_formatted_haplotypecaller %>%
                                         group_by(intervals, sample_status) %>%
                                         summarise(sum = sum(workdir_GB)) %>%
-                                        mutate(caller = 'Haplotypecaller')
+                                        mutate(caller = 'HaplotypeCaller')
 
 merged_formatted_haplotypecaller_storage_sum$intervals <- as.factor(merged_formatted_haplotypecaller_storage_sum$intervals)
 
@@ -464,11 +516,12 @@ germline_vc_storage <- rbind(merged_formatted_deepvariant_storage_sum,
                              merged_formatted_strelka_germline_storage_sum)
 
 
-plot_variantcaller_summary(df_time = germline_vc_time,
-                           group = 'intervals',
+germline_vc_plot <- plot_variantcaller_summary(df_time = germline_vc_time,
+                          group = 'intervals',
                            df_storage = germline_vc_storage,
                            title = 'Germline short variant caller',
                            outputname = 'germline_short_vc_summary')
+germline_vc_plot
 ```
 
 ### Variant callers (Somatic) {.tabset .tabset-fade .tabset-pills}
@@ -546,12 +599,12 @@ merged_formatted_freebayes_somatic_time_max <-  merged_formatted_freebayes_somat
                                             group_by(intervals, sample_status) %>%
                                             summarise(across(max_sample_realtime, sum, .names = 'sum_combined_per_sample_realtime'),
                                                       across(sum_sample_cpuh, sum, .names = 'sum_combined_per_sample_cpuh')) %>%
-                                            mutate(caller = 'Freebayes')
+                                            mutate(caller = 'FreeBayes')
 
 merged_formatted_freebayes_somatic_storage_sum <- merged_formatted_freebayes_somatic %>%
                                         group_by(intervals, sample_status) %>%
                                         summarise(sum = sum(workdir_GB)) %>%
-                                        mutate(caller = 'Freebayes')
+                                        mutate(caller = 'FreeBayes')
 
 merged_formatted_freebayes_somatic_storage_sum$intervals <- as.factor(merged_formatted_freebayes_somatic_storage_sum$intervals)
 
@@ -575,11 +628,25 @@ somatic_vc_storage <- rbind(merged_formatted_mutect_storage_sum,
                             merged_formatted_freebayes_somatic_storage_sum)
 
 
-plot_variantcaller_summary(df_time = somatic_vc_time,
+somatic_vc_plot <- plot_variantcaller_summary(df_time = somatic_vc_time,
                            group = 'intervals',
                            df_storage = somatic_vc_storage,
                            title = 'Somatic short variant caller',
                            outputname = 'somatic_short_vc_summary')
+somatic_vc_plot
+```
+
+## Paper plots:
+
+```{r}
+paper_plot <- ggpubr::ggarrange(mapping_summary, bqsr_summary,
+  common.legend=FALSE, ncol=1, nrow=2, labels = c("A","B"), font.label = list(size = 20))
+
+paper_plot_ann <- annotate_figure(paper_plot, top = text_grob("", face = "bold", size = 14))
+ 
+#vc_suppl_ann_plot
+ggsave(plot=paper_plot_ann, filename = paste0(results_folder,"png/poster_dataflow", ".png"), device="png", width=20, height=30, units="cm")
+ggsave(plot=paper_plot_ann, filename = paste0(results_folder,"eps/poster_dataflow", ".eps"), device="eps", width=20, height=30, units="cm")
 ```
 
 # Package versions:
