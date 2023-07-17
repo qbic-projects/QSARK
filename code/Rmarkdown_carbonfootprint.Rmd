@@ -1,0 +1,63 @@
+---
+title: "Sarek Paper"
+subtitle: "Carbon Footprint"
+author: "Friederike Hanssen"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output: 
+  html_document:
+    toc: true                               # table of contents
+    toc_float: true                        # float the table of contents to the left of the main document content
+    toc_depth: 3                            # header levels 1,2,3
+    theme: default
+    number_sections: true                   # add section numbering to headers
+    df_print: paged                         # tables are printed as an html table with support for pagination over rows and columns
+    css: ./qbic-style.css
+    highlight: pygments
+    pdf_document: true
+---
+
+<!-- QBiC Logo -->
+
+<img src="./QBiCLogo.png" style="position:absolute;top:0px;right:0px;" height="120" width="120"/>
+
+::: watermark
+QBiC
+:::
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# Import all R libraries
+library(dplyr)
+library(patchwork)
+library(forcats)
+library(ggplot2)
+library(cowplot)
+library(knitr)
+library(kableExtra)
+library(ggpubr)
+library(viridisLite)
+library(tidyr)
+library(ggpattern)
+library(ggnewscale)
+
+theme_set(theme_pubclean())
+results_folder <- "results/carbonfootpring/"
+dir.create(results_folder)
+
+source("./functions.R")
+```
+
+------------------------------------------------------------------------
+
+# Introduction
+
+
+```{r load_input, echo=FALSE}
+
+```
+
+Package versions:
+
+```{r, echo=F}
+installed.packages()[names(sessionInfo()$otherPkgs), "Version"]
+```

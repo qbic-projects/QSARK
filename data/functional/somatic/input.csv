@@ -1,0 +1,7 @@
+patient,sex,status,sample,lane,fastq_1,fastq_2
+HCC1395_EA,XX,0,HCC1395N_EA,1,/sfs/9/ws/iizha01-QSARK/functional/pipeline_results/somatic/data/SRR7890919_WES_HCC1395BL-EA_normal_1.fastq.gz,/sfs/9/ws/iizha01-QSARK/functional/pipeline_results/somatic/data/SRR7890919_WES_HCC1395BL-EA_normal_2.fastq.gz
+HCC1395_EA,XX,1,HCC1395T_EA,1,/sfs/9/ws/iizha01-QSARK/functional/pipeline_results/somatic/data/SRR7890918_WES_HCC1395-EA_tumor_1.fastq.gz,/sfs/9/ws/iizha01-QSARK/functional/pipeline_results/somatic/data/SRR7890918_WES_HCC1395-EA_tumor_2.fastq.gz
+HCC1395_NV,XX,0,HCC1395N_NV,1,/sfs/9/ws/iizha01-QSARK/functional/pipeline_results/somatic/data/SRX4728522_SRR7890846_1.fastq.gz,/sfs/9/ws/iizha01-QSARK/functional/pipeline_results/somatic/data/SRX4728522_SRR7890846_2.fastq.gz
+HCC1395_NV,XX,1,HCC1395T_NV,1,/sfs/9/ws/iizha01-QSARK/functional/pipeline_results/somatic/data/SRX4728538_SRR7890830_1.fastq.gz,/sfs/9/ws/iizha01-QSARK/functional/pipeline_results/somatic/data/SRX4728538_SRR7890830_2.fastq.gz
+HCC1395_FD,XX,0,HCC1395N_FD,1,/sfs/9/ws/iizha01-QSARK/functional/pipeline_results/somatic/data/SRX4728490_SRR7890878_1.fastq.gz,/sfs/9/ws/iizha01-QSARK/functional/pipeline_results/somatic/data/SRX4728490_SRR7890878_2.fastq.gz
+HCC1395_FD,XX,1,HCC1395T_FD,1,/sfs/9/ws/iizha01-QSARK/functional/pipeline_results/somatic/data/SRX4728491_SRR7890877_1.fastq.gz,/sfs/9/ws/iizha01-QSARK/functional/pipeline_results/somatic/data/SRX4728491_SRR7890877_2.fastq.gz

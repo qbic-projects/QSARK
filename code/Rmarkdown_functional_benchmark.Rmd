@@ -54,67 +54,99 @@ For somatic benchmarking a dataset from the HCC1395 cell line was run through th
 
 ```{r echo = FALSE}
 
-my_palette = palette.colors(palette = "Dark2")
+my_palette = c("DeepVariant"="#1B9E77", "FreeBayes"="#D95F02", "HaplotypeCaller"="#7570B3", "HaplotypeCaller (filtered)"="#E7298A", 
+               "Strelka2_BP"="#66A61E", "Strelka2"="#66A61E", "Mutect2"="#E6AB02", "Mutect2 (filtered)"="#A6761D")
 
 plot_scatter <- function (data, recall, precision, title, outputfile) {
     p <- ggplot(data, aes(!!!ensyms(x=recall, y=precision)), environment = environment()) +
           ggtitle(title) +
-          geom_jitter(aes(color=caller, shape = aligner),size = 4, width = 0.001, height = 0.001) +
+          geom_jitter(aes(color=caller, shape = aligner), size = 6, stroke = 2) +
           theme_pubr() +
-          guides(colour = guide_legend(override.aes = list(size=2, alpha = 1))) +
-          theme(axis.text.x = element_text(size=12),
-               axis.text.y = element_text(size=12),
-               axis.title.y = element_text(size=15),
-               axis.title.x = element_text(size=15),
-               legend.position="top",  legend.box="vertical", legend.margin=margin()) +
+          guides(colour = guide_legend(title="", override.aes = list(size=4, alpha = 1)), 
+                 shape = guide_legend("", override.aes = list(stroke=1))) +          
+      theme(axis.text.x = element_text(size=20),
+               axis.text.y = element_text(size=20),
+               axis.title.y = element_text(size=30),
+               axis.title.x = element_text(size=30),
+               legend.position="top",  legend.box="vertical", legend.margin=margin(), legend.text = element_text(size=18)) +
           labs(x="Recall", y = "Precision") +
-          scale_color_manual(values = my_palette)
+          scale_color_manual(values = my_palette) +
+          scale_fill_manual(values = my_palette, guide = "none") +
+          scale_shape_manual(values = c(21, 24, 22))
 
     if(!is.na(outputfile)) {
-      ggsave(plot=p, filename = paste0(results_folder,outputfile), device="png", width=10, height=10, units="cm")
+      ggsave(plot=p, filename = paste0(results_folder, "png/", outputfile, ".png"), device="png", width=10, height=10, units="cm")
+      ggsave(plot=p, filename = paste0(results_folder, "eps/", outputfile, ".eps"), device="eps", width=10, height=10, units="cm")
     }
     return(p)
 
 }
 
-plot_score <- function(data, f1, title, outputfilename) {
+plot_scatter_somatic <- function(data, title, outputfile) {
+    data_snvs_30_somatic$caller <- factor(data_snvs_30_somatic$caller, levels = c("DeepVariant", "FreeBayes", "HaplotypeCaller", "HaplotypeCaller (filtered)", "Strelka2_BP", "Mutect2", "Mutect2 (filtered)"))
+   p <- ggplot(data_snvs_30_somatic, aes(x=Sensitivity, y=Precision)) +
+          geom_point(aes(color=caller, shape = aligner, fill=sample), size = 6, stroke=3) +
+          theme_pubr() +
+          guides(colour = guide_legend(title="", override.aes = list(size=4, alpha = 1)), fill = guide_legend("", override.aes = list(shape = 23, stroke=1)), shape = guide_legend("", override.aes = list(stroke=1))) +
+          theme(axis.text.x = element_text(size=22),
+               axis.text.y = element_text(size=22),
+               axis.title.y = element_text(size=24),
+               axis.title.x = element_text(size=24),
+               legend.position="top",  legend.box="vertical", legend.margin=margin(), legend.text = element_text(size=22)) +
+          labs(x="Recall", y = "Precision") +
+          scale_color_manual(values = my_palette, drop=FALSE) +
+          scale_fill_manual(values = c("EA"="white", "FD"="grey", "NV"= "black"), "", labels = c("EA", "FD", "NV")) +
+          scale_shape_manual(values = c(21, 24, 22))
+
+   if(!is.na(outputfile)) {
+      ggsave(plot=p, filename = paste0(results_folder, "png/", outputfile, ".png"), device="png", width=10, height=10, units="cm")
+      ggsave(plot=p, filename = paste0(results_folder, "eps/", outputfile, ".eps"), device="eps", width=10, height=10, units="cm")
+   }
+
+    return(p)
+}
+
+
+plot_score <- function(data, f1, title, outputfile) {
   p <- ggbarplot(data, x="aligner", y = f1, fill = "caller", color = "caller", position=position_dodge(width = 0.8), title = title, add = "mean_sd")  +
-    theme(axis.text.x = element_text(size=12, angle = 20, hjust=1),
-          axis.text.y = element_text(size=12),
-          axis.title.y = element_text(size=15),
+    theme(axis.text.x = element_text(size=20),
+          axis.text.y = element_text(size=20),
+          axis.title.y = element_text(size=25),
           axis.title.x = element_blank()) +
     labs(y= "F1-Score") +
     scale_y_continuous(limits=seq(0,1)) +
     scale_fill_manual(values = my_palette) + scale_color_manual(values = my_palette)
 
-  if(!is.na(outputfilename)){
-    ggsave(plot=p, filename = paste0(results_folder,outputfilename), device="png", dpi = 600)
+  if(!is.na(outputfile)){
+      ggsave(plot=p, filename = paste0(results_folder, "png/", outputfile, ".png"), device="png", width=10, height=10, units="cm")
+      ggsave(plot=p, filename = paste0(results_folder, "eps/", outputfile, ".eps"), device="eps", width=10, height=10, units="cm")
   }
   
   return(p)
 }
 
-plot_summary <- function(scatter, score, outputfilename){
+plot_summary <- function(scatter, score, outputfile, title){
   
   p <- ggpubr::ggarrange(scatter + labs(shape=NULL, colour=NULL, title=NULL), 
                         score + labs(title=NULL),
-                        labels = c("A", "B"),
+                        labels = c("A", "B"), font.label = list(size = 30),
                         ncol=2, nrow=1, common.legend = T, legend = "right") 
-  ggsave(plot=p, filename = paste0(results_folder, outputfilename), device="png", width = 25, height = 10, units = "cm")
   
+  p <- annotate_figure(p, top = text_grob(title, face = "bold", size = 30))
+
+      ggsave(plot=p, filename = paste0(results_folder, "png/", outputfile, ".png"), device="png", width=25, height=10, units="cm")
+      ggsave(plot=p, filename = paste0(results_folder, "eps/", outputfile, ".eps"), device="eps", width=25, height=10, units="cm")  
   return(p)
 }
 
 ```
 
-## Germline 
+## Germline - Illumina
 
-### Loading datasets
-
-Truth vcfs and & bed files were downloaded from 
+<!-- ### Loading datasets -->
 
 ```{r echo=FALSE}
-data_30_germline <- read.table(file = "../data/functional/germline/sarek_30/merged_30_germline.csv", sep = ',', header = TRUE) %>%
+data_30_germline <- read.table(file = "../data/functional/germline/merged_30_germline.csv", sep = ',', header = TRUE) %>%
         mutate('aligner' = case_when(
           grepl("dragmap", run) ~ "Dragmap",
           grepl("bwamem2", run) ~ "BwaMem2",
@@ -127,6 +159,11 @@ data_30_germline <- read.table(file = "../data/functional/germline/sarek_30/merg
             grepl("freebayes", run) ~ "FreeBayes",
             grepl("deepvariant", run) ~ "DeepVariant",
              TRUE ~ "other")) %>%
+        mutate('sample' = case_when(
+            grepl("HG002", run) ~ "HG002",
+            grepl("HG003", run) ~ "HG003",
+            grepl("HG004", run) ~ "HG004",
+            TRUE ~ "other")) %>%
       filter(Filter !='ALL') %>%
       mutate("version" = "sarek3")
 ```
@@ -135,6 +172,8 @@ data_30_germline <- read.table(file = "../data/functional/germline/sarek_30/merg
 
 ```{r, echo=FALSE, message=FALSE}
 
+data_30_germline <- data_30_germline %>%
+                    filter( (grepl('HG003', run) & grepl('DeepVariant', caller)) | !grepl('DeepVariant', caller))
 data_30_germline_snps = data_30_germline %>% filter(Type !='INDEL')
 data_30_germline_indels = data_30_germline %>% filter(Type !='SNP')
 
@@ -153,46 +192,117 @@ data_30_germline_mean_indels <- data_30_germline_mean %>% filter(Type !='SNP')
 
 #### SNVs
 
-```{r, echo=FALSE}
-knitr::kable(data_30_germline_mean_snps) %>%
+```{r, echo=FALSE, message=FALSE}
+knitr::kable(data_30_germline_snps) %>%
     kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
     scroll_box(width = "100%")
 ```
 
 #### Indels
 
-```{r, echo=FALSE}
-knitr::kable(data_30_germline_mean_indels) %>%
+```{r, echo=FALSE, message=FALSE}
+knitr::kable(data_30_germline_indels) %>%
     kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
     scroll_box(width = "100%")
 ```
 
 ### Plots {.tabset .tabset-fade .tabset-pills}
 
-#### SNVs
+#### SNVs (mean)
 
-```{r, echo=FALSE, fig.show="hold", out.width = "50%"}
-scatter_snps_germline <- plot_scatter(data_30_germline_mean_snps, "mean_recall", "mean_precision", "Sarek 3.1.1 SNPs Germline", "snps_prec_recall_30_germline.png")
-score_snps_germline <- plot_score(data_30_germline_snps , 'METRIC.F1_Score', "Sarek 3.1.1 SNPs Germline", "snps_fscore_311_germline.png")
-  
-scatter_snps_germline
-score_snps_germline
+```{r, echo=FALSE, message=FALSE, results='hide', fig.keep='all', warning=FALSE}
+germline_snps_scatter <- plot_scatter(data_30_germline_mean_snps, "mean_recall", "mean_precision", "", "germline_snps_prec_recall_311")
+germline_snps_score <- plot_score(data_30_germline_snps , 'METRIC.F1_Score', "", "germline_snps_fscore_311")
 
-plot_summary(scatter_snps_germline, score_snps_germline, "germline_30_snps_summary.png")
+germline_snvs_summary <-plot_summary(germline_snps_scatter, germline_snps_score, "germline_snps_summary_311", "")
+germline_snvs_summary
 ```
 
-#### Indels
+#### Indels (mean)
 
-```{r echo=FALSE, fig.show="hold", out.width = "50%"}
-scatter_indels_germline <- plot_scatter(data_30_germline_mean_indels, 'mean_recall', 'mean_precision', "Sarek 3.1.1 Indels Germline", "indels_prec_recall_30_germline.png")
-score_indels_germline <- plot_score(data_30_germline_indels , 'METRIC.F1_Score', "Sarek 3.1.1 Indels Germline", "indels_fscore_311_germline.png")
+```{r echo=FALSE, message=FALSE, results='hide', fig.keep='all', warning=FALSE}
+germline_indels_scatter <- plot_scatter(data_30_germline_mean_indels, 'mean_recall', 'mean_precision', "", "germline_indels_prec_recall_311")
+germline_indels_score <- plot_score(data_30_germline_indels , 'METRIC.F1_Score', "", "germline_indels_fscore_311")
 
-scatter_indels_germline
-score_indels_germline
-
-plot_summary(scatter_indels_germline, score_indels_germline, "germline_30_indels_summary.png")
+germline_indels_summary <- plot_summary(germline_indels_scatter, germline_indels_score, "germline_indels_summary_311", "")
+germline_indels_summary
 ```
 
+## Germline - Non Illumina {.tabset .tabset-fade .tabset-pills}
+
+```{r echo=FALSE}
+data_30_germline_nonillumina <- read.table(file = "../data/functional/germline/2023-06-27_non_illumina_precision_recall.csv", sep = ';', header = TRUE) %>%
+        mutate('caller' = case_when(
+            grepl("strelka", run) ~ "Strelka2",
+            grepl("haplotypecaller", run) & !grepl("filtered", run) ~ "HaplotypeCaller",
+            grepl("haplotypecaller.filtered", run) ~ "HaplotypeCaller (filtered)",
+            grepl("freebayes", run) ~ "FreeBayes",
+            grepl("deepvariant", run) ~ "DeepVariant",
+             TRUE ~ "other")) %>%
+        mutate('sample' = case_when(
+            grepl("HG002", run) ~ "HG002",
+            TRUE ~ "other"))%>%
+        mutate('coverage' = case_when(
+            grepl("20x", run) ~ "20x",
+            grepl("30x", run) ~ "30x",
+            grepl("40x", run) ~ "40x",
+            grepl("50x", run) ~ "50x",
+            TRUE ~ "other")) %>%
+        mutate('aligner' = case_when( #just so I get the shapes right with the same function
+          grepl("MGI", run) ~ "MGI",
+          grepl("BGI", run) ~ "BGI"
+        ))
+
+data_30_germline_nonillumina_snps <- data_30_germline_nonillumina %>%
+                                          select(-"INDEL.recall",-"INDEL.precision")
+data_30_germline_nonillumina_indels <- data_30_germline_nonillumina %>%
+                                          select(-"SNP.recall",-"SNP.precision")
+```
+
+### SNPS
+
+```{r echo=FALSE}
+germline_snps_nonillumina_scatter_facet <- plot_scatter(data_30_germline_nonillumina_snps, recall="SNP.recall", precision="SNP.precision", title="", outputfile="germline_snps_prec_recall_facet_30_nonillumina")
+
+germline_snps_nonillumina_scatter_facet <- facet(germline_snps_nonillumina_scatter_facet + 
+             theme(strip.text.x = element_text(size = 30, face = "bold"),
+                   legend.text = element_text(size = 20),
+                   axis.title.y = element_text(size=25),
+                   axis.title.x = element_text(size=25),
+                  strip.background = element_rect(color="white", fill="white", size=1.5),
+                  panel.spacing=unit(1,"lines"))
+           , facet.by = "coverage", scales = "free", nrow=2, ncol=2)
+germline_snps_nonillumina_scatter_facet <- annotate_figure(germline_snps_nonillumina_scatter_facet, top = text_grob("SNPs", face = "bold", size = 40))
+
+ggsave(plot=germline_snps_nonillumina_scatter_facet, filename = paste0(results_folder,"eps/benchmarking_snps_combination_nonillumina", ".eps"), device="eps", width=50, height=40, units="cm")
+ggsave(plot=germline_snps_nonillumina_scatter_facet, filename = paste0(results_folder,"png/benchmarking_snps_combination_nonillumina", ".png"), device="png", width=50, height=40, units="cm")
+germline_snps_nonillumina_scatter_facet
+
+```
+
+
+### Indels
+```{r echo=FALSE}
+
+germline_indels_nonillumina_scatter_facet <- plot_scatter(data_30_germline_nonillumina_indels, 
+                                                                   recall="INDEL.recall", 
+                                                                   precision="INDEL.precision", title="",
+                                                                   outputfile="germline_indels_prec_recall_facet_30_nonillumina")
+germline_indels_nonillumina_scatter_facet <- facet(germline_indels_nonillumina_scatter_facet + 
+             theme(strip.text.x = element_text(size = 20, face = "bold"),
+                   legend.text = element_text(size = 20),
+                   axis.title.y = element_text(size=25),
+                   axis.title.x = element_text(size=25),
+                  strip.background = element_rect(color="white", fill="white", size=1.5),
+                  panel.spacing=unit(1,"lines"))
+           , facet.by = "coverage", scales = "free", nrow=2, ncol=2)
+germline_indels_nonillumina_scatter_facet <- annotate_figure(germline_indels_nonillumina_scatter_facet, top = text_grob("Indels", face = "bold", size = 40))
+
+ggsave(plot=germline_indels_nonillumina_scatter_facet, filename = paste0(results_folder,"eps/benchmarking_indels_combination_nonillumina", ".eps"), device="eps", width=50, height=40, units="cm")
+ggsave(plot=germline_indels_nonillumina_scatter_facet, filename = paste0(results_folder,"png/benchmarking_indels_combination_nonillumina", ".png"), device="png", width=50, height=40, units="cm")
+
+germline_indels_nonillumina_scatter_facet
+```
 
 ## Somatic
 
@@ -200,7 +310,7 @@ plot_summary(scatter_indels_germline, score_indels_germline, "germline_30_indels
 
 Truth vcf & bed files were downloaded from [here](https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/seqc/Somatic_Mutation_WG/release/v1.2/), following the links from this [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8506910/).
 
-See `script.sh` for details on how `som.py` was run. 
+See `script.sh` for details on how `rtg vcfeval`` was run. 
 
 ```{r input, echo=FALSE, message=FALSE}
 data_30_somatic <- read.table(file = "../data/functional/somatic/merged.txt", header = TRUE) %>%
@@ -219,94 +329,140 @@ data_30_somatic <- read.table(file = "../data/functional/somatic/merged.txt", he
             grepl("SNV", run) ~ "SNV",
             grepl("INDEL", run) ~ "INDEL",
             TRUE ~ "other")) %>%
-      mutate("version" = "sarek3")
-# data_30_somatic <- read.table(file = "../data/functional/merged_30_trimmed.csv", sep = ',', header = TRUE) %>%
-#         mutate('aligner' = case_when(
-#           grepl("dragmap", run) ~ "Dragmap",
-#           grepl("bwamem2", run) ~ "BwaMem2",
-#           grepl("bwa", run) ~ "bwa",
-#            TRUE ~ "other")) %>%
-#         mutate('caller' = case_when(
-#             grepl("strelka", run) ~ "Strelka2_BP",
-#             grepl("mutect2", run) & !grepl("filtered", run) ~ "Mutect2",
-#             grepl("mutect2_filtered", run) ~ "Mutect2 (filtered)",
-#             grepl("freebayes", run) ~ "FreeBayes",
-#              TRUE ~ "other")) %>%
-#       filter(type !='records') %>%
-#       mutate("f_score" = 2 * ((precision*recall)/(precision+recall))) %>%
-#       mutate("version" = "sarek3")
-# 
-# data_27_somatic <- read.table(file = "../data/functional/merged_27.csv", sep = ',', header = TRUE) %>%
-#         mutate('aligner' = case_when(
-#           grepl("bwamem2", run) ~ "BwaMem2",
-#           grepl("bwa", run) ~ "bwa",
-#            TRUE ~ "other")) %>%
-#         mutate('Variant caller' = case_when(
-#             grepl("strelka_", run)  ~ "Strelka2",
-#             grepl("strelkabp_", run)  ~ "Strelka2_BP",
-#             grepl("mutect2", run) & !grepl("filtered", run) ~ "Mutect2",
-#             grepl("mutect2_filtered", run) ~ "Mutect2 (filtered)",
-#             grepl("freebayes", run) ~ "FreeBayes",
-#              TRUE ~ "other")) %>%
-#       filter(type !='records') %>%
-#       mutate("f_score" = 2 * ((precision*recall)/(precision+recall)))%>%
-#       mutate("version" = "sarek2")
+        mutate('sample' = case_when(
+            grepl("EA", run) ~ "EA",
+            grepl("FD", run) ~ "FD",
+            grepl("NV", run) ~ "NV",
+            TRUE ~ "other")) 
 ```
 
 
 ```{r echo=FALSE}
 data_snvs_30_somatic =  data_30_somatic %>% filter(type !='INDEL')
-#data_snvs_27_somatic =  data_27_somatic %>% filter(type !='indels')
-
 data_indels_30_somatic =  data_30_somatic %>% filter(type !='SNV')
-#data_indels_27_somatic =  data_27_somatic %>% filter(type !='SNVs')
 ```
-
 
 ### Overview {.tabset .tabset-fade .tabset-pills}
 
 #### SNVs
+
+```{r, echo=FALSE}
+knitr::kable(data_snvs_30_somatic) %>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+    scroll_box(width = "100%")
+```
+
 #### Indels
+
+```{r, echo=FALSE}
+knitr::kable(data_indels_30_somatic) %>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+    scroll_box(width = "100%")
+```
 
 ### Plots {.tabset .tabset-fade .tabset-pills}
 #### SNVs
 
-```{r snvs , echo=FALSE, fig.show="hold", out.width = "50%"}
-somatic_snvs_scatter <- plot_scatter(data_snvs_30_somatic, 'Sensitivity', 'Precision', "SNVs", "snvs_prec_recall_30_somatic.png")
-somatic_snvs_fscore <- plot_score(data_snvs_30_somatic, 'F.measure', "Sarek 3.1.1 SNVS", "snvs_fscore_311_somatic.png")
-
-plot_summary(somatic_snvs_scatter, somatic_snvs_fscore, "somatic_30_snvs_summary.png")
+```{r snvs , echo=FALSE}
+somatic_snvs_scatter <- plot_scatter_somatic(data_snvs_30_somatic, "SNVs", "somatic_snvs_prec_recall_30")
+somatic_snvs_fscore <- plot_score(data_snvs_30_somatic, 'F.measure', "", "somatic_snvs_fscore_311")
+somatic_snvs_summary <- plot_summary(somatic_snvs_scatter, somatic_snvs_fscore, "somatic_snvs_summary_311", "")
+somatic_snvs_summary
 ```
 
 #### Indels
 
-```{r , echo=FALSE,  fig.show="hold", out.width = "50%"}
+```{r , echo=FALSE}
 
-somatic_indels_scatter <- plot_scatter(data_indels_30_somatic, 'Sensitivity', 'Precision', "INDELs", "indels_prec_recall_30_somatic.png")
-somatic_indels_fscore <- plot_score(data_indels_30_somatic, 'F.measure', "Sarek 3.1.1 INDELs", "indels_fscore_311_somatic.png")
+somatic_indels_scatter <- plot_scatter_somatic(data_indels_30_somatic, "INDELs", "somatic_indels_prec_recall_311")
+somatic_indels_fscore <- plot_score(data_indels_30_somatic, 'F.measure', "", "somatic_indels_fscore_311")
 
-plot_summary(somatic_indels_scatter, somatic_indels_fscore, "somatic_30_indels_summary.png")
+somatic_indel_summary <- plot_summary(somatic_indels_scatter, somatic_indels_fscore, "somatic_indels_summary_311", "")
+somatic_indel_summary
 ```
 
+## Paper plots  {.tabset .tabset-fade .tabset-pills}
 
-<!-- ### Indels {.tabset .tabset-fade .tabset-pills} -->
+### SNVS
 
-<!-- #### Recall & Precision -->
+```{r  echo=FALSE}
+somatic_snvs_scatter_facet <- plot_scatter(data_snvs_30_somatic, recall="Sensitivity", precision="Precision", title="", outputfile="somatic_snvs_prec_recall_30")
+
+somatic_snvs_scatter_facet <- facet(somatic_snvs_scatter_facet  + 
+             theme(strip.text.x = element_text(size = 20),
+                   legend.text = element_text(size = 20),
+                   axis.title.y = element_text(size=25),
+                   axis.title.x = element_text(size=25),
+                  strip.background = element_rect(color="white", fill="white", size=1.5),
+                  panel.spacing=unit(1,"lines"))
+           , facet.by = "sample", scales = "free", nrow=2, ncol=2)
 
 
-<!-- ```{r , echo=FALSE, fig.show="hold", out.width = "50%"} -->
-<!-- plot_scatter(data_indels_30_somatic, 'recall', 'precision', "Sarek 3.1.1", "indels_pre_recall_311_somatic.png") -->
-<!-- plot_scatter(data_indels_27_somatic, 'recall', 'precision', "Sarek 2.7.1", "indels_pre_recall_311_somatic.png") -->
-<!-- ``` -->
 
-<!-- #### F_score -->
+germline_snvs_scatter_facet <- plot_scatter(data_30_germline_snps, recall="METRIC.Recall", precision="METRIC.Precision", title="", outputfile="germline_snvs_prec_recall_facet_30")
 
-<!-- ```{r , echo=FALSE,  fig.show="hold", out.width = "50%"} -->
+germline_snvs_scatter_facet <- facet(germline_snvs_scatter_facet + xlim(0.96, 1) + 
+             theme(strip.text.x = element_text(size = 20),
+                   legend.text = element_text(size = 20),
+                   axis.title.y = element_text(size=25),
+                   axis.title.x = element_text(size=25),
+                  strip.background = element_rect(color="white", fill="white", size=1.5),
+                  panel.spacing=unit(1,"lines"))
+           , facet.by = "sample", scales = "free", nrow=2, ncol=2)
 
-<!-- plot_score(data_indels_30_somatic, 'f_score', "Sarek 3.1.1", "indels_fscore_311_somatic.png") -->
-<!-- plot_score(data_indels_27_somatic, 'f_score', "Sarek 2.7.2", "indels_fscore_272_somatic.png") -->
 
-<!-- ``` -->
+p <- ggpubr::ggarrange(
+                        germline_snvs_scatter_facet + theme(legend.position = c(1,0), legend.justification = c("right", "bottom")),
+                        germline_snps_score + theme(legend.position="none"),
+                        somatic_snvs_scatter_facet + theme(legend.position = c(0.9,0), legend.justification = c("right", "bottom")), 
+                        somatic_snvs_fscore + theme(legend.position="none"), align="hv",
+                        ncol=2, nrow=2, labels=c("A", "B", "C", "D"), font.label = list(size = 25), widths = c(1, 0.7, 1, 0.7) )
+p
+ggsave(plot=p, filename = paste0(results_folder,"eps/benchmarking_snvs_combination", ".eps"), device="eps", width=40, height=40, units="cm")
+ggsave(plot=p, filename = paste0(results_folder,"png/benchmarking_snvs_combination", ".png"), device="png", width=40, height=40, units="cm")
+
+```
+
+### Indels
+
+```{r  echo=FALSE}
+somatic_indels_scatter_facet <- plot_scatter(data_indels_30_somatic, recall="Sensitivity", precision="Precision", title="", outputfile="somatic_indels_prec_recall_30")
+
+somatic_indels_scatter_facet <- facet(somatic_indels_scatter_facet + 
+             theme(strip.text.x = element_text(size = 20),
+                   legend.text = element_text(size = 20),
+                   axis.title.y = element_text(size=25),
+                   axis.title.x = element_text(size=25),
+                  strip.background = element_rect(color="white", fill="white", size=1.5),
+                  panel.spacing=unit(1,"lines"))
+           , facet.by = "sample", scales = "free", nrow=2, ncol=2)
+
+germline_indels_scatter_facet <- plot_scatter(data_30_germline_indels, recall="METRIC.Recall", precision="METRIC.Precision", title="", outputfile="germline_indels_prec_recall_facet_30")
+
+germline_indels_scatter_facet <- facet(germline_indels_scatter_facet + 
+             theme(strip.text.x = element_text(size = 20),
+                   legend.text = element_text(size = 20),
+                   axis.title.y = element_text(size=25),
+                   axis.title.x = element_text(size=25),
+                  strip.background = element_rect(color="white", fill="white", size=1.5),
+                  panel.spacing=unit(1,"lines"))
+           , facet.by = "sample", scales = "free", nrow=2, ncol=2)
+
+
+somatic_indel_panels <- cowplot::plot_grid(somatic_indels_scatter_facet + theme(legend.position = c(0.9,0), legend.justification = c("right", "bottom")), 
+                        somatic_indels_fscore + theme(legend.position="none"),
+                        ncol=2, nrow=1, labels=c("C","D"))
+
+germline_indel_panels <- ggpubr::ggarrange(germline_indels_scatter_facet + theme(legend.position = c(1,0), legend.justification = c("right", "bottom")),
+                        germline_indels_score + theme(legend.position="none"), 
+                        ncol=2, nrow=1, labels=c("A","B"))
+
+
+p <- ggpubr::ggarrange(germline_indel_panels, somatic_indel_panels, ncol=1, legend="none")
+ggsave(plot=p, filename = paste0(results_folder,"eps/benchmarking_indels_combination", ".eps"), device="eps", width=50, height=40, units="cm")
+ggsave(plot=p, filename = paste0(results_folder,"png/benchmarking_indels_combination", ".png"), device="png", width=50, height=40, units="cm")
+p
+```
 
 Package versions:
 

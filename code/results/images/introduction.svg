@@ -1,0 +1,2164 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="288.08157mm"
+   height="112.80745mm"
+   viewBox="0 0 205.77263 80.576744"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.2 (b0a8486, 2022-12-01)"
+   sodipodi:docname="introduction.svg"
+   inkscape:export-filename="introduction.png"
+   inkscape:export-xdpi="600"
+   inkscape:export-ydpi="600"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="false"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     showguides="false"
+     inkscape:zoom="0.72827924"
+     inkscape:cx="250.59069"
+     inkscape:cy="156.53336"
+     inkscape:window-width="1600"
+     inkscape:window-height="872"
+     inkscape:window-x="1024"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient56866">
+      <stop
+         style="stop-color:#84ed48;stop-opacity:1;"
+         offset="0"
+         id="stop56862" />
+      <stop
+         style="stop-color:#84ed48;stop-opacity:0;"
+         offset="1"
+         id="stop56864" />
+    </linearGradient>
+    <rect
+       x="-265.17148"
+       y="689.68372"
+       width="374.56961"
+       height="92.750565"
+       id="rect15513" />
+    <rect
+       x="2430.5405"
+       y="712.27679"
+       width="177.17737"
+       height="80.859467"
+       id="rect15507" />
+    <rect
+       x="638.552"
+       y="563.63806"
+       width="99.885223"
+       height="58.26638"
+       id="rect13506" />
+    <linearGradient
+       id="linearGradient6694"
+       inkscape:swatch="solid">
+      <stop
+         style="stop-color:#a3d581;stop-opacity:1;"
+         offset="0"
+         id="stop6692" />
+    </linearGradient>
+    <rect
+       x="296.08835"
+       y="149.82784"
+       width="46.375282"
+       height="14.269318"
+       id="rect733" />
+    <rect
+       x="304.41211"
+       y="101.07434"
+       width="13.080208"
+       height="22.593086"
+       id="rect727" />
+    <rect
+       x="305.60123"
+       y="72.535698"
+       width="17.836649"
+       height="16.647537"
+       id="rect721" />
+    <rect
+       x="140.41821"
+       y="311.94705"
+       width="267.38318"
+       height="56.335449"
+       id="rect355" />
+    <meshgradient
+       inkscape:collect="always"
+       id="meshgradient6026"
+       gradientUnits="userSpaceOnUse"
+       x="-54.269775"
+       y="65.410889"
+       gradientTransform="matrix(0.39922106,0,0,1,380.66999,49.889535)">
+      <meshrow
+         id="meshrow6028">
+        <meshpatch
+           id="meshpatch6030">
+          <stop
+             path="c 76.9318,0  153.864,0  230.795,0"
+             style="stop-color:#ffffff;stop-opacity:1"
+             id="stop6032" />
+          <stop
+             path="c 0,1.04873  0,2.09746  0,3.14619"
+             style="stop-color:#efe112;stop-opacity:1"
+             id="stop6034" />
+          <stop
+             path="c -76.9318,0  -153.864,0  -230.795,0"
+             style="stop-color:#ffffff;stop-opacity:1"
+             id="stop6036" />
+          <stop
+             path="c 0,-1.04873  0,-2.09746  0,-3.14619"
+             style="stop-color:#efe112;stop-opacity:1"
+             id="stop6038" />
+        </meshpatch>
+      </meshrow>
+    </meshgradient>
+    <meshgradient
+       inkscape:collect="always"
+       id="meshgradient6040"
+       gradientUnits="userSpaceOnUse"
+       x="-54.943954"
+       y="70.579628"
+       gradientTransform="matrix(0.39784945,0,0,1,380.86378,49.889535)">
+      <meshrow
+         id="meshrow6042">
+        <meshpatch
+           id="meshpatch6044">
+          <stop
+             path="c 76.6321,0  153.264,0  229.896,0"
+             style="stop-color:#ffffff;stop-opacity:1"
+             id="stop6046" />
+          <stop
+             path="c 0,1.04873  0,2.09746  0,3.14619"
+             style="stop-color:#efe112;stop-opacity:1"
+             id="stop6048" />
+          <stop
+             path="c -76.6321,0  -153.264,0  -229.896,0"
+             style="stop-color:#ffffff;stop-opacity:1"
+             id="stop6050" />
+          <stop
+             path="c 0,-1.04873  0,-2.09746  0,-3.14619"
+             style="stop-color:#efe112;stop-opacity:1"
+             id="stop6052" />
+        </meshpatch>
+      </meshrow>
+    </meshgradient>
+    <meshgradient
+       inkscape:collect="always"
+       id="meshgradient6054"
+       gradientUnits="userSpaceOnUse"
+       x="-56.292316"
+       y="75.748352"
+       gradientTransform="matrix(0.39130433,0,0,1,381.48125,49.889535)">
+      <meshrow
+         id="meshrow6056">
+        <meshpatch
+           id="meshpatch6058">
+          <stop
+             path="c 77.531,0  155.062,0  232.593,0"
+             style="stop-color:#ffffff;stop-opacity:1"
+             id="stop6060" />
+          <stop
+             path="c 0,1.04873  0,2.09746  0,3.14619"
+             style="stop-color:#efe112;stop-opacity:1"
+             id="stop6062" />
+          <stop
+             path="c -77.531,0  -155.062,0  -232.593,0"
+             style="stop-color:#ffffff;stop-opacity:1"
+             id="stop6064" />
+          <stop
+             path="c 0,-1.04873  0,-2.09746  0,-3.14619"
+             style="stop-color:#efe112;stop-opacity:1"
+             id="stop6066" />
+        </meshpatch>
+      </meshrow>
+    </meshgradient>
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient56866"
+       id="radialGradient56868"
+       cx="126.30772"
+       cy="26.100474"
+       fx="126.30772"
+       fy="26.100474"
+       r="73.400992"
+       gradientTransform="matrix(1,0,0,0.03013334,0,25.691956)"
+       gradientUnits="userSpaceOnUse" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient56866"
+       id="radialGradient56870"
+       cx="126.30772"
+       cy="36.92443"
+       fx="126.30772"
+       fy="36.92443"
+       r="73.400992"
+       gradientTransform="matrix(1,0,0,0.03013334,0,36.18975)"
+       gradientUnits="userSpaceOnUse" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient56866"
+       id="radialGradient56872"
+       cx="126.30772"
+       cy="31.512452"
+       fx="126.30772"
+       fy="31.512452"
+       r="73.400992"
+       gradientTransform="matrix(1,0,0,0.03013334,0,30.940853)"
+       gradientUnits="userSpaceOnUse" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient56866"
+       id="radialGradient56874"
+       cx="126.30772"
+       cy="42.336409"
+       fx="126.30772"
+       fy="42.336409"
+       r="73.400992"
+       gradientTransform="matrix(1,0,0,0.03013334,0,41.438648)"
+       gradientUnits="userSpaceOnUse" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient56866"
+       id="radialGradient56876"
+       cx="87.108475"
+       cy="47.748385"
+       fx="87.108475"
+       fy="47.748385"
+       r="34.201743"
+       gradientTransform="matrix(1,0,0,0.06466971,0,45.038487)"
+       gradientUnits="userSpaceOnUse" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient56866"
+       id="radialGradient56878"
+       cx="145.8684"
+       cy="47.748385"
+       fx="145.8684"
+       fy="47.748385"
+       r="4.8216344"
+       gradientTransform="matrix(1,0,0,0.4587277,0,26.222854)"
+       gradientUnits="userSpaceOnUse" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient56866"
+       id="radialGradient56880"
+       cx="130.1281"
+       cy="47.748385"
+       fx="130.1281"
+       fy="47.748385"
+       r="6.9091684"
+       gradientTransform="matrix(1,0,0,0.32012786,0,32.840773)"
+       gradientUnits="userSpaceOnUse" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient56866"
+       id="radialGradient56882"
+       cx="156.2999"
+       cy="47.748385"
+       fx="156.2999"
+       fy="47.748385"
+       r="4.5896865"
+       gradientTransform="matrix(1,0,0,0.48191031,0,25.115922)"
+       gradientUnits="userSpaceOnUse" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient56866"
+       id="radialGradient56880-0"
+       cx="130.1281"
+       cy="47.748386"
+       fx="130.1281"
+       fy="47.748386"
+       r="6.9091682"
+       gradientTransform="matrix(2.0336646,0,0,0.32012786,-78.718514,32.840775)"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(5.6073949,-7.655883)">
+    <rect
+       style="font-variation-settings:'wght' 900;opacity:0.997;fill:#ececec;fill-opacity:1;stroke:#ececec;stroke-width:0.706001;stroke-linejoin:round;paint-order:markers stroke fill"
+       id="rect113"
+       width="41.855785"
+       height="9.566144"
+       x="52.502682"
+       y="8.0088835"
+       rx="2.6458333"
+       ry="2.6458304" />
+    <rect
+       style="font-variation-settings:'wght' 900;opacity:0.997;fill:#ececec;fill-opacity:1;stroke:#ececec;stroke-width:0.706001;stroke-linejoin:round;paint-order:markers stroke fill"
+       id="rect115"
+       width="48.082661"
+       height="9.566144"
+       x="121.42931"
+       y="8.4583387"
+       rx="2.6458333"
+       ry="2.6458313" />
+    <rect
+       style="font-variation-settings:'wght' 900;opacity:0.997;fill:#ececec;fill-opacity:1;stroke:#ececec;stroke-width:0.706;stroke-linejoin:round;paint-order:markers stroke fill"
+       id="rect115-9"
+       width="17.070248"
+       height="4.1659269"
+       x="121.59299"
+       y="19.5487"
+       rx="2.6458333"
+       ry="2.6458306" />
+    <rect
+       style="font-variation-settings:'wght' 900;opacity:0.997;fill:#ececec;fill-opacity:1;stroke:#ececec;stroke-width:0.706;stroke-linejoin:round;paint-order:markers stroke fill"
+       id="rect115-9-0"
+       width="10.777874"
+       height="4.1659269"
+       x="140.47946"
+       y="19.548698"
+       rx="2.6458333"
+       ry="2.6458306" />
+    <rect
+       style="font-variation-settings:'wght' 900;opacity:0.997;fill:#ececec;fill-opacity:1;stroke:#ececec;stroke-width:0.706;stroke-linejoin:round;paint-order:markers stroke fill"
+       id="rect115-9-0-6"
+       width="6.4526978"
+       height="4.1659269"
+       x="153.07356"
+       y="19.5487"
+       rx="2.6458333"
+       ry="2.6458306" />
+    <rect
+       style="font-variation-settings:'wght' 900;opacity:0.997;fill:#ececec;fill-opacity:1;stroke:#ececec;stroke-width:0.706;stroke-linejoin:round;paint-order:markers stroke fill"
+       id="rect115-9-0-0"
+       width="8.495142"
+       height="4.1659269"
+       x="161.72046"
+       y="19.548698"
+       rx="2.6458333"
+       ry="2.6458306" />
+    <rect
+       style="font-variation-settings:'wght' 900;opacity:0.997;fill:#ececec;fill-opacity:1;stroke:#ececec;stroke-width:0.706001;stroke-linejoin:round;paint-order:markers stroke fill"
+       id="rect117"
+       width="27.56357"
+       height="9.566165"
+       x="172.24861"
+       y="8.0088835"
+       rx="2.6458333"
+       ry="2.6458309" />
+    <rect
+       style="font-variation-settings:'wght' 900;opacity:0.997;fill:#ececec;fill-opacity:1;stroke:#ececec;stroke-width:0.706001;stroke-linejoin:round;paint-order:markers stroke fill"
+       id="rect119"
+       width="21.597559"
+       height="9.566165"
+       x="97.095108"
+       y="8.2336111"
+       rx="2.645833"
+       ry="2.6458309" />
+    <text
+       xml:space="preserve"
+       style="font-size:3.52777px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.264583"
+       x="60.864685"
+       y="13.557273"
+       id="text337"><tspan
+         sodipodi:role="line"
+         id="tspan335"
+         style="stroke-width:0.264583"
+         x="60.864685"
+         y="13.557273">Preprocessing</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.52777px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.264583"
+       x="133.34573"
+       y="13.99579"
+       id="text341"><tspan
+         sodipodi:role="line"
+         id="tspan339"
+         style="stroke-width:0.264583"
+         x="133.34573"
+         y="13.99579">Variant calling</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.52777px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.264583"
+       x="176.51427"
+       y="14.130754"
+       id="text345"><tspan
+         sodipodi:role="line"
+         id="tspan343"
+         style="stroke-width:0.264583"
+         x="176.51427"
+         y="14.130754">Annotation</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.52777px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.264583"
+       x="101.43985"
+       y="12.175321"
+       id="text349"><tspan
+         sodipodi:role="line"
+         id="tspan347"
+         style="stroke-width:0.264583"
+         x="101.43985"
+         y="12.175321">Quality </tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.264583"
+         x="101.43985"
+         y="16.585033"
+         id="tspan351">Control</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="scale(0.26458333)"
+       id="text353"
+       style="font-size:13.3333px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;white-space:pre;shape-inside:url(#rect355);display:inline" />
+    <text
+       xml:space="preserve"
+       style="font-size:3.52777px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.264583"
+       x="-88.416084"
+       y="48.747826"
+       id="text361"
+       transform="rotate(-90)"><tspan
+         sodipodi:role="line"
+         id="tspan359"
+         style="stroke-width:0.264583"
+         x="-88.416084"
+         y="48.747826">Code available?</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.264583"
+         x="-88.416084"
+         y="53.157539"
+         id="tspan363" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.52777px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.264583"
+       x="-127.78405"
+       y="218.25453"
+       id="text367"
+       transform="rotate(-90)"><tspan
+         sodipodi:role="line"
+         id="tspan365"
+         style="stroke-width:0.264583"
+         x="-127.78405"
+         y="218.25453">Commercial?</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.52777px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.264583"
+       x="-88.416084"
+       y="24.087841"
+       id="text375"
+       transform="rotate(-90)"><tspan
+         sodipodi:role="line"
+         id="tspan373"
+         style="stroke-width:0.264583"
+         x="-88.416084"
+         y="24.087841">Germline</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.52777px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.264583"
+       x="-88.282028"
+       y="15.954671"
+       id="text379"
+       transform="rotate(-90)"><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.264583"
+         x="-88.282028"
+         y="15.954671"
+         id="tspan507">Tumor-only</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.52777px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.264583"
+       x="-88.50428"
+       y="8.8655529"
+       id="text379-2"
+       transform="rotate(-90)"><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.264583"
+         x="-88.50428"
+         y="8.8655529"
+         id="tspan507-1">Paired</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.52777px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.264583"
+       x="-88.282028"
+       y="-1.6972508"
+       id="text383"
+       transform="rotate(-90)"><tspan
+         sodipodi:role="line"
+         id="tspan381"
+         style="stroke-width:0.264583"
+         x="-88.282028"
+         y="-1.6972508">Workflow language</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.52777px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.264583"
+       x="-84.282112"
+       y="-41.7523"
+       id="text387"
+       transform="rotate(-90)"><tspan
+         sodipodi:role="line"
+         id="tspan385"
+         style="stroke-width:0.264583"
+         x="-84.282112"
+         y="-41.7523">Notes</tspan></text>
+    <rect
+       style="font-variation-settings:'wght' 900;opacity:0.997;fill:none;fill-opacity:1;stroke:#ececec;stroke-width:0.504286;stroke-linejoin:round;paint-order:markers stroke fill"
+       id="rect407"
+       width="181.13048"
+       height="3.3709145"
+       x="311.02502"
+       y="35.072659"
+       rx="2.6458333"
+       ry="2.6458309" />
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="328.37204"
+       y="38.668301"
+       id="text411"><tspan
+         sodipodi:role="line"
+         id="tspan409"
+         style="stroke-width:0.188988"
+         x="328.37204"
+         y="38.668301">IDEA</tspan></text>
+    <rect
+       style="font-variation-settings:'wght' 900;opacity:0.997;fill:none;fill-opacity:1;stroke:#ececec;stroke-width:0.504286;stroke-linejoin:round;paint-order:markers stroke fill"
+       id="rect413"
+       width="181.13048"
+       height="3.1461868"
+       x="323.8345"
+       y="87.434196"
+       rx="2.6458333"
+       ry="2.6458309" />
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="400.73434"
+       y="90.130928"
+       id="text417"><tspan
+         sodipodi:role="line"
+         id="tspan415"
+         style="stroke-width:0.188988"
+         x="400.73434"
+         y="90.130928">MSK_IMPACT</tspan></text>
+    <rect
+       style="font-variation-settings:'wght' 900;opacity:0.997;fill:#e6e6e6;fill-opacity:1;stroke:url(#radialGradient56868);stroke-width:0.504286;stroke-linejoin:round;stroke-opacity:0.6;paint-order:markers stroke fill"
+       id="rect432"
+       width="146.2977"
+       height="3.9193475"
+       x="53.158875"
+       y="24.518776"
+       rx="2.6458333"
+       ry="2.6458306" />
+    <rect
+       style="font-variation-settings:'wght' 900;opacity:0.997;fill:#e6e6e6;fill-opacity:1;stroke:url(#radialGradient56872);stroke-width:0.504286;stroke-linejoin:round;stroke-opacity:0.6;paint-order:markers stroke fill"
+       id="rect432-1"
+       width="146.2977"
+       height="3.9193475"
+       x="53.158875"
+       y="29.930754"
+       rx="2.6458333"
+       ry="2.6458306" />
+    <rect
+       style="font-variation-settings:'wght' 900;opacity:0.997;fill:#e6e6e6;fill-opacity:1;stroke:url(#radialGradient56870);stroke-width:0.504286;stroke-linejoin:round;stroke-opacity:0.6;paint-order:markers stroke fill"
+       id="rect432-4"
+       width="146.2977"
+       height="3.9193475"
+       x="53.158875"
+       y="35.342731"
+       rx="2.6458333"
+       ry="2.6458306" />
+    <rect
+       style="font-variation-settings:'wght' 900;opacity:0.997;fill:#e6e6e6;fill-opacity:1;stroke:url(#radialGradient56874);stroke-width:0.504286;stroke-linejoin:round;stroke-opacity:0.6;paint-order:markers stroke fill"
+       id="rect432-2"
+       width="146.2977"
+       height="3.9193475"
+       x="53.158875"
+       y="40.754711"
+       rx="2.6458333"
+       ry="2.6458306" />
+    <rect
+       style="font-variation-settings:'wght' 900;opacity:0.997;fill:#e6e6e6;fill-opacity:1;stroke:url(#radialGradient56876);stroke-width:0.504286;stroke-linejoin:round;stroke-opacity:0.6;paint-order:markers stroke fill"
+       id="rect432-2-6"
+       width="67.8992"
+       height="3.9193475"
+       x="53.158875"
+       y="46.166687"
+       rx="2.6458333"
+       ry="2.6458306" />
+    <rect
+       style="font-variation-settings:'wght' 900;opacity:0.997;fill:#e6e6e6;fill-opacity:1;stroke:url(#radialGradient56882);stroke-width:0.504287;stroke-linejoin:round;stroke-opacity:0.6;paint-order:markers stroke fill"
+       id="rect432-2-6-9-4"
+       width="8.675086"
+       height="3.9193475"
+       x="151.96236"
+       y="46.166687"
+       rx="2.645833"
+       ry="2.6458306" />
+    <rect
+       style="font-variation-settings:'wght' 900;opacity:0.997;fill:#e6e6e6;fill-opacity:1;stroke:url(#radialGradient56878);stroke-width:0.504287;stroke-linejoin:round;stroke-opacity:0.6;paint-order:markers stroke fill"
+       id="rect432-2-6-9-4-7"
+       width="9.1389818"
+       height="3.9193475"
+       x="141.2989"
+       y="46.166687"
+       rx="2.645833"
+       ry="2.6458306" />
+    <rect
+       style="font-variation-settings:'wght' 900;opacity:0.997;fill:#e6e6e6;fill-opacity:1;stroke:url(#radialGradient56880);stroke-width:0.504287;stroke-linejoin:round;stroke-opacity:0.6;paint-order:markers stroke fill"
+       id="rect432-2-6-9-4-72"
+       width="13.31405"
+       height="3.9193475"
+       x="123.47108"
+       y="46.166687"
+       rx="2.645833"
+       ry="2.6458306" />
+    <rect
+       style="font-variation-settings:'wght' 900;opacity:0.997;fill:#e6e6e6;fill-opacity:1;stroke:url(#radialGradient56880-0);stroke-width:0.504287;stroke-linejoin:round;stroke-opacity:0.6;paint-order:markers stroke fill"
+       id="rect432-2-6-9-4-72-6"
+       width="27.076311"
+       height="3.9193475"
+       x="172.38026"
+       y="46.166687"
+       rx="2.645833"
+       ry="2.6458306" />
+    <rect
+       style="font-variation-settings:'wght' 900;opacity:0.997;fill:none;fill-opacity:1;stroke:#ececec;stroke-width:0.504286;stroke-linejoin:round;paint-order:markers stroke fill"
+       id="rect432-9-7"
+       width="146.07295"
+       height="3.1461868"
+       x="358.21783"
+       y="102.35881"
+       rx="2.645833"
+       ry="2.6458309" />
+    <rect
+       style="font-variation-settings:'wght' 900;opacity:0.997;fill:url(#meshgradient6026);fill-opacity:1;stroke:#ececec;stroke-width:0.504286;stroke-linejoin:round;paint-order:markers stroke fill"
+       id="rect432-9-7-8"
+       width="92.138344"
+       height="3.1461868"
+       x="359.00436"
+       y="115.30042"
+       rx="2.6458333"
+       ry="2.6458309" />
+    <rect
+       style="font-variation-settings:'wght' 900;opacity:0.997;fill:url(#meshgradient6040);fill-opacity:1;stroke:#ececec;stroke-width:0.504285;stroke-linejoin:round;paint-order:markers stroke fill"
+       id="rect432-9-7-8-2"
+       width="91.464149"
+       height="3.1461868"
+       x="359.00436"
+       y="120.46916"
+       rx="2.6458333"
+       ry="2.6458309" />
+    <rect
+       style="font-variation-settings:'wght' 900;opacity:0.997;fill:url(#meshgradient6054);fill-opacity:1;stroke:#ececec;stroke-width:0.504286;stroke-linejoin:round;paint-order:markers stroke fill"
+       id="rect432-9-7-8-3"
+       width="91.014687"
+       height="3.1461868"
+       x="359.45383"
+       y="125.63789"
+       rx="2.6458333"
+       ry="2.6458309" />
+    <text
+       xml:space="preserve"
+       style="font-size:3.52778px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="62.515125"
+       y="27.838409"
+       id="text579"><tspan
+         sodipodi:role="line"
+         id="tspan577"
+         style="font-size:3.52778px;stroke-width:0.188988"
+         x="62.515125"
+         y="27.838409">nf-core/sarek</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.52778px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="62.582153"
+       y="33.252151"
+       id="text583"><tspan
+         sodipodi:role="line"
+         id="tspan581"
+         style="font-size:3.52778px;stroke-width:0.188988"
+         x="62.582153"
+         y="33.252151">OvarFlow</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.52778px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="62.574593"
+       y="38.318405"
+       id="text587"><tspan
+         sodipodi:role="line"
+         id="tspan585"
+         style="font-size:3.52778px;stroke-width:0.188988"
+         x="62.574593"
+         y="38.318405">SequanaVC</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.52778px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="62.677902"
+       y="44.076107"
+       id="text591"><tspan
+         sodipodi:role="line"
+         id="tspan589"
+         style="font-size:3.52778px;stroke-width:0.188988"
+         x="62.677902"
+         y="44.076107">TOSCA</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="427.55746"
+       y="104.90582"
+       id="text617"><tspan
+         sodipodi:role="line"
+         id="tspan615"
+         style="stroke-width:0.188988"
+         x="427.55746"
+         y="104.90582">3-caller</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="400.24188"
+       y="117.32298"
+       id="text643"><tspan
+         sodipodi:role="line"
+         id="tspan641"
+         style="stroke-width:0.188988"
+         x="400.24188"
+         y="117.32298">GENMPI</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="400.69135"
+       y="123.16589"
+       id="text677"><tspan
+         sodipodi:role="line"
+         id="tspan675"
+         style="stroke-width:0.188988"
+         x="400.69135"
+         y="123.16589">Sentieon WF</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="399.11826"
+       y="128.33463"
+       id="text681"><tspan
+         sodipodi:role="line"
+         id="tspan679"
+         style="stroke-width:0.188988"
+         x="399.11826"
+         y="128.33463">LUSH Framework</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.52778px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="62.582153"
+       y="49.144127"
+       id="text707"><tspan
+         sodipodi:role="line"
+         id="tspan705"
+         style="font-size:3.52778px;stroke-width:0.188988"
+         x="62.582153"
+         y="49.144127">One-touch-pipelines</tspan></text>
+    <rect
+       style="font-variation-settings:'wght' 900;opacity:0.997;fill:none;fill-opacity:1;stroke:#ececec;stroke-width:0.504287;stroke-linejoin:round;paint-order:markers stroke fill"
+       id="rect709"
+       width="86.295403"
+       height="4.4945526"
+       x="359.56619"
+       y="73.376549"
+       rx="2.6458333"
+       ry="2.6458309" />
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="404.58194"
+       y="76.747459"
+       id="text713"><tspan
+         sodipodi:role="line"
+         id="tspan711"
+         style="stroke-width:0.188988"
+         x="404.58194"
+         y="76.747459">5$ genome</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.18898813,0,0,0.18898813,-57.753045,7.655883)"
+       id="text719"
+       style="font-size:29.3333px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;white-space:pre;shape-inside:url(#rect721);display:inline"><tspan
+         x="305.60156"
+         y="118.66356"
+         id="tspan46039">x</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.18898813,0,0,0.18898813,-57.753045,7.655883)"
+       id="text731"
+       style="font-size:13.3333px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;white-space:pre;shape-inside:url(#rect733);display:inline"><tspan
+         x="296.08789"
+         y="177.49762"
+         id="tspan46041">x</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="21.162561"
+       y="38.688316"
+       id="text865"><tspan
+         sodipodi:role="line"
+         id="tspan863"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="21.162561"
+         y="38.688316">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="13.38746"
+       y="43.998039"
+       id="text865-5"><tspan
+         sodipodi:role="line"
+         id="tspan863-1"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="13.38746"
+         y="43.998039">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="5.9402728"
+       y="49.512276"
+       id="text865-5-0"><tspan
+         sodipodi:role="line"
+         id="tspan863-1-9"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="5.9402728"
+         y="49.512276">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="13.38746"
+       y="49.512276"
+       id="text865-5-0-4"><tspan
+         sodipodi:role="line"
+         id="tspan863-1-9-2"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="13.38746"
+         y="49.512276">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="13.38746"
+       y="27.864363"
+       id="text865-2"><tspan
+         sodipodi:role="line"
+         id="tspan863-4"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="13.38746"
+         y="27.864363">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="259.45929"
+       y="77.122108"
+       id="text865-6"><tspan
+         sodipodi:role="line"
+         id="tspan863-7"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="259.45929"
+         y="77.122108">x</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="257.8862"
+       y="128.52542"
+       id="text865-55"><tspan
+         sodipodi:role="line"
+         id="tspan863-0"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="257.8862"
+         y="128.52542">x</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="5.9402728"
+       y="27.864363"
+       id="text865-52"><tspan
+         sodipodi:role="line"
+         id="tspan863-07"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="5.9402728"
+         y="27.864363">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="250.32187"
+       y="105.31782"
+       id="text865-75"><tspan
+         sodipodi:role="line"
+         id="tspan863-3"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="250.32187"
+         y="105.31782">x</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="45.822544"
+       y="33.27634"
+       id="text865-9"><tspan
+         sodipodi:role="line"
+         id="tspan863-94"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="45.822544"
+         y="33.27634">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="302.68622"
+       y="39.54356"
+       id="text865-91"><tspan
+         sodipodi:role="line"
+         id="tspan863-59"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="302.68622"
+         y="39.54356">x</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="45.822544"
+       y="38.688316"
+       id="text865-8"><tspan
+         sodipodi:role="line"
+         id="tspan863-30"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="45.822544"
+         y="38.688316">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="299.02829"
+       y="118.0347"
+       id="text865-90"><tspan
+         sodipodi:role="line"
+         id="tspan863-76"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="299.02829"
+         y="118.0347">x</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="299.02829"
+       y="123.23917"
+       id="text865-83"><tspan
+         sodipodi:role="line"
+         id="tspan863-8"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="299.02829"
+         y="123.23917">x</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="299.02829"
+       y="128.52542"
+       id="text865-78"><tspan
+         sodipodi:role="line"
+         id="tspan863-97"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="299.02829"
+         y="128.52542">x</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="291.35431"
+       y="118.11785"
+       id="text865-4"><tspan
+         sodipodi:role="line"
+         id="tspan863-5"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="291.35431"
+         y="118.11785">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="257.8862"
+       y="123.23917"
+       id="text865-552"><tspan
+         sodipodi:role="line"
+         id="tspan863-49"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="257.8862"
+         y="123.23917">x</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="257.8862"
+       y="118.0347"
+       id="text865-44"><tspan
+         sodipodi:role="line"
+         id="tspan863-79"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="257.8862"
+         y="118.0347">x</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="45.822544"
+       y="27.864363"
+       id="text865-556"><tspan
+         sodipodi:role="line"
+         id="tspan863-15"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="45.822544"
+         y="27.864363">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="21.162561"
+       y="27.864363"
+       id="text865-913"><tspan
+         sodipodi:role="line"
+         id="tspan863-88"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="21.162561"
+         y="27.864363">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="33.827831"
+       y="27.864363"
+       id="text865-2-84"><tspan
+         sodipodi:role="line"
+         id="tspan863-4-07"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="33.827831"
+         y="27.864363">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="28.106983"
+       y="27.864363"
+       id="text865-52-7"><tspan
+         sodipodi:role="line"
+         id="tspan863-07-1"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="28.106983"
+         y="27.864363">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="33.827831"
+       y="33.27634"
+       id="text865-2-84-9"><tspan
+         sodipodi:role="line"
+         id="tspan863-4-07-7"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="33.827831"
+         y="33.27634">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="28.106983"
+       y="33.27634"
+       id="text865-52-7-3"><tspan
+         sodipodi:role="line"
+         id="tspan863-07-1-5"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="28.106983"
+         y="33.27634">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="39.819057"
+       y="27.864363"
+       id="text865-913-2"><tspan
+         sodipodi:role="line"
+         id="tspan863-88-2"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="39.819057"
+         y="27.864363">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="33.827831"
+       y="49.512276"
+       id="text865-2-84-5"><tspan
+         sodipodi:role="line"
+         id="tspan863-4-07-1"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="33.827831"
+         y="49.512276">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="33.827831"
+       y="43.998039"
+       id="text865-2-84-5-0"><tspan
+         sodipodi:role="line"
+         id="tspan863-4-07-1-2"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="33.827831"
+         y="43.998039">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="28.106983"
+       y="43.998039"
+       id="text865-2-84-5-5"><tspan
+         sodipodi:role="line"
+         id="tspan863-4-07-1-0"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="28.106983"
+         y="43.998039">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="39.819057"
+       y="49.512276"
+       id="text865-913-2-7"><tspan
+         sodipodi:role="line"
+         id="tspan863-88-2-7"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="39.819057"
+         y="49.512276">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="144.31366"
+       y="27.864361"
+       id="text865-2-8"><tspan
+         sodipodi:role="line"
+         id="tspan863-4-0"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="144.31366"
+         y="27.864361">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="128.57336"
+       y="27.864361"
+       id="text865-52-6"><tspan
+         sodipodi:role="line"
+         id="tspan863-07-0"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="128.57336"
+         y="27.864361">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="128.57336"
+       y="33.27634"
+       id="text865-52-6-3"><tspan
+         sodipodi:role="line"
+         id="tspan863-07-0-7"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="128.57336"
+         y="33.27634">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="128.57336"
+       y="38.688316"
+       id="text865-52-6-6"><tspan
+         sodipodi:role="line"
+         id="tspan863-07-0-2"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="128.57336"
+         y="38.688316">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="128.57336"
+       y="44.100296"
+       id="text865-52-6-9"><tspan
+         sodipodi:role="line"
+         id="tspan863-07-0-8"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="128.57336"
+         y="44.100296">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="128.57336"
+       y="49.512272"
+       id="text865-52-6-9-5"><tspan
+         sodipodi:role="line"
+         id="tspan863-07-0-8-5"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="128.57336"
+         y="49.512272">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="144.31366"
+       y="44.100296"
+       id="text865-52-6-5"><tspan
+         sodipodi:role="line"
+         id="tspan863-07-0-9"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="144.31366"
+         y="44.100296">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="144.31366"
+       y="49.512272"
+       id="text865-52-6-5-9"><tspan
+         sodipodi:role="line"
+         id="tspan863-07-0-9-1"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="144.31366"
+         y="49.512272">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="154.74516"
+       y="49.512272"
+       id="text865-52-6-5-9-4"><tspan
+         sodipodi:role="line"
+         id="tspan863-07-0-9-1-4"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="154.74516"
+         y="49.512272">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="154.74516"
+       y="27.864361"
+       id="text865-913-5"><tspan
+         sodipodi:role="line"
+         id="tspan863-88-9"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="154.74516"
+         y="27.864361">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="164.4133"
+       y="27.864361"
+       id="text865-913-5-2"><tspan
+         sodipodi:role="line"
+         id="tspan863-88-9-8"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="164.4133"
+         y="27.864361">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="21.162561"
+       y="33.27634"
+       id="text865-94"><tspan
+         sodipodi:role="line"
+         id="tspan863-39"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="21.162561"
+         y="33.27634">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="288.79163"
+       y="123.20344"
+       id="text865-51"><tspan
+         sodipodi:role="line"
+         id="tspan863-74"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="288.79163"
+         y="123.20344">(x)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="300.60138"
+       y="77.122108"
+       id="text865-514"><tspan
+         sodipodi:role="line"
+         id="tspan863-6"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="300.60138"
+         y="77.122108">x</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="45.822544"
+       y="43.998039"
+       id="text865-0"><tspan
+         sodipodi:role="line"
+         id="tspan863-32"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="45.822544"
+         y="43.998039">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="45.822544"
+       y="49.512276"
+       id="text865-0-9"><tspan
+         sodipodi:role="line"
+         id="tspan863-32-1"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="45.822544"
+         y="49.512276">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="215.84581"
+       y="70.377319"
+       id="text865-4-2"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-1"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="215.84581"
+         y="70.377319">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="291.35431"
+       y="128.60858"
+       id="text865-4-4"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-7"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="291.35431"
+         y="128.60858">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="215.84581"
+       y="75.728989"
+       id="text865-4-7"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-0"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="215.84581"
+         y="75.728989">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="300.21902"
+       y="105.40097"
+       id="text865-4-9"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-5"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="300.21902"
+         y="105.40097">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="215.84581"
+       y="83.161354"
+       id="text865-4-72"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-9"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="215.84581"
+         y="83.161354">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="215.84581"
+       y="59.556534"
+       id="text865-4-76"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-8"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="215.84581"
+         y="59.556534">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="215.84581"
+       y="49.668522"
+       id="text865-4-29"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-98"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="215.84581"
+         y="49.668522">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="215.84581"
+       y="54.818485"
+       id="text865-4-3"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-71"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="215.84581"
+         y="54.818485">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="215.84581"
+       y="43.263779"
+       id="text865-4-26"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-17"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="215.84581"
+         y="43.263779">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="250.16426"
+       y="123.32233"
+       id="text865-4-29-4"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-98-0"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="250.16426"
+         y="123.32233">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="250.16426"
+       y="128.60858"
+       id="text865-4-3-4"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-71-6"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="250.16426"
+         y="128.60858">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="251.73735"
+       y="77.205261"
+       id="text865-4-3-4-8-0"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-71-6-4-0"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="251.73735"
+         y="77.205261">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="250.16426"
+       y="118.11785"
+       id="text865-4-26-4"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-17-6"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="250.16426"
+         y="118.11785">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="300.89322"
+       y="90.251625"
+       id="text865-4-45"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-12"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="300.89322"
+         y="90.251625">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="215.84581"
+       y="37.665359"
+       id="text865-4-37"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="215.84581"
+         y="37.665359">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="21.679129"
+       y="44.081192"
+       id="text865-4-37-7"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-9"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="21.679129"
+         y="44.081192">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="258.45959"
+       y="105.40097"
+       id="text865-4-37-3"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-8"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="258.45959"
+         y="105.40097">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="13.904027"
+       y="33.359493"
+       id="text865-4-37-0"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-2"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="13.904027"
+         y="33.359493">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="13.904027"
+       y="38.771473"
+       id="text865-4-37-0-4"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-2-9"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="13.904027"
+         y="38.771473">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="40.335625"
+       y="44.081192"
+       id="text865-4-37-0-4-8"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-2-9-1"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="40.335625"
+         y="44.081192">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="28.62355"
+       y="49.595428"
+       id="text865-4-37-0-4-8-8"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-2-9-1-0"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="28.62355"
+         y="49.595428">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="39.819057"
+       y="38.688316"
+       id="text865-2-84-5-1"><tspan
+         sodipodi:role="line"
+         id="tspan863-4-07-1-9"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="39.819057"
+         y="38.688316">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="34.344398"
+       y="38.771473"
+       id="text865-4-37-0-4-8-8-9"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-2-9-1-0-7"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="34.344398"
+         y="38.771473">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="28.62355"
+       y="38.771473"
+       id="text865-4-37-0-4-8-8-9-9"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-2-9-1-0-7-0"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="28.62355"
+         y="38.771473">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="243.25266"
+       y="105.31782"
+       id="text865-75-3"><tspan
+         sodipodi:role="line"
+         id="tspan863-3-4"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="243.25266"
+         y="105.31782">x</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="243.09505"
+       y="123.32233"
+       id="text865-4-29-4-0"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-98-0-7"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="243.09505"
+         y="123.32233">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="243.09505"
+       y="128.60858"
+       id="text865-4-3-4-5"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-71-6-7"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="243.09505"
+         y="128.60858">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="244.66814"
+       y="77.205261"
+       id="text865-4-3-4-8-0-5"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-71-6-4-0-0"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="244.66814"
+         y="77.205261">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="243.09505"
+       y="118.11785"
+       id="text865-4-26-4-6"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-17-6-4"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="243.09505"
+         y="118.11785">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="6.45684"
+       y="33.359493"
+       id="text865-4-37-0-7"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-2-8"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="6.45684"
+         y="33.359493">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="39.819057"
+       y="33.27634"
+       id="text865-94-7"><tspan
+         sodipodi:role="line"
+         id="tspan863-39-4"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="39.819057"
+         y="33.27634">✔</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="39.798897"
+       y="37.053249"
+       id="text865-4-37-0-7-38-5"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-2-8-9-9"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="39.798897"
+         y="37.053249" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="144.83023"
+       y="33.359493"
+       id="text865-4-37-0-7-3"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-2-8-6"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="144.83023"
+         y="33.359493">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="155.26173"
+       y="33.359493"
+       id="text865-4-37-0-7-2"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-2-8-16"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="155.26173"
+         y="33.359493">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="164.92986"
+       y="33.359493"
+       id="text865-4-37-0-7-08"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-2-8-47"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="164.92986"
+         y="33.359493">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="144.83023"
+       y="38.771473"
+       id="text865-4-37-0-7-3-4"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-2-8-6-6"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="144.83023"
+         y="38.771473">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="155.26173"
+       y="38.771473"
+       id="text865-4-37-0-7-2-9"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-2-8-16-5"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="155.26173"
+         y="38.771473">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="164.92986"
+       y="38.771473"
+       id="text865-4-37-0-7-08-3"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-2-8-47-2"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="164.92986"
+         y="38.771473">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="155.26173"
+       y="44.183453"
+       id="text865-4-37-0-7-3-9"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-2-8-6-4"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="155.26173"
+         y="44.183453">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="164.92986"
+       y="44.183453"
+       id="text865-4-37-0-7-2-1"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-2-8-16-6"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="164.92986"
+         y="44.183453">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="164.92986"
+       y="49.595428"
+       id="text865-4-37-0-7-2-1-7"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-2-8-16-6-0"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="164.92986"
+         y="49.595428">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="6.45684"
+       y="38.771473"
+       id="text865-4-37-0-4-4"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-2-9-0"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="6.45684"
+         y="38.771473">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="6.45684"
+       y="44.081192"
+       id="text865-4-37-0-4-4-3"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-2-9-0-7"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="6.45684"
+         y="44.081192">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="21.679129"
+       y="49.595428"
+       id="text865-4-37-7-3"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-9-2"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="21.679129"
+         y="49.595428">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.53572px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="-60.418015"
+       y="55.745914"
+       id="text865-4-37-0-4-4-3-1"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-2-9-0-7-9"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:4.53572px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="-60.418015"
+         y="55.745914" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="215.84581"
+       y="64.949997"
+       id="text865-4-37-4"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-83"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="215.84581"
+         y="64.949997">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.03968px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="215.84581"
+       y="32.721359"
+       id="text865-4-37-9"><tspan
+         sodipodi:role="line"
+         id="tspan863-5-2-0"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:5.03968px;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana Semi-Bold';stroke-width:0.188988"
+         x="215.84581"
+         y="32.721359">-</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="15.058705"
+       y="-24.568562"
+       id="text499"><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.188988"
+         x="15.058705"
+         y="-24.568562"
+         id="tspan505">WGS, WES, Panel</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.188988"
+         x="15.058705"
+         y="-21.418762"
+         id="tspan501" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.52778px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="-88.282028"
+       y="42.740814"
+       id="text499-2"
+       transform="rotate(-90)"><tspan
+         sodipodi:role="line"
+         style="font-size:3.52778px;stroke-width:0.188988"
+         x="-88.282028"
+         y="42.740814"
+         id="tspan505-7">WGS</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:3.52778px;stroke-width:0.188988"
+         x="-88.282028"
+         y="47.150539"
+         id="tspan501-3" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.52778px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="-88.282028"
+       y="36.744297"
+       id="text499-2-9"
+       transform="rotate(-90)"><tspan
+         sodipodi:role="line"
+         style="font-size:3.52778px;stroke-width:0.188988"
+         x="-88.282028"
+         y="36.744297"
+         id="tspan505-7-6">WES</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:3.52778px;stroke-width:0.188988"
+         x="-88.282028"
+         y="41.154022"
+         id="tspan501-3-4" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.52778px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="-88.50428"
+       y="31.004045"
+       id="text499-2-92"
+       transform="rotate(-90)"><tspan
+         sodipodi:role="line"
+         style="font-size:3.52778px;stroke-width:0.188988"
+         x="-88.50428"
+         y="31.004045"
+         id="tspan505-7-3">Panel</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:3.52778px;stroke-width:0.188988"
+         x="-88.50428"
+         y="35.413769"
+         id="tspan501-3-5" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="6.4898806"
+       y="-5.8823771"
+       id="text9111"><tspan
+         sodipodi:role="line"
+         id="tspan9109"
+         style="stroke-width:0.188988"
+         x="6.4898806"
+         y="-5.8823771">WGS,,? other may be possible</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="273.93631"
+       y="104.90456"
+       id="text9115-8"><tspan
+         sodipodi:role="line"
+         id="tspan9113-1"
+         style="stroke-width:0.188988"
+         x="273.93631"
+         y="104.90456">WES</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.18898812,0,0,0.18898812,-78.163721,7.655883)"
+       id="text13504"
+       style="font-size:13.3333px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;white-space:pre;shape-inside:url(#rect13506);display:inline" />
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="-3.4783559"
+       y="27.459929"
+       id="text13512"><tspan
+         sodipodi:role="line"
+         id="tspan13510"
+         style="stroke-width:0.188988"
+         x="-3.4783559"
+         y="27.459929">NF</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="-3.6950536"
+       y="43.584782"
+       id="text13516"><tspan
+         sodipodi:role="line"
+         id="tspan13514"
+         style="stroke-width:0.188988"
+         x="-3.6950536"
+         y="43.584782">SM</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="-3.6950536"
+       y="38.275063"
+       id="text13516-5"><tspan
+         sodipodi:role="line"
+         id="tspan13514-9"
+         style="stroke-width:0.188988"
+         x="-3.6950536"
+         y="38.275063">SM</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="-3.6950536"
+       y="32.863087"
+       id="text13516-3"><tspan
+         sodipodi:role="line"
+         id="tspan13514-96"
+         style="stroke-width:0.188988"
+         x="-3.6950536"
+         y="32.863087">SM</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="233.08406"
+       y="127.21098"
+       id="text13558"><tspan
+         sodipodi:role="line"
+         id="tspan13556"
+         style="stroke-width:0.188988"
+         x="233.08406"
+         y="127.21098">bash</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="220.49301"
+       y="38.952915"
+       id="text13558-6"><tspan
+         sodipodi:role="line"
+         id="tspan13556-07"
+         style="stroke-width:0.188988"
+         x="220.49301"
+         y="38.952915">bash</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="233.01068"
+       y="122.32686"
+       id="text13558-29"><tspan
+         sodipodi:role="line"
+         id="tspan13556-8"
+         style="stroke-width:0.188988"
+         x="233.01068"
+         y="122.32686">bash</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="233.01068"
+       y="117.83231"
+       id="text13558-1"><tspan
+         sodipodi:role="line"
+         id="tspan13556-1"
+         style="stroke-width:0.188988"
+         x="233.01068"
+         y="117.83231">bash</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="235.1066"
+       y="76.747459"
+       id="text13622"><tspan
+         sodipodi:role="line"
+         id="tspan13620"
+         style="stroke-width:0.188988"
+         x="235.1066"
+         y="76.747459">WDL</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.18898812,0,0,0.18898812,-78.163721,7.655883)"
+       id="text15505"
+       style="font-size:13.3333px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;white-space:pre;shape-inside:url(#rect15507);display:inline"><tspan
+         x="2430.541"
+         y="725.67731"
+         id="tspan46043">ElPrep?</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.18898812,0,0,0.18898812,-25.127998,-104.48321)"
+       id="text15511"
+       style="font-size:13.3333px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;white-space:pre;shape-inside:url(#rect15513);display:inline"><tspan
+         x="-265.17188"
+         y="703.08356"
+         id="tspan46045">Only Haplotypecaller, snpEff</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="-129.85109"
+       y="33.274826"
+       id="text15519"><tspan
+         sodipodi:role="line"
+         id="tspan15517"
+         style="stroke-width:0.188988"
+         x="-129.85109"
+         y="33.274826">FreeBayes, snpEff, the  framework  published not the indiidual pipelines</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="1.5176593"
+       y="0.23987247"
+       id="text15523"><tspan
+         sodipodi:role="line"
+         id="tspan15521"
+         style="stroke-width:0.188988"
+         x="1.5176593"
+         y="0.23987247">all may be possible, undocumented?</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="-59.960781"
+       y="38.668308"
+       id="text15590"><tspan
+         sodipodi:role="line"
+         id="tspan15588"
+         style="stroke-width:0.188988"
+         x="-59.960781"
+         y="38.668308">Mutect2, snpEff</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="510.84741"
+       y="102.26621"
+       id="text31494"><tspan
+         sodipodi:role="line"
+         id="tspan31492"
+         style="stroke-width:0.188988"
+         x="510.84741"
+         y="102.26621">no source code, maybe not even a pipeline, the whole thing feels of</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="-126.96049"
+       y="42.713394"
+       id="text32224"><tspan
+         sodipodi:role="line"
+         id="tspan32222"
+         style="stroke-width:0.188988"
+         x="-126.96049"
+         y="42.713394">Not published individually, most comprehensive competitor too sarek, </tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.188988"
+         x="-126.96049"
+         y="45.863194"
+         id="tspan33702">however  many workflows need to be triggered manually what sarek </tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.188988"
+         x="-126.96049"
+         y="49.012993"
+         id="tspan36612">can do wit one command, only suitable for humans, </tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.188988"
+         x="-126.96049"
+         y="52.162796"
+         id="tspan51841">integration in their autosubmissin portal</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.188988"
+         x="-126.96049"
+         y="55.312595"
+         id="tspan33700" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:2.51984px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="-5.8014226"
+       y="48.829399"
+       id="text35884"><tspan
+         sodipodi:role="line"
+         id="tspan35882"
+         style="stroke-width:0.188988"
+         x="-5.8014226"
+         y="48.829399">Roddy</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.27579px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="122.10899"
+       y="22.663538"
+       id="text51364"><tspan
+         sodipodi:role="line"
+         id="tspan51362"
+         style="font-size:3.27579px;stroke-width:0.188988"
+         x="122.10899"
+         y="22.663538">SNP/Indel</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.27579px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="142.12418"
+       y="22.896116"
+       id="text51368"><tspan
+         sodipodi:role="line"
+         id="tspan51366"
+         style="font-size:3.27579px;stroke-width:0.188988"
+         x="142.12418"
+         y="22.896116">CNV</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.27579px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="153.961"
+       y="22.896118"
+       id="text51372"><tspan
+         sodipodi:role="line"
+         id="tspan51370"
+         style="font-size:3.27579px;stroke-width:0.188988"
+         x="153.961"
+         y="22.896118">SV</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.27579px;line-height:1.25;font-family:'.Aqua Kana';-inkscape-font-specification:'.Aqua Kana';font-variant-ligatures:none;word-spacing:0px;stroke-width:0.188988"
+       x="162.91664"
+       y="22.896116"
+       id="text51376"><tspan
+         sodipodi:role="line"
+         id="tspan51374"
+         style="font-size:3.27579px;stroke-width:0.188988"
+         x="162.91664"
+         y="22.896116">MSI</tspan></text>
+  </g>
+  <script
+     id="mesh_polyfill"
+     type="text/javascript">
+!function(){const t=&quot;http://www.w3.org/2000/svg&quot;,e=&quot;http://www.w3.org/1999/xlink&quot;,s=&quot;http://www.w3.org/1999/xhtml&quot;,r=2;if(document.createElementNS(t,&quot;meshgradient&quot;).x)return;const n=(t,e,s,r)=&gt;{let n=new x(.5*(e.x+s.x),.5*(e.y+s.y)),o=new x(.5*(t.x+e.x),.5*(t.y+e.y)),i=new x(.5*(s.x+r.x),.5*(s.y+r.y)),a=new x(.5*(n.x+o.x),.5*(n.y+o.y)),h=new x(.5*(n.x+i.x),.5*(n.y+i.y)),l=new x(.5*(a.x+h.x),.5*(a.y+h.y));return[[t,o,a,l],[l,h,i,r]]},o=t=&gt;{let e=t[0].distSquared(t[1]),s=t[2].distSquared(t[3]),r=.25*t[0].distSquared(t[2]),n=.25*t[1].distSquared(t[3]),o=e&gt;s?e:s,i=r&gt;n?r:n;return 18*(o&gt;i?o:i)},i=(t,e)=&gt;Math.sqrt(t.distSquared(e)),a=(t,e)=&gt;t.scale(2/3).add(e.scale(1/3)),h=t=&gt;{let e,s,r,n,o,i,a,h=new g;return t.match(/(\w+\(\s*[^)]+\))+/g).forEach(t=&gt;{let l=t.match(/[\w.-]+/g),d=l.shift();switch(d){case&quot;translate&quot;:2===l.length?e=new g(1,0,0,1,l[0],l[1]):(console.error(&quot;mesh.js: translate does not have 2 arguments!&quot;),e=new g(1,0,0,1,0,0)),h=h.append(e);break;case&quot;scale&quot;:1===l.length?s=new g(l[0],0,0,l[0],0,0):2===l.length?s=new g(l[0],0,0,l[1],0,0):(console.error(&quot;mesh.js: scale does not have 1 or 2 arguments!&quot;),s=new g(1,0,0,1,0,0)),h=h.append(s);break;case&quot;rotate&quot;:if(3===l.length&amp;&amp;(e=new g(1,0,0,1,l[1],l[2]),h=h.append(e)),l[0]){r=l[0]*Math.PI/180;let t=Math.cos(r),e=Math.sin(r);Math.abs(t)&lt;1e-16&amp;&amp;(t=0),Math.abs(e)&lt;1e-16&amp;&amp;(e=0),a=new g(t,e,-e,t,0,0),h=h.append(a)}else console.error(&quot;math.js: No argument to rotate transform!&quot;);3===l.length&amp;&amp;(e=new g(1,0,0,1,-l[1],-l[2]),h=h.append(e));break;case&quot;skewX&quot;:l[0]?(r=l[0]*Math.PI/180,n=Math.tan(r),o=new g(1,0,n,1,0,0),h=h.append(o)):console.error(&quot;math.js: No argument to skewX transform!&quot;);break;case&quot;skewY&quot;:l[0]?(r=l[0]*Math.PI/180,n=Math.tan(r),i=new g(1,n,0,1,0,0),h=h.append(i)):console.error(&quot;math.js: No argument to skewY transform!&quot;);break;case&quot;matrix&quot;:6===l.length?h=h.append(new g(...l)):console.error(&quot;math.js: Incorrect number of arguments for matrix!&quot;);break;default:console.error(&quot;mesh.js: Unhandled transform type: &quot;+d)}}),h},l=t=&gt;{let e=[],s=t.split(/[ ,]+/);for(let t=0,r=s.length-1;t&lt;r;t+=2)e.push(new x(parseFloat(s[t]),parseFloat(s[t+1])));return e},d=(t,e)=&gt;{for(let s in e)t.setAttribute(s,e[s])},c=(t,e,s,r,n)=&gt;{let o,i,a=[0,0,0,0];for(let h=0;h&lt;3;++h)e[h]&lt;t[h]&amp;&amp;e[h]&lt;s[h]||t[h]&lt;e[h]&amp;&amp;s[h]&lt;e[h]?a[h]=0:(a[h]=.5*((e[h]-t[h])/r+(s[h]-e[h])/n),o=Math.abs(3*(e[h]-t[h])/r),i=Math.abs(3*(s[h]-e[h])/n),a[h]&gt;o?a[h]=o:a[h]&gt;i&amp;&amp;(a[h]=i));return a},u=[[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],[-3,3,0,0,-2,-1,0,0,0,0,0,0,0,0,0,0],[2,-2,0,0,1,1,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0],[0,0,0,0,0,0,0,0,-3,3,0,0,-2,-1,0,0],[0,0,0,0,0,0,0,0,2,-2,0,0,1,1,0,0],[-3,0,3,0,0,0,0,0,-2,0,-1,0,0,0,0,0],[0,0,0,0,-3,0,3,0,0,0,0,0,-2,0,-1,0],[9,-9,-9,9,6,3,-6,-3,6,-6,3,-3,4,2,2,1],[-6,6,6,-6,-3,-3,3,3,-4,4,-2,2,-2,-2,-1,-1],[2,0,-2,0,0,0,0,0,1,0,1,0,0,0,0,0],[0,0,0,0,2,0,-2,0,0,0,0,0,1,0,1,0],[-6,6,6,-6,-4,-2,4,2,-3,3,-3,3,-2,-1,-2,-1],[4,-4,-4,4,2,2,-2,-2,2,-2,2,-2,1,1,1,1]],f=t=&gt;{let e=[];for(let s=0;s&lt;16;++s){e[s]=0;for(let r=0;r&lt;16;++r)e[s]+=u[s][r]*t[r]}return e},p=(t,e,s)=&gt;{const r=e*e,n=s*s,o=e*e*e,i=s*s*s;return t[0]+t[1]*e+t[2]*r+t[3]*o+t[4]*s+t[5]*s*e+t[6]*s*r+t[7]*s*o+t[8]*n+t[9]*n*e+t[10]*n*r+t[11]*n*o+t[12]*i+t[13]*i*e+t[14]*i*r+t[15]*i*o},y=t=&gt;{let e=[],s=[],r=[];for(let s=0;s&lt;4;++s)e[s]=[],e[s][0]=n(t[0][s],t[1][s],t[2][s],t[3][s]),e[s][1]=[],e[s][1].push(...n(...e[s][0][0])),e[s][1].push(...n(...e[s][0][1])),e[s][2]=[],e[s][2].push(...n(...e[s][1][0])),e[s][2].push(...n(...e[s][1][1])),e[s][2].push(...n(...e[s][1][2])),e[s][2].push(...n(...e[s][1][3]));for(let t=0;t&lt;8;++t){s[t]=[];for(let r=0;r&lt;4;++r)s[t][r]=[],s[t][r][0]=n(e[0][2][t][r],e[1][2][t][r],e[2][2][t][r],e[3][2][t][r]),s[t][r][1]=[],s[t][r][1].push(...n(...s[t][r][0][0])),s[t][r][1].push(...n(...s[t][r][0][1])),s[t][r][2]=[],s[t][r][2].push(...n(...s[t][r][1][0])),s[t][r][2].push(...n(...s[t][r][1][1])),s[t][r][2].push(...n(...s[t][r][1][2])),s[t][r][2].push(...n(...s[t][r][1][3]))}for(let t=0;t&lt;8;++t){r[t]=[];for(let e=0;e&lt;8;++e)r[t][e]=[],r[t][e][0]=s[t][0][2][e],r[t][e][1]=s[t][1][2][e],r[t][e][2]=s[t][2][2][e],r[t][e][3]=s[t][3][2][e]}return r};class x{constructor(t,e){this.x=t||0,this.y=e||0}toString(){return`(x=${this.x}, y=${this.y})`}clone(){return new x(this.x,this.y)}add(t){return new x(this.x+t.x,this.y+t.y)}scale(t){return void 0===t.x?new x(this.x*t,this.y*t):new x(this.x*t.x,this.y*t.y)}distSquared(t){let e=this.x-t.x,s=this.y-t.y;return e*e+s*s}transform(t){let e=this.x*t.a+this.y*t.c+t.e,s=this.x*t.b+this.y*t.d+t.f;return new x(e,s)}}class g{constructor(t,e,s,r,n,o){void 0===t?(this.a=1,this.b=0,this.c=0,this.d=1,this.e=0,this.f=0):(this.a=t,this.b=e,this.c=s,this.d=r,this.e=n,this.f=o)}toString(){return`affine: ${this.a} ${this.c} ${this.e} \n       ${this.b} ${this.d} ${this.f}`}append(t){t instanceof g||console.error(&quot;mesh.js: argument to Affine.append is not affine!&quot;);let e=this.a*t.a+this.c*t.b,s=this.b*t.a+this.d*t.b,r=this.a*t.c+this.c*t.d,n=this.b*t.c+this.d*t.d,o=this.a*t.e+this.c*t.f+this.e,i=this.b*t.e+this.d*t.f+this.f;return new g(e,s,r,n,o,i)}}class w{constructor(t,e){this.nodes=t,this.colors=e}paintCurve(t,e){if(o(this.nodes)&gt;r){const s=n(...this.nodes);let r=[[],[]],o=[[],[]];for(let t=0;t&lt;4;++t)r[0][t]=this.colors[0][t],r[1][t]=(this.colors[0][t]+this.colors[1][t])/2,o[0][t]=r[1][t],o[1][t]=this.colors[1][t];let i=new w(s[0],r),a=new w(s[1],o);i.paintCurve(t,e),a.paintCurve(t,e)}else{let s=Math.round(this.nodes[0].x);if(s&gt;=0&amp;&amp;s&lt;e){let r=4*(~~this.nodes[0].y*e+s);t[r]=Math.round(this.colors[0][0]),t[r+1]=Math.round(this.colors[0][1]),t[r+2]=Math.round(this.colors[0][2]),t[r+3]=Math.round(this.colors[0][3])}}}}class m{constructor(t,e){this.nodes=t,this.colors=e}split(){let t=[[],[],[],[]],e=[[],[],[],[]],s=[[[],[]],[[],[]]],r=[[[],[]],[[],[]]];for(let s=0;s&lt;4;++s){const r=n(this.nodes[0][s],this.nodes[1][s],this.nodes[2][s],this.nodes[3][s]);t[0][s]=r[0][0],t[1][s]=r[0][1],t[2][s]=r[0][2],t[3][s]=r[0][3],e[0][s]=r[1][0],e[1][s]=r[1][1],e[2][s]=r[1][2],e[3][s]=r[1][3]}for(let t=0;t&lt;4;++t)s[0][0][t]=this.colors[0][0][t],s[0][1][t]=this.colors[0][1][t],s[1][0][t]=(this.colors[0][0][t]+this.colors[1][0][t])/2,s[1][1][t]=(this.colors[0][1][t]+this.colors[1][1][t])/2,r[0][0][t]=s[1][0][t],r[0][1][t]=s[1][1][t],r[1][0][t]=this.colors[1][0][t],r[1][1][t]=this.colors[1][1][t];return[new m(t,s),new m(e,r)]}paint(t,e){let s,n=!1;for(let t=0;t&lt;4;++t)if((s=o([this.nodes[0][t],this.nodes[1][t],this.nodes[2][t],this.nodes[3][t]]))&gt;r){n=!0;break}if(n){let s=this.split();s[0].paint(t,e),s[1].paint(t,e)}else{new w([...this.nodes[0]],[...this.colors[0]]).paintCurve(t,e)}}}class b{constructor(t){this.readMesh(t),this.type=t.getAttribute(&quot;type&quot;)||&quot;bilinear&quot;}readMesh(t){let e=[[]],s=[[]],r=Number(t.getAttribute(&quot;x&quot;)),n=Number(t.getAttribute(&quot;y&quot;));e[0][0]=new x(r,n);let o=t.children;for(let t=0,r=o.length;t&lt;r;++t){e[3*t+1]=[],e[3*t+2]=[],e[3*t+3]=[],s[t+1]=[];let r=o[t].children;for(let n=0,o=r.length;n&lt;o;++n){let o=r[n].children;for(let r=0,i=o.length;r&lt;i;++r){let i=r;0!==t&amp;&amp;++i;let h,d=o[r].getAttribute(&quot;path&quot;),c=&quot;l&quot;;null!=d&amp;&amp;(c=(h=d.match(/\s*([lLcC])\s*(.*)/))[1]);let u=l(h[2]);switch(c){case&quot;l&quot;:0===i?(e[3*t][3*n+3]=u[0].add(e[3*t][3*n]),e[3*t][3*n+1]=a(e[3*t][3*n],e[3*t][3*n+3]),e[3*t][3*n+2]=a(e[3*t][3*n+3],e[3*t][3*n])):1===i?(e[3*t+3][3*n+3]=u[0].add(e[3*t][3*n+3]),e[3*t+1][3*n+3]=a(e[3*t][3*n+3],e[3*t+3][3*n+3]),e[3*t+2][3*n+3]=a(e[3*t+3][3*n+3],e[3*t][3*n+3])):2===i?(0===n&amp;&amp;(e[3*t+3][3*n+0]=u[0].add(e[3*t+3][3*n+3])),e[3*t+3][3*n+1]=a(e[3*t+3][3*n],e[3*t+3][3*n+3]),e[3*t+3][3*n+2]=a(e[3*t+3][3*n+3],e[3*t+3][3*n])):(e[3*t+1][3*n]=a(e[3*t][3*n],e[3*t+3][3*n]),e[3*t+2][3*n]=a(e[3*t+3][3*n],e[3*t][3*n]));break;case&quot;L&quot;:0===i?(e[3*t][3*n+3]=u[0],e[3*t][3*n+1]=a(e[3*t][3*n],e[3*t][3*n+3]),e[3*t][3*n+2]=a(e[3*t][3*n+3],e[3*t][3*n])):1===i?(e[3*t+3][3*n+3]=u[0],e[3*t+1][3*n+3]=a(e[3*t][3*n+3],e[3*t+3][3*n+3]),e[3*t+2][3*n+3]=a(e[3*t+3][3*n+3],e[3*t][3*n+3])):2===i?(0===n&amp;&amp;(e[3*t+3][3*n+0]=u[0]),e[3*t+3][3*n+1]=a(e[3*t+3][3*n],e[3*t+3][3*n+3]),e[3*t+3][3*n+2]=a(e[3*t+3][3*n+3],e[3*t+3][3*n])):(e[3*t+1][3*n]=a(e[3*t][3*n],e[3*t+3][3*n]),e[3*t+2][3*n]=a(e[3*t+3][3*n],e[3*t][3*n]));break;case&quot;c&quot;:0===i?(e[3*t][3*n+1]=u[0].add(e[3*t][3*n]),e[3*t][3*n+2]=u[1].add(e[3*t][3*n]),e[3*t][3*n+3]=u[2].add(e[3*t][3*n])):1===i?(e[3*t+1][3*n+3]=u[0].add(e[3*t][3*n+3]),e[3*t+2][3*n+3]=u[1].add(e[3*t][3*n+3]),e[3*t+3][3*n+3]=u[2].add(e[3*t][3*n+3])):2===i?(e[3*t+3][3*n+2]=u[0].add(e[3*t+3][3*n+3]),e[3*t+3][3*n+1]=u[1].add(e[3*t+3][3*n+3]),0===n&amp;&amp;(e[3*t+3][3*n+0]=u[2].add(e[3*t+3][3*n+3]))):(e[3*t+2][3*n]=u[0].add(e[3*t+3][3*n]),e[3*t+1][3*n]=u[1].add(e[3*t+3][3*n]));break;case&quot;C&quot;:0===i?(e[3*t][3*n+1]=u[0],e[3*t][3*n+2]=u[1],e[3*t][3*n+3]=u[2]):1===i?(e[3*t+1][3*n+3]=u[0],e[3*t+2][3*n+3]=u[1],e[3*t+3][3*n+3]=u[2]):2===i?(e[3*t+3][3*n+2]=u[0],e[3*t+3][3*n+1]=u[1],0===n&amp;&amp;(e[3*t+3][3*n+0]=u[2])):(e[3*t+2][3*n]=u[0],e[3*t+1][3*n]=u[1]);break;default:console.error(&quot;mesh.js: &quot;+c+&quot; invalid path type.&quot;)}if(0===t&amp;&amp;0===n||r&gt;0){let e=window.getComputedStyle(o[r]).stopColor.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i),a=window.getComputedStyle(o[r]).stopOpacity,h=255;a&amp;&amp;(h=Math.floor(255*a)),e&amp;&amp;(0===i?(s[t][n]=[],s[t][n][0]=Math.floor(e[1]),s[t][n][1]=Math.floor(e[2]),s[t][n][2]=Math.floor(e[3]),s[t][n][3]=h):1===i?(s[t][n+1]=[],s[t][n+1][0]=Math.floor(e[1]),s[t][n+1][1]=Math.floor(e[2]),s[t][n+1][2]=Math.floor(e[3]),s[t][n+1][3]=h):2===i?(s[t+1][n+1]=[],s[t+1][n+1][0]=Math.floor(e[1]),s[t+1][n+1][1]=Math.floor(e[2]),s[t+1][n+1][2]=Math.floor(e[3]),s[t+1][n+1][3]=h):3===i&amp;&amp;(s[t+1][n]=[],s[t+1][n][0]=Math.floor(e[1]),s[t+1][n][1]=Math.floor(e[2]),s[t+1][n][2]=Math.floor(e[3]),s[t+1][n][3]=h))}}e[3*t+1][3*n+1]=new x,e[3*t+1][3*n+2]=new x,e[3*t+2][3*n+1]=new x,e[3*t+2][3*n+2]=new x,e[3*t+1][3*n+1].x=(-4*e[3*t][3*n].x+6*(e[3*t][3*n+1].x+e[3*t+1][3*n].x)+-2*(e[3*t][3*n+3].x+e[3*t+3][3*n].x)+3*(e[3*t+3][3*n+1].x+e[3*t+1][3*n+3].x)+-1*e[3*t+3][3*n+3].x)/9,e[3*t+1][3*n+2].x=(-4*e[3*t][3*n+3].x+6*(e[3*t][3*n+2].x+e[3*t+1][3*n+3].x)+-2*(e[3*t][3*n].x+e[3*t+3][3*n+3].x)+3*(e[3*t+3][3*n+2].x+e[3*t+1][3*n].x)+-1*e[3*t+3][3*n].x)/9,e[3*t+2][3*n+1].x=(-4*e[3*t+3][3*n].x+6*(e[3*t+3][3*n+1].x+e[3*t+2][3*n].x)+-2*(e[3*t+3][3*n+3].x+e[3*t][3*n].x)+3*(e[3*t][3*n+1].x+e[3*t+2][3*n+3].x)+-1*e[3*t][3*n+3].x)/9,e[3*t+2][3*n+2].x=(-4*e[3*t+3][3*n+3].x+6*(e[3*t+3][3*n+2].x+e[3*t+2][3*n+3].x)+-2*(e[3*t+3][3*n].x+e[3*t][3*n+3].x)+3*(e[3*t][3*n+2].x+e[3*t+2][3*n].x)+-1*e[3*t][3*n].x)/9,e[3*t+1][3*n+1].y=(-4*e[3*t][3*n].y+6*(e[3*t][3*n+1].y+e[3*t+1][3*n].y)+-2*(e[3*t][3*n+3].y+e[3*t+3][3*n].y)+3*(e[3*t+3][3*n+1].y+e[3*t+1][3*n+3].y)+-1*e[3*t+3][3*n+3].y)/9,e[3*t+1][3*n+2].y=(-4*e[3*t][3*n+3].y+6*(e[3*t][3*n+2].y+e[3*t+1][3*n+3].y)+-2*(e[3*t][3*n].y+e[3*t+3][3*n+3].y)+3*(e[3*t+3][3*n+2].y+e[3*t+1][3*n].y)+-1*e[3*t+3][3*n].y)/9,e[3*t+2][3*n+1].y=(-4*e[3*t+3][3*n].y+6*(e[3*t+3][3*n+1].y+e[3*t+2][3*n].y)+-2*(e[3*t+3][3*n+3].y+e[3*t][3*n].y)+3*(e[3*t][3*n+1].y+e[3*t+2][3*n+3].y)+-1*e[3*t][3*n+3].y)/9,e[3*t+2][3*n+2].y=(-4*e[3*t+3][3*n+3].y+6*(e[3*t+3][3*n+2].y+e[3*t+2][3*n+3].y)+-2*(e[3*t+3][3*n].y+e[3*t][3*n+3].y)+3*(e[3*t][3*n+2].y+e[3*t+2][3*n].y)+-1*e[3*t][3*n].y)/9}}this.nodes=e,this.colors=s}paintMesh(t,e){let s=(this.nodes.length-1)/3,r=(this.nodes[0].length-1)/3;if(&quot;bilinear&quot;===this.type||s&lt;2||r&lt;2){let n;for(let o=0;o&lt;s;++o)for(let s=0;s&lt;r;++s){let r=[];for(let t=3*o,e=3*o+4;t&lt;e;++t)r.push(this.nodes[t].slice(3*s,3*s+4));let i=[];i.push(this.colors[o].slice(s,s+2)),i.push(this.colors[o+1].slice(s,s+2)),(n=new m(r,i)).paint(t,e)}}else{let n,o,a,h,l,d,u;const x=s,g=r;s++,r++;let w=new Array(s);for(let t=0;t&lt;s;++t){w[t]=new Array(r);for(let e=0;e&lt;r;++e)w[t][e]=[],w[t][e][0]=this.nodes[3*t][3*e],w[t][e][1]=this.colors[t][e]}for(let t=0;t&lt;s;++t)for(let e=0;e&lt;r;++e)0!==t&amp;&amp;t!==x&amp;&amp;(n=i(w[t-1][e][0],w[t][e][0]),o=i(w[t+1][e][0],w[t][e][0]),w[t][e][2]=c(w[t-1][e][1],w[t][e][1],w[t+1][e][1],n,o)),0!==e&amp;&amp;e!==g&amp;&amp;(n=i(w[t][e-1][0],w[t][e][0]),o=i(w[t][e+1][0],w[t][e][0]),w[t][e][3]=c(w[t][e-1][1],w[t][e][1],w[t][e+1][1],n,o));for(let t=0;t&lt;r;++t){w[0][t][2]=[],w[x][t][2]=[];for(let e=0;e&lt;4;++e)n=i(w[1][t][0],w[0][t][0]),o=i(w[x][t][0],w[x-1][t][0]),w[0][t][2][e]=n&gt;0?2*(w[1][t][1][e]-w[0][t][1][e])/n-w[1][t][2][e]:0,w[x][t][2][e]=o&gt;0?2*(w[x][t][1][e]-w[x-1][t][1][e])/o-w[x-1][t][2][e]:0}for(let t=0;t&lt;s;++t){w[t][0][3]=[],w[t][g][3]=[];for(let e=0;e&lt;4;++e)n=i(w[t][1][0],w[t][0][0]),o=i(w[t][g][0],w[t][g-1][0]),w[t][0][3][e]=n&gt;0?2*(w[t][1][1][e]-w[t][0][1][e])/n-w[t][1][3][e]:0,w[t][g][3][e]=o&gt;0?2*(w[t][g][1][e]-w[t][g-1][1][e])/o-w[t][g-1][3][e]:0}for(let s=0;s&lt;x;++s)for(let r=0;r&lt;g;++r){let n=i(w[s][r][0],w[s+1][r][0]),o=i(w[s][r+1][0],w[s+1][r+1][0]),c=i(w[s][r][0],w[s][r+1][0]),x=i(w[s+1][r][0],w[s+1][r+1][0]),g=[[],[],[],[]];for(let t=0;t&lt;4;++t){(d=[])[0]=w[s][r][1][t],d[1]=w[s+1][r][1][t],d[2]=w[s][r+1][1][t],d[3]=w[s+1][r+1][1][t],d[4]=w[s][r][2][t]*n,d[5]=w[s+1][r][2][t]*n,d[6]=w[s][r+1][2][t]*o,d[7]=w[s+1][r+1][2][t]*o,d[8]=w[s][r][3][t]*c,d[9]=w[s+1][r][3][t]*x,d[10]=w[s][r+1][3][t]*c,d[11]=w[s+1][r+1][3][t]*x,d[12]=0,d[13]=0,d[14]=0,d[15]=0,u=f(d);for(let e=0;e&lt;9;++e){g[t][e]=[];for(let s=0;s&lt;9;++s)g[t][e][s]=p(u,e/8,s/8),g[t][e][s]&gt;255?g[t][e][s]=255:g[t][e][s]&lt;0&amp;&amp;(g[t][e][s]=0)}}h=[];for(let t=3*s,e=3*s+4;t&lt;e;++t)h.push(this.nodes[t].slice(3*r,3*r+4));l=y(h);for(let s=0;s&lt;8;++s)for(let r=0;r&lt;8;++r)(a=new m(l[s][r],[[[g[0][s][r],g[1][s][r],g[2][s][r],g[3][s][r]],[g[0][s][r+1],g[1][s][r+1],g[2][s][r+1],g[3][s][r+1]]],[[g[0][s+1][r],g[1][s+1][r],g[2][s+1][r],g[3][s+1][r]],[g[0][s+1][r+1],g[1][s+1][r+1],g[2][s+1][r+1],g[3][s+1][r+1]]]])).paint(t,e)}}}transform(t){if(t instanceof x)for(let e=0,s=this.nodes.length;e&lt;s;++e)for(let s=0,r=this.nodes[0].length;s&lt;r;++s)this.nodes[e][s]=this.nodes[e][s].add(t);else if(t instanceof g)for(let e=0,s=this.nodes.length;e&lt;s;++e)for(let s=0,r=this.nodes[0].length;s&lt;r;++s)this.nodes[e][s]=this.nodes[e][s].transform(t)}scale(t){for(let e=0,s=this.nodes.length;e&lt;s;++e)for(let s=0,r=this.nodes[0].length;s&lt;r;++s)this.nodes[e][s]=this.nodes[e][s].scale(t)}}document.querySelectorAll(&quot;rect,circle,ellipse,path,text&quot;).forEach((r,n)=&gt;{let o=r.getAttribute(&quot;id&quot;);o||(o=&quot;patchjs_shape&quot;+n,r.setAttribute(&quot;id&quot;,o));const i=r.style.fill.match(/^url\(\s*&quot;?\s*#([^\s&quot;]+)&quot;?\s*\)/),a=r.style.stroke.match(/^url\(\s*&quot;?\s*#([^\s&quot;]+)&quot;?\s*\)/);if(i&amp;&amp;i[1]){const a=document.getElementById(i[1]);if(a&amp;&amp;&quot;meshgradient&quot;===a.nodeName){const i=r.getBBox();let l=document.createElementNS(s,&quot;canvas&quot;);d(l,{width:i.width,height:i.height});const c=l.getContext(&quot;2d&quot;);let u=c.createImageData(i.width,i.height);const f=new b(a);&quot;objectBoundingBox&quot;===a.getAttribute(&quot;gradientUnits&quot;)&amp;&amp;f.scale(new x(i.width,i.height));const p=a.getAttribute(&quot;gradientTransform&quot;);null!=p&amp;&amp;f.transform(h(p)),&quot;userSpaceOnUse&quot;===a.getAttribute(&quot;gradientUnits&quot;)&amp;&amp;f.transform(new x(-i.x,-i.y)),f.paintMesh(u.data,l.width),c.putImageData(u,0,0);const y=document.createElementNS(t,&quot;image&quot;);d(y,{width:i.width,height:i.height,x:i.x,y:i.y});let g=l.toDataURL();y.setAttributeNS(e,&quot;xlink:href&quot;,g),r.parentNode.insertBefore(y,r),r.style.fill=&quot;none&quot;;const w=document.createElementNS(t,&quot;use&quot;);w.setAttributeNS(e,&quot;xlink:href&quot;,&quot;#&quot;+o);const m=&quot;patchjs_clip&quot;+n,M=document.createElementNS(t,&quot;clipPath&quot;);M.setAttribute(&quot;id&quot;,m),M.appendChild(w),r.parentElement.insertBefore(M,r),y.setAttribute(&quot;clip-path&quot;,&quot;url(#&quot;+m+&quot;)&quot;),u=null,l=null,g=null}}if(a&amp;&amp;a[1]){const o=document.getElementById(a[1]);if(o&amp;&amp;&quot;meshgradient&quot;===o.nodeName){const i=parseFloat(r.style.strokeWidth.slice(0,-2))*(parseFloat(r.style.strokeMiterlimit)||parseFloat(r.getAttribute(&quot;stroke-miterlimit&quot;))||1),a=r.getBBox(),l=Math.trunc(a.width+i),c=Math.trunc(a.height+i),u=Math.trunc(a.x-i/2),f=Math.trunc(a.y-i/2);let p=document.createElementNS(s,&quot;canvas&quot;);d(p,{width:l,height:c});const y=p.getContext(&quot;2d&quot;);let g=y.createImageData(l,c);const w=new b(o);&quot;objectBoundingBox&quot;===o.getAttribute(&quot;gradientUnits&quot;)&amp;&amp;w.scale(new x(l,c));const m=o.getAttribute(&quot;gradientTransform&quot;);null!=m&amp;&amp;w.transform(h(m)),&quot;userSpaceOnUse&quot;===o.getAttribute(&quot;gradientUnits&quot;)&amp;&amp;w.transform(new x(-u,-f)),w.paintMesh(g.data,p.width),y.putImageData(g,0,0);const M=document.createElementNS(t,&quot;image&quot;);d(M,{width:l,height:c,x:0,y:0});let S=p.toDataURL();M.setAttributeNS(e,&quot;xlink:href&quot;,S);const k=&quot;pattern_clip&quot;+n,A=document.createElementNS(t,&quot;pattern&quot;);d(A,{id:k,patternUnits:&quot;userSpaceOnUse&quot;,width:l,height:c,x:u,y:f}),A.appendChild(M),o.parentNode.appendChild(A),r.style.stroke=&quot;url(#&quot;+k+&quot;)&quot;,g=null,p=null,S=null}}})}();
+</script>
+</svg>

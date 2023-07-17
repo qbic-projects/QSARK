@@ -1,0 +1,4 @@
+patient,sex,status,sample,lane,fastq_1,fastq_2
+HG002,XY,0,HG002,1,/sfs/9/ws/iizha01-QSARK/functional/giab_samples/giab_HG002_40x_R1.fastq.gz,/sfs/9/ws/iizha01-QSARK/functional/giab_samples/giab_HG002_40x_R2.fastq.gz
+HG003,XY,0,HG003,1,/sfs/9/ws/iizha01-QSARK/functional/giab_samples/giab_HG003_40x_R1.fastq.gz,/sfs/9/ws/iizha01-QSARK/functional/giab_samples/giab_HG003_40x_R2.fastq.gz
+HG004,XY,0,HG004,1,/sfs/9/ws/iizha01-QSARK/functional/giab_samples/giab_HG004_40x_R1.fastq.gz,/sfs/9/ws/iizha01-QSARK/functional/giab_samples/giab_HG004_40x_R2.fastq.gz
