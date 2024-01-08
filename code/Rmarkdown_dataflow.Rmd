@@ -93,10 +93,6 @@ execution_fastp4_intervals78 <- read.csv(file = '../data/intervals/fastp4_interv
 storage_fastp8_intervals40 <- read.csv(file = '../data/intervals/fastp8_intervals40/folder_size.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
 execution_fastp8_intervals40 <- read.csv(file = '../data/intervals/fastp8_intervals40/execution_trace_2023-02-22_15-42-27.txt', sep = "\t", stringsAsFactors = FALSE)
 
-## Fastp 12, intervals 10
-#storage_fastp12_intervals10 <- read.csv(file = '../data/intervals/fastp12_intervals10/folder_size.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
-#execution_fastp12_intervals10 <- read.csv(file = '../data/intervals/fastp12_intervals10/execution_trace_2023-09-19_22-28-30.txt', sep = "\t", stringsAsFactors = FALSE)
-
 ## Fastp 12
 execution_fastp12_preprocessing <- read.csv(file = '../data/intervals/fastp12/execution_trace_2023-04-21_16-25-01.txt', sep = "\t", stringsAsFactors = FALSE)
 storage_fastp12_preprocessing <- read.csv(file = '../data/intervals/fastp12/folder_size.tsv', sep = "\t", stringsAsFactors = FALSE, header = FALSE)
