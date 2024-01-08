@@ -335,12 +335,12 @@ x_axis_dataflow <- function(type) {
   if(identical('fastp', type)) {
     scale_x_discrete(breaks = c(1, 4, 8, 12, 16), labels = c(1, 4, 8, 12, 16)) }
   else {
-    scale_x_discrete(breaks = c(1, 21, 40, 78, 124), labels = c(1, 21, 40, 78, 124))
+    scale_x_discrete(breaks = c(1, 10, 21, 40, 78, 124), labels = c(1, 10, 21, 40, 78, 124))
   }
 }
 
-dataflow_theme = theme(axis.title.x = element_text(size=16), axis.text.x = element_text(size=16),
-              axis.title.y = element_text(size=16), axis.text.y = element_text(size=16),
+dataflow_theme = theme(axis.title.x = element_text(size=16), axis.text.x = element_text(size=12),
+              axis.title.y = element_text(size=16), axis.text.y = element_text(size=12),
               plot.title = element_text(size = 20, hjust = 0.))
 
 plot_dataflow_single_process <- function(df_max_time, df, df_storage, group, title, xaxis, outputname, results_folder){
@@ -413,14 +413,16 @@ plot_variantcaller_summary <-  function(df_time, group, df_storage, title, outpu
                   labs(y = "time (min)") +
                   theme(axis.title.x = element_blank(), axis.text.x = element_blank(),
                         strip.text.x = element_text(size = 15),
-                        strip.background = element_rect(color="white", fill="white", size=1.5)) +
+                        strip.background = element_rect(color="white", fill="white", size=1.5),
+                        axis.text.y = element_text(size = 10)) +
                   scale_color_manual(values = my_palette),
                   facet.by = 'caller',
                   nrow=1)
   
   line_cpuh <-  facet(ggboxplot(data=df_time, x=group, y="sum_combined_per_sample_cpuh", color = 'caller') +
                         labs(y = "CPUh", x = "#interval groups") +
-                        theme(strip.text = element_blank())+
+                        theme(strip.text = element_blank(), axis.text.x = element_text(size = 10),
+                              axis.text.y = element_text(size = 10))+
                         scale_color_manual(values = my_palette),
                         facet.by  = 'caller', nrow=1)
   
@@ -428,7 +430,8 @@ plot_variantcaller_summary <-  function(df_time, group, df_storage, title, outpu
                  labs(y = "work dir (GB)") +
                  theme(legend.text = element_text(size = 8)) +
                  rremove("legend.title") + 
-                 theme(axis.title.x = element_blank(), axis.text.x = element_blank(), strip.text = element_blank())+
+                 theme(axis.title.x = element_blank(), axis.text.x = element_blank(), strip.text = element_blank(), 
+                       axis.text.y = element_text(size = 10)) +
                  scale_color_manual(values = my_palette),
                 facet.by  = 'caller', nrow=1)
   

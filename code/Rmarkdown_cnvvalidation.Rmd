@@ -1,0 +1,289 @@
+---
+title: "Sarek Paper"
+subtitle: "CNV Validation with PCAWG data"
+author: "Friederike Hanssen"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output: 
+  html_document:
+    toc: true                               # table of contents
+    toc_float: true                        # float the table of contents to the left of the main document content
+    toc_depth: 3                            # header levels 1,2,3
+    theme: default
+    number_sections: true                   # add section numbering to headers
+    df_print: paged                         # tables are printed as an html table with support for pagination over rows and columns
+    css: ./qbic-style.css
+    highlight: pygments
+    pdf_document: true
+---
+
+<!-- QBiC Logo -->
+<img src="./QBiCLogo.png" style="position:absolute;top:0px;right:0px;" height="120" width="120" />
+<div class="watermark">QBiC</div>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# Import all R libraries
+library(dplyr)
+library(patchwork)
+library(forcats)
+library(ggplot2)
+library(cowplot)
+library(knitr)
+library(kableExtra)
+library(karyoploteR)
+library(GenomicRanges)
+library(CopyNumberPlots)
+library(ggplotify)
+
+theme_set(theme_classic())
+results_folder <- "results/cnvs"
+dir.create(results_folder)
+```
+
+# Define Functions
+
+```{r load_controlfreec, echo=FALSE}
+##################################
+#### Load ControlFREEC data ######
+##################################
+
+ploidy = 2
+max_cn = 20
+sex = 'XX'
+genome = 'hg38'
+chromosomes = c("chr1","chr2","chr3","chr4","chr5","chr6","chr7","chr8","chr9","chr10","chr11","chr12","chr13","chr14","chr15","chr16","chr17","chr18","chr19","chr20","chr21","chr22","chrX")
+
+loadControlFREEC_CNV_Calls = function(segments,sex) {
+  
+  # V1: chromosome
+  # V2: start position
+  # V3: end position
+  # V4: predicted copy number
+  # V5: type of alteration
+  # V6: genotype (if [BAF] option is used)
+  # V7: * percentage of uncertainty of the predicted genotype (max=100). (!) It is **not** the uncertainty of a CNA
+  # V8: *&** status (somatic or germline)
+  # V9: *&** percentage of germline CNA/LOH
+  
+  segments$V1 = paste('chr', segments$V1, sep='')
+  segments = segments %>% filter(segments$V8 == 'somatic')
+  names(segments)[names(segments)=="V4"] <- "cn_col"
+  
+  if(sex == 'XY') {
+    # LOH:
+    #   Loss AND copy number is 1   
+    # 
+    # [( Neutral (== cnLOH) 
+    #  OR  Gain AND BAF is all 'A') 
+    #  AND Percentage of Uncertaintity < 1 (according to FAQs, values below 1 can be trusted) ]
+    #
+    #  Not (chrX OR chrY) [ since males only have one X and one Y, no LOH can be reported]
+    
+    segments$loh <- ifelse( ( (segments$V5=='loss' & segments$cn_col == 1) 
+                              | ((segments$V5=='neutral' | (segments$V5 =='gain' & !grepl("[^A]", segments$V6) )) & segments$V7 < 1 )
+    )
+    & !( segments$V1 == "chrX" | segments$V1 == "chrY")
+    , TRUE, FALSE)
+    
+  }else{
+    # LOH:
+    #   Loss AND copy number is 1   
+    # 
+    # [( Neutral (== cnLOH) 
+    #  OR  Gain AND BAF is all 'A') 
+    #  AND Percentage of Uncertaintity < 1 (according to FAQs, values below 1 can be trusted) ]
+    
+    segments$loh <- ifelse(  (segments$V5=='loss' & segments$cn_col == 1) 
+                             | ((segments$V5=='neutral' | (segments$V5 =='gain' & !grepl("[^A]", segments$V6) )) & segments$V7 < 1 )
+                             , TRUE, FALSE)
+  }
+  
+  segments <- toGRanges(segments)
+  return(segments)
+}
+```
+
+```{r load_ascat, echo=FALSE}
+##################################
+####### Load ASCAT data ##########
+##################################
+
+loadASCAT = function(segments, sex) {
+
+  segments$chr = paste('chr', segments$chr, sep='')
+  segments$cn_col <- ifelse(segments$nMajor + segments$nMinor > max_cn, max_cn, segments$nMajor + segments$nMinor)
+
+  if(sex == 'XY') {
+
+    segments$loh <- ifelse(segments$nMinor==0
+                           & (!(segments$chr=='chrX' | segments$chr=='chrY')), TRUE, FALSE)
+  }else{
+
+    segments$loh <- ifelse(segments$nMinor==0 , TRUE, FALSE)
+
+  }
+
+  ascat <- toGRanges(segments)
+  
+  ascat_cnv = ascat[!(ascat$cn_col == 2 & ascat$loh == FALSE) | sex =='XY' & (seqnames(ascat) == "chrX" |seqnames(ascat) == "chrY")]
+  
+  return(ascat_cnv)
+
+}
+```
+
+```{r load_data, echo=FALSE}
+loadData <- function(patient) {
+  
+  #### ControlFREEC
+  cf_cnvs_p = paste0("../data/pcawg_cnvs/", patient,"/", patient, "T_vs_",patient, "N.tumor.mpileup.gz_CNVs", sep="")
+  cf_cnvs_file <- data.frame(read.table(file=cf_cnvs_p, header =FALSE))
+  controlfreec <- loadControlFREEC_CNV_Calls(cf_cnvs_file, sex)
+
+  #### ASCAT
+  ascat_cnv =  paste0("../data/pcawg_cnvs/", patient,"/", patient, "T_vs_",patient, "N.cnvs.txt", sep="")
+  ascat_output <- data.frame(read.table(file =ascat_cnv, header =TRUE))
+  ascat <- loadASCAT(ascat_output, sex)
+
+  #### CNVKit
+  cnvkit <- loadCopyNumberCallsCNVkit(paste0("../data/pcawg_cnvs/", patient,"/", patient, "T.call.cns", sep=""))
+
+  ##################################
+  ####### Load PCAWG DKFZ VCF ##########
+  ##################################
+  pcawg_dkfz <- data.frame(read.table(file = paste0("../data/pcawg_cnvs/", patient,"/", patient, "_dkfz.table", sep=""), sep = "\t", header =TRUE))
+  pcawg_dkfz <- pcawg_dkfz[ , c("CHROM", "POS", "END", "ALT", "TUMOR.TCN")] %>%
+    mutate(loh = ifelse(ALT == "<cnLOH>", 1, 0)) %>%
+    mutate(CHROM = ifelse(CHROM == "23", "X", CHROM)) %>%
+    mutate(CHROM = paste0("chr", CHROM))
+    
+
+  pcawg_dkfz_granges <- toGRanges(pcawg_dkfz)
+
+  ##################################
+  ####### Load PCAWG SVCP VCF  ##########
+  ##################################
+
+  pcawg_svcp <- data.frame(read.table(file =paste0("../data/pcawg_cnvs/", patient,"/", patient, "_svcp.table", sep=""), sep = "\t", header =TRUE))
+  pcawg_svcp <- pcawg_svcp[ , c("CHROM", "POS", "END", "TUMOUR.MCN", "TUMOUR.TCN")] %>%
+    mutate(loh = ifelse(TUMOUR.MCN == 0, 1, 0)) %>%
+    mutate(CHROM = paste0("chr", CHROM))
+
+  pcawg_svcp_granges <- toGRanges(pcawg_svcp)
+
+  cnv_calls = list(controlfreec = controlfreec, ascat = ascat, cnvkit=cnvkit, pcawg_dkfz = pcawg_dkfz_granges, pcawg_svcp = pcawg_svcp_granges)
+
+  return (cnv_calls)
+
+}
+```
+
+# Plot
+
+```{r plot_calls, echo=FALSE, fig.show=TRUE}
+####################################
+####### Plot full genome ###########
+####################################
+
+####################################
+###### Set plot metrics ############
+####################################
+
+cn.cols <- getCopyNumberColors(c("#0000FF", "#B2DFEE", "#E0E0E0", "#FFC1C1", "#FF8A8A", "#FF5C5C", "#EE0000", "#A30000", "#800000", "#0D0D0D" ))
+loh.col <- "orange"
+
+pp = getDefaultPlotParams(plot.type = 4)
+pp$data1inmargin = 0
+pp$bottommargin = 50
+pp$ideogramheight = 30
+
+res = 300
+width = 12
+height = 4
+units = 'in'
+
+plotData <- function(cnv_calls, patient){ 
+  
+  postscript(paste0(results_folder, "/", patient, "_cnvs.eps", sep=""), width = width, height = height)  # Specify the file name and dimensions
+  png(paste0(results_folder, "/", patient, "_cnvs.png", sep=""), res = res, width = width, height = height, units = units)
+  
+  kp <- plotKaryotype(genome = genome, chromosomes = chromosomes, plot.type = 4, ideogram.plotter = NULL, labels.plotter = NULL, plot.params = pp)
+  
+  kpAddCytobandsAsLine(kp)
+  kpAddChromosomeNames(kp,srt = 35)
+  kpAddMainTitle(kp,patient)
+  
+  label_size = 0.6
+  
+  plotCopyNumberCalls(kp, cn.calls = cnv_calls["cnvkit"],  cn.colors = cn.cols, loh.color = loh.col, r0=0.8, r1=0.9, labels = "")
+  kpAddLabels(kp, labels="CNVKit (sarek)", r0=0.9, r1=1, cex=label_size, srt= 90)
+  
+  plotCopyNumberCalls(kp,cn.calls=cnv_calls["controlfreec"], cn.colors = cn.cols, loh.color = loh.col, r0=0.6, r1=0.7, cn.column = "cn_col", labels="")
+  kpAddLabels(kp, labels="ControlFREEC (sarek)", r0=0.8, r1=0.9, cex=label_size, srt= 90, label.margin = 0.03)
+ 
+  plotCopyNumberCalls(kp,cn.calls=cnv_calls["ascat"], cn.column = "cn_col", cn.colors = cn.cols, loh.color = loh.col, r0=0.4, r1=0.5, labels="")
+  kpAddLabels(kp, labels="ASCAT (sarek)", r0=0.5, r1=0.6, cex=label_size, srt= 90)
+  
+  plotCopyNumberCalls(kp, cn.calls = cnv_calls["pcawg_svcp"],  cn.colors = cn.cols, loh.color = loh.col,cn.column = "TUMOUR.TCN", r0=0.2, r1=0.3, labels="")
+  kpAddLabels(kp, labels="SVCP (PCAWG)", r0=0.3, r1=0.4, cex=label_size, srt= 90, label.margin = 0.03)
+  
+  plotCopyNumberCalls(kp, cn.calls = cnv_calls["pcawg_dkfz"],  cn.colors = cn.cols, loh.color = loh.col,cn.column = "TUMOR.TCN", r0=0, r1=0.1, labels="")
+  kpAddLabels(kp, labels="DKFZ (PCAWG)", r0=0.1, r1=0.2, cex=label_size, srt= 90)
+  
+  cn.cols["LOH"] = loh.col
+  legend(x=0.97, y=1.1, legend=names(cn.cols), fill = cn.cols, ncol=1, title="CN", xpd=TRUE, bty="n")
+  
+  dev.off()
+  
+  return(kp)
+}
+```
+
+
+# Load data
+
+```{r , results='hide', fig.keep='all'}
+
+#############
+## DO44888 ##
+#############
+
+do44888_data <- loadData("DO44888")
+do44888_plot <- plotData(do44888_data, "DO44888")
+
+#############
+## DO44889 ##
+#############
+
+do44889_data <- loadData("DO44889")
+do44889_plot <- plotData(do44889_data, "DO44889")
+
+#############
+## DO44890 ##
+#############
+
+do44890_data <- loadData("DO44890")
+do44890_plot <- plotData(do44890_data, "DO44890")
+
+#############
+## DO44919 ##
+#############
+
+do44919_data <- loadData("DO44919")
+do44919_plot <- plotData(do44919_data, "DO44919")
+
+#############
+## DO44930 ##
+#############
+
+do44930_data <- loadData("DO44930")
+do44930_plot <- plotData(do44930_data, "DO44930")
+
+```
+
+
+
+Package versions:
+```{r, echo=F}
+installed.packages()[names(sessionInfo()$otherPkgs), "Version"]
+```

@@ -18,3 +18,5 @@ dependencies:
   - conda-forge::r-ggpattern
   - conda-forge::r-ggnewscale
   - conda-forge::r-markdown
+  - bioconda::bioconductor-karyoploter
+  - bioconda::bioconductor-copynumberplots
