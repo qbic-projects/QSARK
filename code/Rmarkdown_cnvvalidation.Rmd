@@ -24,6 +24,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 # Import all R libraries
 library(dplyr)
+library(tidyr)
 library(patchwork)
 library(forcats)
 library(ggplot2)
@@ -34,10 +35,24 @@ library(karyoploteR)
 library(GenomicRanges)
 library(CopyNumberPlots)
 library(ggplotify)
+library(ComplexHeatmap)
+library(scales)
+library(RColorBrewer)
+library(gridExtra)
+library(ggpubr)
+
 
 theme_set(theme_classic())
+
+theme_set(
+  theme_bw() +
+    theme(legend.position = "top")
+  )
 results_folder <- "results/cnvs"
 dir.create(results_folder)
+
+#install.packages("remotes")
+#remotes::install_github("antonio-mora/vennRanges")
 ```
 
 # Define Functions
@@ -155,6 +170,7 @@ loadData <- function(patient) {
   pcawg_dkfz <- pcawg_dkfz[ , c("CHROM", "POS", "END", "ALT", "TUMOR.TCN")] %>%
     mutate(loh = ifelse(ALT == "<cnLOH>", 1, 0)) %>%
     mutate(CHROM = ifelse(CHROM == "23", "X", CHROM)) %>%
+    mutate(CHROM = ifelse(CHROM == "24", "Y", CHROM)) %>%
     mutate(CHROM = paste0("chr", CHROM))
     
 
@@ -281,6 +297,369 @@ do44930_plot <- plotData(do44930_data, "DO44930")
 
 ```
 
+```{r echo=FALSE}
+
+get_combination_matrix <- function(df, mode = 'distinct'){
+  cf_gain = df[["controlfreec"]][ df[["controlfreec"]]$V5 == 'gain' ]
+  cnvkit_gain = df[["cnvkit"]][ df[["cnvkit"]]$cn > 2 ]
+  ascat_gain = df[["ascat"]][ df[["ascat"]]$cn_col > 2 ]
+  dkfz_gain = df[["pcawg_dkfz"]][ df[["pcawg_dkfz"]]$ALT == '<AMP>' ]
+  svcp_gain = df[["pcawg_svcp"]][ df[["pcawg_svcp"]]$TUMOUR.TCN > 2 ]
+  
+  lt = list(controlfreec = cf_gain,
+       cnvkit= cnvkit_gain,
+       ascat = ascat_gain, 
+       dkfz = dkfz_gain, 
+       svcp = svcp_gain)
+  m_gain = normalize_comb_mat(make_comb_mat(lt, mode=mode), full_comb_sets = TRUE) 
+
+  cf_del = df[["controlfreec"]][ df[["controlfreec"]]$V5 == 'loss' ]
+  cnvkit_del = df[["cnvkit"]][ df[["cnvkit"]]$cn < 2 ]
+  ascat_del = df[["ascat"]][ df[["ascat"]]$cn_col < 2 ]
+  dkfz_del = df[["pcawg_dkfz"]][ df[["pcawg_dkfz"]]$ALT == '<DEL>' ]
+  svcp_del = df[["pcawg_svcp"]][ df[["pcawg_svcp"]]$TUMOUR.TCN < 2 ]
+  
+  lt_del = list(controlfreec = cf_del,
+       cnvkit= cnvkit_del,
+       ascat = ascat_del, 
+       dkfz = dkfz_del, 
+       svcp = svcp_del)
+  m_del = normalize_comb_mat(make_comb_mat(lt_del, mode=mode), full_comb_sets = TRUE)
+
+  return(list(gain=m_gain, del=m_del))
+}
+
+
+```
+
+```{r echo=FALSE}
+do44888_comb <- get_combination_matrix(do44888_data)
+do44889_comb <- get_combination_matrix(do44889_data)
+do44890_comb <- get_combination_matrix(do44890_data)
+do44919_comb <- get_combination_matrix(do44919_data)
+do44930_comb <- get_combination_matrix(do44930_data)
+```
+
+
+```{r echo=FALSE}
+# TODO compute union (total) number of all callers
+do44888_comb_union <- get_combination_matrix(do44888_data, mode = 'union')
+do44888_gain_total <- comb_size(do44888_comb_union[["gain"]])["11111"]
+do44888_del_total <- comb_size(do44888_comb_union[["del"]])["11111"]
+
+do44889_comb_union <- get_combination_matrix(do44889_data, mode = 'union')
+do44889_gain_total <- comb_size(do44889_comb_union[["gain"]])["11111"]
+do44889_del_total <- comb_size(do44889_comb_union[["del"]])["11111"]
+
+do44890_comb_union <- get_combination_matrix(do44890_data, mode = 'union')
+do44890_gain_total <- comb_size(do44890_comb_union[["gain"]])["11111"]
+do44890_del_total <- comb_size(do44890_comb_union[["del"]])["11111"]
+
+do44919_comb_union <- get_combination_matrix(do44919_data, mode = 'union')
+do44919_gain_total <- comb_size(do44919_comb_union[["gain"]])["11111"]
+do44919_del_total <- comb_size(do44919_comb_union[["del"]])["11111"]
+
+do44930_comb_union <- get_combination_matrix(do44930_data, mode = 'union')
+do44930_gain_total <- comb_size(do44930_comb_union[["gain"]])["11111"]
+do44930_del_total <- comb_size(do44930_comb_union[["del"]])["11111"]
+
+```
+
+
+```{r echo=FALSE}
+
+get_percentage_tool_comb <- function(comb_matrix, gain_total, del_total){
+  
+  # 5s
+  five_perc_gain = comb_size(comb_matrix[["gain"]])["11111"]/gain_total
+  
+  five_perc_del = comb_size(comb_matrix[["del"]])["11111"]/del_total
+  
+  
+  # 4s
+  four_perc_gain = (comb_size(comb_matrix[["gain"]])["11110"] + 
+                 comb_size(comb_matrix[["gain"]])["11101"] +
+                 comb_size(comb_matrix[["gain"]])["11011"] +
+                 comb_size(comb_matrix[["gain"]])["10111"] +
+                 comb_size(comb_matrix[["gain"]])["01111"])/gain_total
+  
+  four_perc_del = (comb_size(comb_matrix[["del"]])["11110"] + 
+                 comb_size(comb_matrix[["del"]])["11101"] +
+                 comb_size(comb_matrix[["del"]])["11011"] +
+                 comb_size(comb_matrix[["del"]])["10111"] +
+                 comb_size(comb_matrix[["del"]])["01111"])/del_total
+  
+  
+  # 3s
+  three_perc_gain = (comb_size(comb_matrix[["gain"]])["11100"] + 
+                  comb_size(comb_matrix[["gain"]])["11010"] +
+                  comb_size(comb_matrix[["gain"]])["10110"] +
+                  comb_size(comb_matrix[["gain"]])["01110"] +
+                  comb_size(comb_matrix[["gain"]])["11001"] +
+                  comb_size(comb_matrix[["gain"]])["10101"] +
+                  comb_size(comb_matrix[["gain"]])["01101"] +
+                  comb_size(comb_matrix[["gain"]])["10011"] +
+                  comb_size(comb_matrix[["gain"]])["01011"] +
+                  comb_size(comb_matrix[["gain"]])["00111"])/gain_total
+  
+  three_perc_del = (comb_size(comb_matrix[["del"]])["11100"] + 
+                  comb_size(comb_matrix[["del"]])["11010"] +
+                  comb_size(comb_matrix[["del"]])["10110"] +
+                  comb_size(comb_matrix[["del"]])["01110"] +
+                  comb_size(comb_matrix[["del"]])["11001"] +
+                  comb_size(comb_matrix[["del"]])["10101"] +
+                  comb_size(comb_matrix[["del"]])["01101"] +
+                  comb_size(comb_matrix[["del"]])["10011"] +
+                  comb_size(comb_matrix[["del"]])["01011"] +
+                  comb_size(comb_matrix[["del"]])["00111"])/del_total
+  
+  # 2s
+  two_perc_gain = (comb_size(comb_matrix[["gain"]])["11000"] + 
+                  comb_size(comb_matrix[["gain"]])["10100"] +
+                  comb_size(comb_matrix[["gain"]])["10010"] +
+                  comb_size(comb_matrix[["gain"]])["10001"] +
+                  comb_size(comb_matrix[["gain"]])["01100"] +
+                  comb_size(comb_matrix[["gain"]])["01010"] +
+                  comb_size(comb_matrix[["gain"]])["01001"] +
+                  comb_size(comb_matrix[["gain"]])["00110"] +
+                  comb_size(comb_matrix[["gain"]])["00101"] +
+                  comb_size(comb_matrix[["gain"]])["00011"])/gain_total
+  
+  two_perc_del = (comb_size(comb_matrix[["del"]])["11000"] + 
+                  comb_size(comb_matrix[["del"]])["10100"] +
+                  comb_size(comb_matrix[["del"]])["10010"] +
+                  comb_size(comb_matrix[["del"]])["10001"] +
+                  comb_size(comb_matrix[["del"]])["01100"] +
+                  comb_size(comb_matrix[["del"]])["01010"] +
+                  comb_size(comb_matrix[["del"]])["01001"] +
+                  comb_size(comb_matrix[["del"]])["00110"] +
+                  comb_size(comb_matrix[["del"]])["00101"] +
+                  comb_size(comb_matrix[["del"]])["00011"])/del_total
+  
+  # 1s
+  one_perc_gain = (comb_size(comb_matrix[["gain"]])["10000"] + 
+                  comb_size(comb_matrix[["gain"]])["01000"] +
+                  comb_size(comb_matrix[["gain"]])["00100"] +
+                  comb_size(comb_matrix[["gain"]])["00010"] +
+                  comb_size(comb_matrix[["gain"]])["00001"] )/gain_total
+  
+  one_perc_del = (comb_size(comb_matrix[["del"]])["10000"] + 
+                  comb_size(comb_matrix[["del"]])["01000"] +
+                  comb_size(comb_matrix[["del"]])["00100"] +
+                  comb_size(comb_matrix[["del"]])["00010"] +
+                  comb_size(comb_matrix[["del"]])["00001"] )/del_total
+  
+    return(list(five_perc_gain = five_perc_gain,
+                five_perc_del = five_perc_del,
+                four_perc_gain = four_perc_gain,
+                four_perc_del = four_perc_del,
+                three_perc_gain = three_perc_gain,
+                three_perc_del = three_perc_del,
+                two_perc_gain = two_perc_gain,
+                two_perc_del = two_perc_del,
+                one_perc_gain = one_perc_gain,
+                one_perc_del = one_perc_del))
+}
+
+do44888_perc = get_percentage_tool_comb(do44888_comb, gain_total= do44888_gain_total, del_total= do44888_del_total)
+do44889_perc = get_percentage_tool_comb(do44889_comb, gain_total= do44889_gain_total, del_total= do44889_del_total)
+do44890_perc = get_percentage_tool_comb(do44890_comb, gain_total= do44890_gain_total, del_total= do44890_del_total)
+do44919_perc = get_percentage_tool_comb(do44919_comb, gain_total= do44919_gain_total, del_total= do44919_del_total)
+do44930_perc = get_percentage_tool_comb(do44930_comb, gain_total= do44930_gain_total, del_total= do44930_del_total)
+
+df <- t(data.frame(do44888 = unlist(do44888_perc), do44889 = unlist(do44889_perc), do44890 = unlist(do44890_perc), do44919 = unlist(do44919_perc), do44930 = unlist(do44930_perc) ))
+
+# Create a table from the data frame
+kable(df, row.names = TRUE, col.names = c("5 tools (AMP)", "5 tools (DEL)", "4 tools (AMP)", "4 tools (DEL)", "3 tools (AMP)", "3 tools (DEL)", "2 tools (AMP)", "2 tools (DEl)", "1 tool (AMP)", "1 tool (DEL)"))# %>%
+    #kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+    #scroll_box(width = "100%", height = "300px")
+```
+
+```{r echo=FALSE}
+degree_colors = list( degree=c("1" = "#EDF8FB", "2"="#B2E2E2", "3"="#66C2A4", "4"="#2CA25F", "5"="#006D2C"))
+
+group_colors = list( group = c("PCAWG" =  "#6A3D9A", "Sarek" = "maroon"))
+
+plot_upset <- function(sample_comb, title){
+  
+  top_ha = HeatmapAnnotation(
+    degree = as.character(comb_degree(sample_comb[["gain"]])),
+    col = degree_colors,
+    "Deletions" = anno_barplot(comb_size(sample_comb[["del"]]), 
+        gp = gpar(fill = "black"), height = unit(2, "cm")), 
+    "Amplifications" = anno_barplot(comb_size(sample_comb[["gain"]]), 
+        gp = gpar(fill = "black"), height = unit(2, "cm")), 
+    gap = unit(2, "mm"), annotation_name_side = "left", annotation_name_rot = 0)
+  
+  path = paste0(results_folder, "/", title, "_upset.png", sep="")
+  print(path)
+  png(path, res = res, width = unit(10, "cm"), height = unit(5, "cm"), units = units)
+  draw(UpSet(sample_comb[["gain"]], top_annotation = top_ha,
+              set_order =c("ascat", "cnvkit", "controlfreec", "svcp", "dkfz"),
+              right_annotation = rowAnnotation(
+                      "Set size" = anno_barplot(set_size(sample_comb[["gain"]]),
+                         border = FALSE,
+                          gp = gpar(fill = "black"),
+                          width = unit(2, "cm")),
+                      group = c("Sarek","Sarek","Sarek", "PCAWG", "PCAWG"),
+                      col = group_colors),
+                      column_title = title))
+  dev.off()
+ 
+   #return(my_plot)
+  
+}
+
+plot_upset(do44888_comb, "DO44888")
+plot_upset(do44889_comb, "DO44889")
+plot_upset(do44890_comb, "DO44890")
+plot_upset(do44919_comb, "DO44919")
+plot_upset(do44930_comb, "DO44930")
+```
+
+```{r}
+
+# Order is important
+cnv_tools <- c("ascat", "cnvkit", "controlfreec","dkfz", "svcp")
+
+# Store precomputed values in lists
+comb_matrices <- list(do44888 = do44888_comb, do44889 = do44889_comb, do44890 = do44890_comb, do44919 = do44919_comb, do44930 = do44930_comb)
+gain_totals <- list(do44888 = do44888_gain_total, do44889 = do44889_gain_total, do44890 = do44890_gain_total, do44919 = do44919_gain_total, do44930 = do44930_gain_total)
+del_totals <- list(do44888 = do44888_del_total, do44889 = do44889_del_total, do44890 = do44890_del_total, do44919 = do44919_del_total, do44930 = do44930_del_total)
+
+# Create a color palette
+color_palette <- scale_fill_brewer(palette = "viridis")
+
+# Create a custom theme
+custom_theme <- theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 20, face = "bold"),
+    axis.title.x = element_text(size = 14, face = "bold"),
+    axis.title.y = element_text(size = 14, face = "bold"),
+    axis.text.x = element_text(angle = 90, hjust = 1, size = 12),
+    axis.text.y = element_text(size = 12),
+    legend.title = element_text(size = 14, face = "bold"),
+    legend.text = element_text(size = 12),
+    strip.text = element_text(size = 14, face = "bold")
+  )
+
+generate_binary_permutations <- function(n, fixed_position) {
+  # Generate all binary strings of length n
+  binary_strings <- expand.grid(rep(list(c("0", "1")), n))
+  binary_strings <- apply(binary_strings, 1, paste0, collapse = "")
+  
+  # Filter binary strings where the fixed position is '1'
+  binary_strings <- binary_strings[substr(binary_strings, fixed_position, fixed_position) == "1"]
+  
+  groupings <- split(binary_strings, sapply(binary_strings, function(x) sum(strsplit(x, "")[[1]] == "1")))
+  names(groupings) <- as.character(as.numeric(names(groupings)) - 1)
+  
+  return(groupings)
+}
+
+get_percentage_tool_comb <- function(comb_matrix, gain_total, del_total, bin_mut){
+  # Initialize an empty list to store the results
+  results <- list()
+
+  # Loop over the binary permutations
+  for (i in (length(bin_mut) - 1):0) {
+  # Get the binary strings for the current group
+    binary_strings <- bin_mut[[as.character(i)]]
+
+    # Calculate the sum for each binary string for "gain" and "del"
+    perc_gain <- sum(sapply(binary_strings, function(x) comb_size(comb_matrix[["gain"]])[x]))
+    perc_del <- sum(sapply(binary_strings, function(x) comb_size(comb_matrix[["del"]])[x]))
+
+    # Add the results to the list
+    results[[paste0(i, "_perc_gain")]] <- perc_gain
+    results[[paste0(i, "_perc_del")]] <- perc_del
+  }
+
+  return(results)
+}
+
+
+generate_plot <- function(tool, index){
+  
+  # Now you can use both 'i' (the position) and 'tool' (the value) in your loop
+  df <- data.frame()
+
+  bin_perm <- generate_binary_permutations(5,index)
+
+  # Loop over all samples
+  for (sample in names(comb_matrices)) {
+    # Get the combination matrix, gain total and del total for the current sample
+    comb_matrix <- comb_matrices[[sample]]
+    gain_total <- gain_totals[[sample]]
+    del_total <- del_totals[[sample]]
+  
+    # Calculate the percentages for the current sample
+    percentages <- get_percentage_tool_comb(comb_matrix, gain_total, del_total, bin_perm)
+    # Add the percentages to the dataframe
+    df <- rbind(df, cbind(Sample = sample, as.data.frame(t(unlist(percentages)))))
+    
+  }
+  
+  row.names(df) <- df$Sample
+  # Remove the 'Sample' column from the dataframe
+  df$Sample <- NULL
+
+  tdf <- as.data.frame(t(df) ) %>%
+    tibble::rownames_to_column("type") %>% 
+    mutate(gain_or_del = sub(".*(gain|del).*", "\\1", type)) %>%
+    mutate(num_tools = sub("(.*?)_.*", "\\1", type))
+  
+  # Melt the data frame to long format
+  df_long <- reshape2::melt(tdf, id.vars = c("type", "gain_or_del", "num_tools"))
+  
+  # Create the plot
+  plot <- ggplot(df_long, aes(x = variable, y = value, fill = num_tools)) +
+    geom_bar(stat = "identity") +
+    facet_grid(~ gain_or_del) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    labs(x = "Sample", y = "Bases", fill = "Confirmed by tools ") +
+    ggtitle(paste0("Bases found by ",tool , " and confirmed with other tools")) +
+    color_palette +
+    custom_theme
+  
+  ggsave(paste0(results_folder, "/", tool, "_plot.png", sep=""), plot, device= "png", width = 12, height = 8, units = "in")
+  ggsave(paste0(results_folder, "/", tool, "_plot.svg", sep=""), plot, device= "svg", width = 12, height = 8, units = "in")
+  
+  return(list(plot=plot, df_long=df_long))
+  
+}
+
+ascat_plot <- generate_plot("ascat", 1)
+cnvkit_plot <- generate_plot("cnvkit", 2)
+controlfreec_plot <- generate_plot("controlfreec", 3)
+dkfz_plot <- generate_plot("dkfz", 4)
+svcp_plot <- generate_plot("svcp", 5)
+
+
+# Combine the data frames
+df_combined <- rbind(
+  mutate(ascat_plot[["df_long"]], tool = "ascat"),
+  mutate(cnvkit_plot[["df_long"]], tool = "cnvkit"),
+  mutate(controlfreec_plot[["df_long"]], tool = "controlfreec"),
+  mutate(dkfz_plot[["df_long"]], tool = "dkfz"),
+  mutate(svcp_plot[["df_long"]], tool = "svcp")
+)
+
+# Create the plot
+combined <- ggplot(df_combined, aes(x = variable, y = value, fill = num_tools)) +
+  geom_bar(stat = "identity") +
+  facet_grid(tool ~ gain_or_del) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(x = "Sample", y = "Bases", fill = "Confirmed by tools") +
+  ggtitle("Bases found by each tool and confirmed with other tools") +
+  color_palette +
+  custom_theme
+
+ ggsave(paste0(results_folder, "/", "combined_plot.png", sep=""), combined, device= "png", width = 12, height = 12, units = "in")
+ ggsave(paste0(results_folder, "/", "combined_plot.svg", sep=""), combined, device= "svg", width = 12, height = 12, units = "in")
+ ggsave(paste0(results_folder, "/", "combined_plot.eps", sep=""), combined, device= "eps", width = 12, height = 12, units = "in")
+
+```
 
 
 Package versions:
